@@ -1,0 +1,45 @@
+node -v
+npm -v
+node -v
+npm -v
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IZZY – AI Avatar for Real Conversations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+  <div class="max-w-3xl mx-auto p-8 text-center">
+    <h1 class="text-4xl font-bold mb-4">Talk to IZZY – Your AI Conversation Coach</h1>
+    <p class="text-lg text-gray-600 mb-8">
+      IZZY is a real-time AI woman avatar that helps men improve their conversation skills.
+      Start talking, practicing, and gaining confidence now.
+    </p>
+
+    <button onclick="startChat()" class="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700 transition mb-6">
+      Start Chat Now
+    </button>
+
+    <iframe id="avatarFrame" class="w-full h-[480px] rounded-xl shadow-lg hidden" allow="microphone;"></iframe>
+
+    <div class="mt-12 text-left">
+      <h2 class="text-2xl font-semibold mb-4">Why IZZY?</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2">
+        <li>Real-time conversations with a photo-realistic female avatar</li>
+        <li>Personalized training based on your goals and level</li>
+        <li>Powered by GPT-4 for emotional intelligence and smart dialogue</li>
+        <li>Perfect for beginners and experienced men alike</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function startChat() {
+      const frame = document.getElementById('avatarFrame');
+      frame.src = "https://studio.d-id.com/talks/YOUR_AVATAR_ID?api_key=YOUR_PUBLIC_KEY"; // Replace with your actual ID and key
+      frame.style.display = "block";
+    }
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IZZY – AI Avatar for Real Conversations</title>
+  <title>IZZY - AI Conversations</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     window.onload = async () => {
@@ -16,37 +16,51 @@
     };
   </script>
   <style>
-    @keyframes dropIn {
-      0% { transform: translateY(-80px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
+    body {
+      background-color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
     }
-    .pop { display: inline-block; animation: dropIn 0.6s ease-out forwards; transform: translateY(-80px); opacity: 0; }
+    .pop {
+      display: inline-block;
+      animation: dropIn 0.6s ease-out forwards;
+      transform: translateY(-80px);
+      opacity: 0;
+    }
+    @keyframes dropIn {
+      0% {
+        transform: translateY(-80px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
     .pop-delay-1 { animation-delay: 0.1s; }
     .pop-delay-2 { animation-delay: 0.2s; }
     .pop-delay-3 { animation-delay: 0.3s; }
     .pop-delay-4 { animation-delay: 0.4s; }
     .pop-delay-5 { animation-delay: 0.5s; }
+    .pop-delay-6 { animation-delay: 0.6s; }
     .glass {
-      background: rgba(255,255,255,0.85);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
       border-radius: 1rem;
       padding: 2rem;
       box-shadow: 0 20px 25px rgba(0,0,0,0.05);
     }
+    .btn {
+      transition: all 0.3s ease-in-out;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body class="text-gray-900">
+  <div class="flex flex-col items-center justify-center min-h-screen px-6 pt-20 pb-16 relative overflow-hidden bg-white">
 
-  <!-- Navigation -->
-  <nav class="w-full flex justify-center items-center space-x-10 px-6 py-4 bg-white shadow-md fixed top-0 left-0 z-50">
-    <a href="#about" class="text-[#0047AB] font-semibold hover:underline">About</a>
-    <a href="#practice" class="text-[#0047AB] font-semibold hover:underline">Practice with IZZY</a>
-    <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
-  </nav>
-
-  <div class="pt-28 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative overflow-hidden bg-white">
-
-    <!-- Headline -->
+    <!-- Main Headline Pop Effect -->
     <h1 class="text-7xl md:text-8xl font-extrabold text-[#0047AB] text-center leading-tight mb-6">
       <span class="pop pop-delay-1">We</span>
       <span class="pop pop-delay-2">Don't</span>
@@ -55,40 +69,54 @@
       <span class="pop pop-delay-5">Talk.</span>
     </h1>
 
+    <!-- Sub Message -->
     <p class="text-xl text-black text-center mb-2">
       Start talking, we’re listening. Your voice matters.
     </p>
 
-    <!-- Avatar -->
+    <!-- Talking Avatar -->
     <iframe
       id="avatarFrame"
-      class="w-full max-w-md md:max-w-2xl h-[360px] md:h-[480px] rounded-2xl shadow-xl mb-10 border-4 border-blue-100"
+      class="w-full max-w-2xl h-[480px] rounded-2xl shadow-xl mb-10 border-4 border-blue-100"
       allow="microphone; autoplay"
       src="https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy">
     </iframe>
 
-    <!-- Prompt Interaction -->
-    <div id="practice" class="glass max-w-xl w-full mx-auto text-center">
+    <!-- Prompt Interaction Section -->
+    <div id="interaction" class="glass max-w-xl w-full text-center">
       <label for="userInput" class="block text-lg font-semibold mb-2">Say something to IZZY:</label>
-      <input type="text" id="userInput" maxlength="400" placeholder="Type your question here... (max 50 words)" class="mx-auto block w-full max-w-md px-4 py-3 border rounded-lg mb-2">
-      <p class="text-md text-[#0047AB] italic mb-4">You had just received 3 free prompts!</p>
-      <button onclick="handlePrompt()" class="btn bg-[#0047AB] text-white text-base md:text-lg px-6 py-3 rounded-xl shadow hover:bg-blue-800">
+      <input type="text" id="userInput" maxlength="400" placeholder="Type your question here... (max 50 words)" class="w-full px-4 py-3 border rounded-lg mb-2">
+      <p class="text-md text-[#0047AB] italic mb-4">You had just received 3 free prompts!.</p>
+      <button onclick="handlePrompt()" class="btn bg-[#0047AB] text-white text-lg px-6 py-3 rounded-xl shadow hover:bg-blue-800">
         Send
       </button>
     </div>
 
+    <!-- Paywall Section -->
+    <div id="paywall" class="hidden mt-10 text-center">
+      <p class="text-lg text-gray-700 mb-4">
+        You've used all your free prompts. Unlock unlimited conversations below:
+      </p>
+      <a href="https://buy.stripe.com/test_YOUR_CHECKOUT_LINK" target="_blank"
+        class="btn bg-green-600 text-white text-lg px-8 py-4 rounded-xl shadow hover:bg-green-700">
+        Subscribe Now - $20/month
+      </a>
+    </div>
+
     <!-- About Section -->
-    <div id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800">
+    <div class="max-w-4xl mt-20 px-8 text-center text-gray-800">
       <h2 class="text-7xl md:text-8xl font-extrabold text-[#0047AB] text-center leading-tight mb-6">About</h2>
       <p class="text-lg leading-relaxed text-justify">
         IZZY is the first AI-based avatar, personalized to every woman around the globe, from every culture,
         every appearance, every social status, every language, and every different criterion.<br/><br/>
+
         IZZY was founded not to help users "flirt" with women, but to help real men to gain confidence and
         competence in engaging with women in real life!<br/><br/>
+
         So many men these days suffer from a lack of confidence with women, especially in person. IZZY therefore
         will help YOU practice before approaching the girl you like. However, IZZY will behave accordingly to
         a real woman, so sometimes you can expect being ignored, the conversation is not flowing, and more.
-        That's how you WILL GET BETTER!
+        THAT'S HOW YOU WILL GET BETTER!
       </p>
     </div>
 
@@ -114,13 +142,13 @@
       input.value = "";
 
       if (promptCounter >= maxFreePrompts) {
-        window.location.href = "subscribe.html";
+        document.getElementById("interaction").classList.add("hidden");
+        document.getElementById("paywall").classList.remove("hidden");
         return;
       }
 
       console.log(`Prompt #${promptCounter}: ${text}`);
     }
   </script>
-
 </body>
 </html>

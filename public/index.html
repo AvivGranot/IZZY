@@ -18,22 +18,18 @@
   <style>
     body {
       background-color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
     }
     .pop {
       display: inline-block;
-      animation: popIn 0.6s ease-out forwards;
-      transform: translateY(-50px);
+      animation: dropIn 0.6s ease-out forwards;
+      transform: translateY(-80px);
       opacity: 0;
     }
-    @keyframes popIn {
+    @keyframes dropIn {
       0% {
-        transform: translateY(-50px);
+        transform: translateY(-80px);
         opacity: 0;
-      }
-      60% {
-        transform: translateY(10px);
-        opacity: 1;
       }
       100% {
         transform: translateY(0);
@@ -47,11 +43,11 @@
     .pop-delay-5 { animation-delay: 0.5s; }
     .pop-delay-6 { animation-delay: 0.6s; }
     .glass {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
       border-radius: 1rem;
       padding: 2rem;
-      box-shadow: 0 20px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 20px 25px rgba(0,0,0,0.05);
     }
     .btn {
       transition: all 0.3s ease-in-out;
@@ -62,60 +58,38 @@
   </style>
 </head>
 <body class="text-gray-900">
-  <div class="flex flex-col items-center justify-center min-h-screen px-6 pt-20 pb-16 relative overflow-hidden">
-
-    <!-- Decorative Background Circles -->
-    <div class="absolute w-72 h-72 bg-indigo-100 rounded-full top-0 left-0 -z-10 blur-3xl opacity-30"></div>
-    <div class="absolute w-96 h-96 bg-purple-100 rounded-full bottom-0 right-0 -z-10 blur-3xl opacity-30"></div>
+  <div class="flex flex-col items-center justify-center min-h-screen px-6 pt-20 pb-16 relative overflow-hidden bg-white">
 
     <!-- Main Headline Pop Effect -->
-    <h1 class="text-6xl md:text-7xl font-extrabold text-black text-center leading-tight mb-6">
-      <span class="pop pop-delay-1">W</span>
-      <span class="pop pop-delay-2">e</span>
-      <span class="pop pop-delay-3"> </span>
-      <span class="pop pop-delay-4">D</span>
-      <span class="pop pop-delay-5">o</span>
-      <span class="pop pop-delay-6">n</span>
-      <span class="pop pop-delay-1">’</span>
-      <span class="pop pop-delay-2">t</span>
-      <span class="pop pop-delay-3"> </span>
-      <span class="pop pop-delay-4">T</span>
-      <span class="pop pop-delay-5">e</span>
-      <span class="pop pop-delay-6">x</span>
-      <span class="pop pop-delay-1">t</span>
-      <span class="pop pop-delay-2">.</span>
-      <br>
-      <span class="pop pop-delay-3">W</span>
-      <span class="pop pop-delay-4">e</span>
-      <span class="pop pop-delay-5"> </span>
-      <span class="pop pop-delay-6">T</span>
-      <span class="pop pop-delay-1">a</span>
-      <span class="pop pop-delay-2">l</span>
-      <span class="pop pop-delay-3">k</span>
-      <span class="pop pop-delay-4">.</span>
+    <h1 class="text-7xl md:text-8xl font-extrabold text-[#0047AB] text-center leading-tight mb-6">
+      <span class="pop pop-delay-1">We</span>
+      <span class="pop pop-delay-2">Don't</span>
+      <span class="pop pop-delay-3">Text.</span><br>
+      <span class="pop pop-delay-4">We</span>
+      <span class="pop pop-delay-5">Talk.</span>
     </h1>
 
     <!-- Sub Message -->
-    <p class="text-xl text-gray-600 text-center mb-8">
+    <p class="text-xl text-black text-center mb-2">
       Start talking, we’re listening. Your voice matters.
     </p>
 
     <!-- Talking Avatar -->
     <iframe
       id="avatarFrame"
-      class="w-full max-w-2xl h-[480px] rounded-2xl shadow-xl mb-10 border-4 border-indigo-100"
+      class="w-full max-w-2xl h-[480px] rounded-2xl shadow-xl mb-10 border-4 border-blue-100"
       allow="microphone; autoplay"
-      src="https://studio.d-id.com/talks/Z3Jhbm90MjExQGdtYWlsLmNvbQ:DISoO-BsAaaJUHGxRnH5C">
+      src="https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy">
     </iframe>
 
     <!-- Prompt Interaction Section -->
     <div id="interaction" class="glass max-w-xl w-full text-center">
       <label for="userInput" class="block text-lg font-semibold mb-2">Say something to IZZY:</label>
-      <input type="text" id="userInput" placeholder="Type your question here..." class="w-full px-4 py-3 border rounded-lg mb-4">
-      <button onclick="handlePrompt()" class="btn bg-indigo-600 text-white text-lg px-6 py-3 rounded-xl shadow hover:bg-indigo-700">
+      <input type="text" id="userInput" maxlength="400" placeholder="Type your question here... (max 50 words)" class="w-full px-4 py-3 border rounded-lg mb-2">
+      <p class="text-md text-[#0047AB] italic mb-4">You had just received 3 free prompts!.</p>
+      <button onclick="handlePrompt()" class="btn bg-[#0047AB] text-white text-lg px-6 py-3 rounded-xl shadow hover:bg-blue-800">
         Send
       </button>
-      <p id="promptCount" class="mt-4 text-sm text-gray-500">Remaining Free Prompts: <span id="remaining">3</span></p>
     </div>
 
     <!-- Paywall Section -->
@@ -125,14 +99,14 @@
       </p>
       <a href="https://buy.stripe.com/test_YOUR_CHECKOUT_LINK" target="_blank"
         class="btn bg-green-600 text-white text-lg px-8 py-4 rounded-xl shadow hover:bg-green-700">
-        Subscribe Now - $30/month
+        Subscribe Now - $20/month
       </a>
     </div>
 
     <!-- About Section -->
-    <div class="max-w-3xl mt-20 p-6 text-center text-gray-800">
-      <h2 class="text-2xl font-bold mb-4">About IZZY</h2>
-      <p class="text-lg leading-relaxed">
+    <div class="max-w-4xl mt-20 px-8 text-center text-gray-800">
+      <h2 class="text-7xl md:text-8xl font-extrabold text-[#0047AB] text-center leading-tight mb-6">About</h2>
+      <p class="text-lg leading-relaxed text-justify">
         IZZY is the first AI-based avatar, personalized to every woman around the globe, from every culture,
         every appearance, every social status, every language, and every different criterion.<br/><br/>
 
@@ -142,7 +116,7 @@
         So many men these days suffer from a lack of confidence with women, especially in person. IZZY therefore
         will help YOU practice before approaching the girl you like. However, IZZY will behave accordingly to
         a real woman, so sometimes you can expect being ignored, the conversation is not flowing, and more.
-        That's how you WILL GET BETTER!
+        THAT'S HOW YOU WILL GET BETTER!
       </p>
     </div>
 
@@ -152,10 +126,17 @@
     let promptCounter = 0;
     const maxFreePrompts = 3;
 
+    function countWords(str) {
+      return str.trim().split(/\s+/).length;
+    }
+
     function handlePrompt() {
       const input = document.getElementById("userInput");
       const text = input.value.trim();
-      if (!text) return;
+      if (!text || countWords(text) > 50) {
+        alert("Please limit your prompt to 50 words.");
+        return;
+      }
 
       promptCounter++;
       input.value = "";
@@ -166,11 +147,7 @@
         return;
       }
 
-      const remaining = maxFreePrompts - promptCounter;
-      document.getElementById("remaining").innerText = remaining;
       console.log(`Prompt #${promptCounter}: ${text}`);
-
-      // Here you would typically send the prompt to your backend and get the AI response.
     }
   </script>
 </body>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribe to IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes borderFlow {
+      0% {
+        box-shadow: inset 0 -4px 0 0 #0047AB;
+      }
+      25% {
+        box-shadow: inset 4px 0 0 0 #0047AB;
+      }
+      50% {
+        box-shadow: inset 0 4px 0 0 #0047AB;
+      }
+      75% {
+        box-shadow: inset -4px 0 0 0 #0047AB;
+      }
+      100% {
+        box-shadow: inset 0 -4px 0 0 #0047AB;
+      }
+    }
+
+    .animate-borderFlow {
+      animation: borderFlow 2s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+  <div class="min-h-screen flex flex-col items-center justify-center p-6">
+    <h1 class="text-4xl md:text-6xl font-bold text-[#0047AB] mb-8 text-center">Choose Your Plan</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+
+      <!-- Share with 1 friend -->
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-2">Share with 1 friend</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">5 free prompts</p>
+        <ul class="text-left mb-6 space-y-2">
+          </ul>
+        <a href="#" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Subscribe</a>
+      </div>
+
+      <!-- Share with 2 friend -->
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center relative animate-borderFlow overflow-hidden">
+        <h2 class="text-2xl font-semibold mb-2">Share with 2 friends</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">10 free prompts</p>
+        <ul class="text-left mb-6 space-y-2">
+          </ul>
+        <a href="https://buy.stripe.com/test_dR6aHO9PM10AcR60oo" target="_blank" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Subscribe</a>
+      </div>
+
+      <!-- Share with 3 friend  -->
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-2">Share with 3 friends/h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">20 free prompts</p>
+        <ul class="text-left mb-6 space-y-2">
+          </ul>
+        <a href="https://buy.stripe.com/test_6oE3cO9PM2h66qU4gg" target="_blank" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Subscribe</a>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

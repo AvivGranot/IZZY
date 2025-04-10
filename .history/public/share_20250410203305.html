@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribe to IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Function to show the sharing modal when user clicks
+    function shareCount(link) {
+      // Fetch current share count from localStorage or initialize to 0
+      let shareData = JSON.parse(localStorage.getItem("shareData")) || { count: 0 };
+  
+      // Update the count when user shares
+      shareData.count += 1;
+      localStorage.setItem("shareData", JSON.stringify(shareData));
+  
+      // Update the user interface to show new rewards based on shares
+      updateRewards(shareData.count);
+  
+      // Open a popout window with sharing options
+      showSharePopout();
+    }
+
+    function showSharePopout() {
+      // Open the popout modal to share
+      const shareModal = document.getElementById('shareModal');
+      shareModal.classList.remove('hidden'); // show the modal
+    }
+
+    // Function to close the modal
+    function closeShareModal() {
+      const shareModal = document.getElementById('shareModal');
+      shareModal.classList.add('hidden'); // hide the modal
+    }
+
+    function updateRewards(count) {
+      // Update rewards based on the share count
+      const rewardsText = document.getElementById("rewardsText");
+      if (count >= 3) {
+        rewardsText.textContent = "You've shared 3 times! Enjoy 20 free prompts!";
+      } else if (count >= 2) {
+        rewardsText.textContent = "You've shared 2 times! Enjoy 15 free prompts!";
+      } else if (count >= 1) {
+        rewardsText.textContent = "You've shared 1 time! Enjoy 5 free prompts!";
+      } else {
+        rewardsText.textContent = "Start sharing to earn free prompts!";
+      }
+    }
+  </script>  
+  <style>
+    @keyframes borderFlow {
+      0% {
+        box-shadow: inset 0 -4px 0 0 #0047AB;
+      }
+      25% {
+        box-shadow: inset 4px 0 0 0 #0047AB;
+      }
+      50% {
+        box-shadow: inset 0 4px 0 0 #0047AB;
+      }
+      75% {
+        box-shadow: inset -4px 0 0 0 #0047AB;
+      }
+      100% {
+        box-shadow: inset 0 -4px 0 0 #0047AB;
+      }
+    }
+
+    .animate-borderFlow {
+      animation: borderFlow 2s linear infinite;
+    }
+
+    /* Styles for the share modal */
+    #shareModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      display: none;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+  <div class="min-h-screen flex flex-col items-center justify-center p-6">
+    <h1 class="text-4xl md:text-6xl font-bold text-[#0047AB] mb-8 text-center">Help IZZY Grow</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+
+      <!-- Share with 1 friend -->
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-2">Share with 1 friend</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">5 free prompts</p>
+        <ul class="text-left mb-6 space-y-2">
+          </ul>
+        <button onclick="shareCount('#')" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Win free prompts</button>
+      </div>
+
+      <!-- Share with 2 friends -->
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center relative animate-borderFlow overflow-hidden">
+        <h2 class="text-2xl font-semibold mb-2">Share with 2 friends</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">10 free prompts</p>
+        <ul class="text-left mb-6 space-y-2">
+          </ul>
+        <button onclick="shareCount('https://buy.stripe.com/test_dR6aHO9PM10AcR60oo')" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Share & Resume Practice</button>
+      </div>
+
+      <!-- Share with 3 friends -->
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-2">Share with 3 friends</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">20 free prompts</p>
+        <ul class="text-left mb-6 space-y-2">
+          </ul>
+        <button onclick="shareCount('https://buy.stripe.com/test_6oE3cO9PM2h66qU4gg')" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Unlock 20 prompts!</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div id="shareModal" class="hidden">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold mb-4">Share IZZY with Friends!</h2>
+      <button onclick="window.open('https://api.whatsapp.com/send?text=Check out IZZY – the first AI Avatar for Real Men! https://izzy-auth.web.app', '_blank')" class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg shadow mb-4">WhatsApp</button>
+      <button onclick="window.open('mailto:?subject=Try IZZY&body=Check out this AI Avatar for Real Men: https://izzy-auth.web.app', '_blank')" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow mb-4">Email</button>
+      <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=https://izzy-auth.web.app', '_blank')" class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow mb-4">Facebook</button>
+      <button onclick="window.open('https://twitter.com/intent/tweet?text=Try IZZY: https://izzy-auth.web.app', '_blank')" class="inline-block bg-blue-400 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow mb-4">Twitter</button>
+      <button onclick="window.open('https://www.reddit.com/submit?url=https://izzy-auth.web.app', '_blank')" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow mb-4">Reddit</button>
+      <button onclick="closeShareModal()" class="inline-block bg-gray-500 text-white py-3 px-6 rounded-lg shadow">Close</button>
+    </div>
+  </div>
+</body>
+</html>

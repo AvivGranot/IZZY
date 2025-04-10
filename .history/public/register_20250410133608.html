@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
+    <h2 class="text-2xl font-bold text-center text-[#0047AB] mb-6">Create your IZZY account</h2>
+
+    <input type="email" id="email" placeholder="Email" class="w-full px-4 py-2 mb-3 border rounded-md" />
+    <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 mb-4 border rounded-md" />
+
+    <button onclick="register()" class="w-full bg-[#0047AB] text-white py-2 rounded-md hover:bg-blue-800 transition">Register</button>
+    
+    <p id="message" class="mt-4 text-center text-sm text-red-600"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          // שליחת אימייל אימות
+          sendEmailVerification(user)
+            .then(() => {
+              document.getElementById("message").innerText = "Check your inbox for a verification email.";
+            })
+            .catch((error) => {
+              document.getElementById("message").innerText = "Error sending email verification: " + error.message;
+            });
+        })
+        .catch((error) => {
+          document.getElementById("message").innerText = error.message;
+        });
+    }
+
+    window.register = register;
+  </script>
+</body>
+</html>

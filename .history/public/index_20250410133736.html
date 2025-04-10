@@ -11,6 +11,11 @@
       100% { transform: translateY(0); opacity: 1; }
     }
     .pop { display: inline-block; animation: dropIn 0.6s ease-out forwards; transform: translateY(-80px); opacity: 0; }
+    .pop-delay-1 { animation-delay: 0.1s; }
+    .pop-delay-2 { animation-delay: 0.2s; }
+    .pop-delay-3 { animation-delay: 0.3s; }
+    .pop-delay-4 { animation-delay: 0.4s; }
+    .pop-delay-5 { animation-delay: 0.5s; }
     .glass {
       background: rgba(255,255,255,0.85);
       backdrop-filter: blur(10px);
@@ -18,86 +23,33 @@
       padding: 2rem;
       box-shadow: 0 20px 25px rgba(0,0,0,0.05);
     }
+    .option-selected {
+      border: 2px solid #0047AB;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0,71,171, 0.6);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(0,71,171, 0);
+      }
+    }
   </style>
 </head>
 <body class="text-gray-900 bg-white">
-
-  <!-- Firebase Auth Protection -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
-      authDomain: "izzy-auth.firebaseapp.com",
-      projectId: "izzy-auth",
-      storageBucket: "izzy-auth.appspot.com",
-      messagingSenderId: "573135779043",
-      appId: "1:573135779043:web:f6c59473f9956c917041d6"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        document.getElementById("authModal").classList.remove("hidden");
-      }
-    });
-
-    window.logout = () => signOut(auth).then(() => location.reload());
-
-    window.continueWithGoogle = () => {
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider)
-        .then(() => location.reload())
-        .catch(err => alert(err.message));
-    };
-
-    window.authEmail = async (mode) => {
-      const email = document.getElementById("emailInput").value;
-      const password = document.getElementById("passwordInput").value;
-      const msg = document.getElementById("authMessage");
-      msg.textContent = "";
-      try {
-        if (mode === 'register') {
-          const cred = await createUserWithEmailAndPassword(auth, email, password);
-          await sendEmailVerification(cred.user);
-          msg.textContent = "Verification email sent!";
-        } else {
-          await signInWithEmailAndPassword(auth, email, password);
-          location.reload();
-        }
-      } catch (err) {
-        msg.textContent = err.message;
-      }
-    };
-  </script>
-
-  <!-- Auth Modal -->
-  <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white p-6 rounded-xl max-w-sm w-full text-center animate-fade-in">
-      <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Welcome to IZZY</h2>
-      <button onclick="continueWithGoogle()" class="flex items-center justify-center w-full bg-white border rounded-md px-4 py-2 shadow hover:bg-gray-100 mb-4">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2"> Continue with Google
-      </button>
-      <input type="email" id="emailInput" placeholder="Email" class="w-full px-3 py-2 border mb-2 rounded-md">
-      <input type="password" id="passwordInput" placeholder="Password" class="w-full px-3 py-2 border mb-2 rounded-md">
-      <button onclick="authEmail('login')" class="w-full bg-blue-600 text-white py-2 rounded-md mb-2 hover:bg-blue-700">Login</button>
-      <button onclick="authEmail('register')" class="w-full border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-50">Register</button>
-      <p id="authMessage" class="text-sm text-red-500 mt-2"></p>
-    </div>
-  </div>
 
   <!-- Navigation -->
   <nav class="w-full flex justify-center items-center space-x-10 px-6 py-4 bg-white shadow-md fixed top-0 left-0 z-50">
     <a href="#about" class="text-[#0047AB] font-semibold hover:underline">About</a>
     <a href="#practice" class="text-[#0047AB] font-semibold hover:underline">Practice</a>
+    <button onclick="openShareModal()" class="text-[#0047AB] font-semibold hover:underline">Share</button>
     <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
-    <button onclick="logout()" class="ml-auto text-red-500 font-semibold hover:underline">Logout</button>
   </nav>
 
   <div class="pt-32 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
+
+    <!-- Headline -->
     <h1 class="text-6xl md:text-7xl font-extrabold text-[#0047AB] text-center mb-4 uppercase">
       THE WORLD'S FIRST<br>AI-AVATAR FOR REAL LIFE
     </h1>
@@ -106,11 +58,13 @@
       NEVER BE AFRAID TO APPROACH A WOMAN AGAIN!<br>TRY IT FOR FREE
     </p>
 
+    <!-- Avatar -->
     <iframe id="avatarFrame" class="w-full max-w-xl h-[420px] rounded-2xl shadow-xl mb-6 border border-blue-100"
       allow="microphone; autoplay"
       src="https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy">
     </iframe>
 
+    <!-- Prompt Input -->
     <div id="practice" class="glass max-w-xl w-full mx-auto text-center">
       <label for="userInput" class="block text-lg font-semibold mb-2">Say something to IZZY:</label>
       <input type="text" id="userInput" maxlength="400" placeholder="Type your question here... (max 50 words)" class="w-full px-4 py-3 border rounded-lg mb-2" />
@@ -119,6 +73,7 @@
       <button onclick="restartConversation()" id="restartBtn" class="mt-3 hidden bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300">Restart Conversation</button>
     </div>
 
+    <!-- About Section -->
     <div id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800">
       <h2 class="text-3xl font-bold text-[#0047AB] mb-2">IZZY WAS BUILT FOR YOU!</h2>
       <p class="text-lg italic font-bold text-[#0047AB] mb-4">No More Texting. No More Hiding Behind a Screen.</p>
@@ -131,6 +86,7 @@
         So, stay tuned and help us help more men to gain real confidence with women!
       </p>
     </div>
+
   </div>
 
   <script>
@@ -190,5 +146,6 @@
       recognition.start();
     }
   </script>
+
 </body>
 </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | IZZY</title>
+</head>
+<body>
+  <h2>Sign Up</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="register()">Register</button>
+  <p id="message"></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => window.location.href = "index.html")
+        .catch((error) => {
+          document.getElementById("message").innerText = error.message;
+        });
+    }
+
+    window.register = register;
+  </script>
+</body>
+</html>

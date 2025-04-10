@@ -23,7 +23,20 @@
       padding: 2rem;
       box-shadow: 0 20px 25px rgba(0,0,0,0.05);
     }
+    .option-selected {
+      border: 2px solid #0047AB;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0,71,171, 0.6);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(0,71,171, 0);
+      }
+    }
   </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="text-gray-900 bg-white">
 
@@ -31,22 +44,20 @@
   <nav class="w-full flex justify-center items-center space-x-10 px-6 py-4 bg-white shadow-md fixed top-0 left-0 z-50">
     <a href="#about" class="text-[#0047AB] font-semibold hover:underline">About</a>
     <a href="#practice" class="text-[#0047AB] font-semibold hover:underline">Practice</a>
-    <a href="#share" class="text-[#0047AB] font-semibold hover:underline">Share</a>
+    <button onclick="openShareModal()" class="text-[#0047AB] font-semibold hover:underline">Share</button>
     <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
   </nav>
 
-  <div class="pt-28 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
+  <div class="pt-32 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
 
     <!-- Headline -->
-    <h1 class="text-6xl md:text-8xl font-extrabold text-[#0047AB] text-center mb-4">
-      <span class="pop pop-delay-1">We</span>
-      <span class="pop pop-delay-2">Don't</span>
-      <span class="pop pop-delay-3">Text.</span><br>
-      <span class="pop pop-delay-4">We</span>
-      <span class="pop pop-delay-5">Talk.</span>
+    <h1 class="text-6xl md:text-7xl font-extrabold text-[#0047AB] text-center mb-4 uppercase">
+      THE WORLD'S FIRST<br>AI-AVATAR FOR REAL LIFE
     </h1>
 
-    <p class="text-xl text-black text-center mb-6">Never be afraid to approach a woman again!<br>Start A Chat Now!</p>
+    <p class="text-lg font-semibold text-center text-black uppercase mb-6">
+      NEVER BE AFRAID TO APPROACH A WOMAN AGAIN!<br>TRY IT FOR FREE
+    </p>
 
     <!-- Avatar -->
     <iframe id="avatarFrame" class="w-full max-w-xl h-[420px] rounded-2xl shadow-xl mb-6 border border-blue-100"
@@ -63,49 +74,50 @@
       <button onclick="restartConversation()" id="restartBtn" class="mt-3 hidden bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300">Restart Conversation</button>
     </div>
 
+    <!-- Share Modal -->
+    <div id="shareModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+      <div class="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full text-center">
+        <h2 class="text-3xl font-bold text-[#0047AB] mb-4">Share IZZY</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm md:text-base">
+          <div class="p-4 border rounded-lg cursor-pointer" onclick="selectShareOption(this)">
+            <p class="font-bold">Share with one friend</p>
+            <p>Get 5 free prompts</p>
+          </div>
+          <div class="p-4 border rounded-lg cursor-pointer option-selected" onclick="selectShareOption(this)">
+            <p class="font-bold">Share with two friends</p>
+            <p>Get 15 free prompts</p>
+          </div>
+          <div class="p-4 border rounded-lg cursor-pointer" onclick="selectShareOption(this)">
+            <p class="font-bold">Share with three friends</p>
+            <p>Get 20 free prompts</p>
+          </div>
+        </div>
+        <div class="mt-4 flex justify-center gap-6 text-lg">
+          <a href="https://wa.me/?text=Try%20IZZY%20AI%20Avatar!%20https://izzy-auth.web.app" target="_blank" class="text-[#0047AB] font-semibold hover:underline flex items-center gap-1"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+          <a href="https://www.instagram.com/direct/new/" target="_blank" class="text-[#0047AB] font-semibold hover:underline flex items-center gap-1"><i class="bi bi-instagram"></i> Instagram</a>
+          <a href="mailto:?subject=Try%20IZZY!&body=Try%20IZZY%20AI%20Avatar!%20https://izzy-auth.web.app" class="text-[#0047AB] font-semibold hover:underline flex items-center gap-1"><i class="bi bi-envelope"></i> Email</a>
+          <a href="https://x.com/share?text=Try%20IZZY%20AI%20Avatar!%20https://izzy-auth.web.app" target="_blank" class="text-[#0047AB] font-semibold hover:underline flex items-center gap-1"><i class="bi bi-twitter-x"></i> X</a>
+        </div>
+        <button onclick="closeShareModal()" class="mt-6 text-sm text-gray-500 hover:underline">Close</button>
+      </div>
+    </div>
+
     <!-- About Section -->
     <div id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800">
-      <h2 class="text-5xl font-bold text-[#0047AB] mb-4">About</h2>
-      <p class="text-lg leading-relaxed mb-4">
-        <strong>IZZY Is Here For You!</strong><br>
+      <h2 class="text-3xl font-bold text-[#0047AB] mb-4">About – IZZY Is Here For You!</h2>
+      <p class="mt-6 text-lg leading-relaxed">
         No more texting, no more hiding behind a screen.<br>
         IZZY will help you increase your chances of approaching women in real life!
       </p>
-      <p class="text-lg leading-relaxed mb-4">
-        From years of experience, friends who sought bits of advice, and the rise of social media,<br>
-        we noticed a mighty gap between texting and the real world.<br>
+      <p class="mt-6 text-lg leading-relaxed">
+        From years of experience, friends who sought bits of advice, and the rise of social media, we noticed a mighty gap between texting and the real world.<br>
         That is why IZZY is not a dating app, but rather a personal coach – one might say.
       </p>
-      <p class="text-lg leading-relaxed">
+      <p class="mt-6 text-lg leading-relaxed">
         <strong>Our full version will include full personalization:</strong><br>
         You will be able to personalize IZZY according to the actual girl you like to approach.<br>
         So, stay tuned and help us help more men to gain real confidence with women!
       </p>
-    </div>
-
-    <!-- Share Section -->
-    <div id="share" class="max-w-xl mt-20 px-6 text-center">
-      <h3 class="text-3xl font-bold mb-2 text-[#0047AB]">Share IZZY</h3>
-      <p class="mb-4 text-gray-700">
-        Share with one friend – get 5 free prompts.<br>
-        Share with two friends – get 15 free prompts.<br>
-        Share with three friends – get 20 free prompts.
-      </p>
-      <div class="flex justify-center gap-4">
-        <a href="#" class="text-[#0047AB] hover:underline">WhatsApp</a>
-        <a href="#" class="text-[#0047AB] hover:underline">Instagram</a>
-        <a href="#" class="text-[#0047AB] hover:underline">Email</a>
-      </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="subscribeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-      <div class="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center">
-        <h2 class="text-2xl font-semibold text-[#0047AB] mb-4">You had finished your free version</h2>
-        <p class="text-gray-700 mb-6">Join IZZY to practice with unlimited prompts!</p>
-        <a href="subscribe.html" class="bg-[#0047AB] text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition">Subscribe Now</a>
-        <button onclick="closeModal()" class="block mt-4 text-sm text-gray-500 hover:underline">Close</button>
-      </div>
     </div>
 
   </div>
@@ -136,7 +148,6 @@
       }
 
       document.getElementById("restartBtn").classList.remove("hidden");
-
       const frame = document.getElementById('avatarFrame');
       frame.src = frame.src;
     }
@@ -150,6 +161,20 @@
 
     function closeModal() {
       document.getElementById("subscribeModal").classList.add("hidden");
+    }
+
+    function openShareModal() {
+      document.getElementById("shareModal").classList.remove("hidden");
+    }
+
+    function closeShareModal() {
+      document.getElementById("shareModal").classList.add("hidden");
+    }
+
+    function selectShareOption(element) {
+      const options = document.querySelectorAll('#shareModal .grid > div');
+      options.forEach(el => el.classList.remove('option-selected'));
+      element.classList.add('option-selected');
     }
 
     function startDictation() {

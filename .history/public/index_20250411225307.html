@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IZZY – AI Avatar for Real Conversations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Basic Reset & Body Styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+  /* Make modal background feel unclickable */
+  #authModal {
+    cursor: not-allowed;
+  }
+
+  /* Optional: allow normal cursor inside the modal */
+  #authModal .registration-card {
+    cursor: default;
+  }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    @keyframes dropIn {
+      0% { transform: translateY(-80px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    
+    .pop { 
+      display: inline-block; 
+      animation: dropIn 0.6s ease-out forwards; 
+      transform: translateY(-80px); 
+      opacity: 0; 
+    }
+    
+    .glass {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 20px 25px rgba(0,0,0,0.05);
+    }
+
+    /* Registration Modal Styling */
+    .blur-background {
+      filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .registration-card {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Form Element Styling */
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85em;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #606770;
+    }
+
+    .form-group input[type="tel"],
+    .form-group input[type="number"],
+    .form-group input[type="text"],
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ccd0d5;
+      border-radius: 8px;
+      font-size: 1em;
+      background-color: #f5f6f7;
+      color: #1c1e21;
+    }
+
+    /* Wrapper for custom select arrow */
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 35px;
+      background-color: #f5f6f7;
+      cursor: pointer;
+    }
+
+    .select-wrapper::after {
+      content: '\f078';
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: #606770;
+      pointer-events: none;
+      font-size: 0.8em;
+    }
+
+    /* Button Styling */
+    .auth-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background-color: #e60023;
+      color: #ffffff;
+      font-size: 1.05em;
+      padding: 14px 15px;
+    }
+
+    .btn-primary:hover {
+      background-color: #cc001f;
+    }
+
+    .btn-primary:disabled {
+      background-color: #f5627b;
+      cursor: wait;
+    }
+
+    .btn-secondary {
+      background-color: #ffffff;
+      color: #1c1e21;
+      border: 1px solid #ccd0d5;
+      text-align: center;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f5f6f7;
+    }
+
+    .btn-secondary i {
+      font-size: 1.2em;
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .btn-secondary span {
+      flex-grow: 1;
+      text-align: center;
+      margin-left: -30px;
+      padding-right: 0;
+    }
+
+    /* Separator Styling */
+    .separator {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #8a8d91;
+      margin: 25px 0;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #ccd0d5;
+    }
+
+    .separator span {
+      padding: 0 10px;
+    }
+
+    /* Status Messages */
+    .hidden {
+      display: none;
+    }
+
+    #error-message {
+      color: red;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 0.9em;
+      min-height: 1.2em;
+      text-align: center;
+    }
+
+    #verification-message {
+      margin-bottom: 15px;
+      font-size: 0.95em;
+      color: #333;
+      text-align: center;
+    }
+
+    /* Verification Section Styles */
+    #verification-code-section h2 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: #1c1e21;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="text-gray-900 bg-white">
+  <!-- Authentication Modal -->
+  <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="registration-card">
+      <!-- Initial Registration View -->
+      <div id="initial-view">
+        <h1 class="text-2xl font-bold text-[#0047AB] mb-4">Welcome to IZZY</h1>
+
+        <!-- Phone Number Form -->
+        <form id="phone-form">
+          <div class="form-group">
+            <label for="country-region">Country/region</label>
+            <div class="select-wrapper">
+              <select id="country-region" name="country-region">
+                <option value="+972" selected>Israel (+972)</option>
+                <option value="+1">United States (+1)</option>
+                <option value="+44">United Kingdom (+44)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone-number">Phone number</label>
+            <input type="tel" id="phone-number" name="phone-number" placeholder="Phone number">
+          </div>
+
+          <button type="submit" id="continue-phone-btn" class="auth-btn btn-primary">Continue</button>
+        </form>
+
+        <!-- Social Logins Section -->
+        <div class="separator">
+          <span>or</span>
+        </div>
+
+        <div class="social-logins">
+          <button type="button" id="google-signin-btn" class="auth-btn btn-secondary">
+            <i class="fab fa-google"></i>
+            <span>Continue with Google</span>
+          </button>
+          <button type="button" id="apple-signin-btn" class="auth-btn btn-secondary">
+            <i class="fab fa-apple"></i>
+            <span>Continue with Apple</span>
+          </button>
+          <button type="button" id="email-signin-btn" class="auth-btn btn-secondary">
+            <i class="fas fa-envelope"></i>
+            <span>Continue with email</span>
+          </button>
+          <button type="button" id="facebook-signin-btn" class="auth-btn btn-secondary">
+            <i class="fab fa-facebook"></i>
+            <span>Continue with Facebook</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Verification Code Section -->
+      <div id="verification-code-section" class="hidden">
+        <h2>Enter Verification Code</h2>
+        <p id="verification-message">Please check your SMS for the verification code.</p>
+        <form id="verification-form">
+          <div class="form-group">
+            <label for="verification-code">Verification Code</label>
+            <input type="number" id="verification-code" name="verification-code" placeholder="Enter code">
+          </div>
+          <button type="submit" id="verify-code-btn" class="auth-btn btn-primary">Verify Code</button>
+        </form>
+      </div>
+
+      <div id="email-form-section" class="hidden">
+        <h2>Sign in with Email</h2>
+        <form id="email-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Your email address">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Your password">
+          </div>
+          <button type="submit" id="signin-email-btn" class="auth-btn btn-primary">Sign In</button>
+<button type="button" id="register-email-btn" class="auth-btn btn-secondary">Register</button>
+</form>
+</div>
+
+<p class="text-sm text-gray-600 mt-4">You must register or sign in to begin using IZZY.</p>
+
+<div id="error-message"></div>
+<div id="recaptcha-container"></div>
+
+      
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="w-full flex justify-center items-center space-x-10 px-6 py-4 bg-white shadow-md fixed top-0 left-0 z-50">
+    <a href="#about" class="text-[#0047AB] font-semibold hover:underline">About</a>
+    <a href="#practice" class="text-[#0047AB] font-semibold hover:underline">Practice</a>
+    <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
+    <button id="authButton" onclick="openAuthModal()" class="ml-auto text-[#0047AB] font-semibold hover:underline">Login</button>
+    <button id="logoutButton" onclick="logout()" class="ml-auto text-red-500 font-semibold hover:underline hidden">Logout</button>
+    <a href="share.html" class="text-[#0047AB] font-semibold hover:underline">Share</a>
+  </nav>
+
+  <div id="mainContent" class="pt-32 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
+    <h1 class="text-6xl md:text-7xl font-extrabold text-[#0047AB] text-center mb-4 uppercase">
+      THE WORLD'S FIRST<br>AI-AVATAR FOR REAL LIFE
+    </h1>
+
+    <p class="text-lg font-semibold text-center text-black uppercase mb-6">
+      NEVER BE AFRAID TO APPROACH A WOMAN AGAIN!<br>TRY IT FOR FREE
+    </p>
+
+    <iframe id="avatarFrame" class="w-full max-w-xl h-[420px] rounded-2xl shadow-xl mb-6 border border-blue-100"
+      allow="microphone; autoplay"
+      src="https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy">
+    </iframe>
+
+    <div id="practice" class="glass max-w-xl w-full mx-auto text-center">
+      <label for="userInput" class="block text-lg font-semibold mb-2">Say something to IZZY:</label>
+      <input type="text" id="userInput" maxlength="400" placeholder="Type your question here... (max 50 words)" class="w-full px-4 py-3 border rounded-lg mb-2" />
+      <button onclick="startDictation()" class="text-sm text-[#0047AB] hover:underline mb-3">🎤 Speak to IZZY</button><br>
+      <button onclick="handlePrompt()" class="bg-[#0047AB] text-white px-6 py-3 rounded-xl shadow hover:bg-blue-800">Send</button>
+      <button onclick="restartConversation()" id="restartBtn" class="mt-3 hidden bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300">Restart Conversation</button>
+    </div>
+
+    <div id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800">
+      <h2 class="text-3xl font-bold text-[#0047AB] mb-2">IZZY WAS BUILT FOR YOU!</h2>
+      <p class="text-lg italic font-bold text-[#0047AB] mb-4">No More Texting. No More Hiding Behind a Screen.</p>
+      <p class="mt-6 text-lg leading-relaxed">
+        IZZY is not a dating app, but rather a personal coach – one might say.
+      </p>
+      <p class="mt-6 text-lg leading-relaxed">
+        <strong>Our full version will include full personalization:</strong><br>
+        You will be able to personalize IZZY according to the actual girl you like to approach.<br>
+        So, stay tuned and help us help more men to gain real confidence with women!
+      </p>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Global Variables
+    let confirmationResult = null;
+    window.recaptchaVerifier = null;
+
+    // DOM References
+    const authModal = document.getElementById('authModal');
+    const mainContent = document.getElementById('mainContent');
+    const initialView = document.getElementById('initial-view');
+    const verificationCodeSection = document.getElementById('verification-code-section');
+    const emailFormSection = document.getElementById('email-form-section');
+    const errorMessageDiv = document.getElementById('error-message');
+    const authButton = document.getElementById('authButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const recaptchaContainer = document.getElementById('recaptcha-container');
+
+    // Check authentication state and update UI
+    auth.onAuthStateChanged(function(user) {
+  if (user) {
+    // ✅ User is signed in
+    authButton.classList.add('hidden');
+    logoutButton.classList.remove('hidden');
+    authModal.classList.add('hidden');
+    mainContent.classList.remove('blur-background');
+  } else {
+    // ❌ User is NOT signed in – force open registration
+    openAuthModal(); // This will keep showing the modal until the user signs in
+  }
+});
+
+    // Auth Modal Functions
+    function openAuthModal() {
+      authModal.classList.remove('hidden');
+      mainContent.classList.add('blur-background');
+      resetAuthForm();
+      setupRecaptcha();
+    }
+
+    function closeAuthModal() {
+      authModal.classList.add('hidden');
+      mainContent.classList.remove('blur-background');
+    }
+
+    function resetAuthForm() {
+      initialView.classList.remove('hidden');
+      verificationCodeSection.classList.add('hidden');
+      emailFormSection.classList.add('hidden');
+      clearError();
+
+      // Reset form fields
+      document.getElementById('phone-number').value = '';
+      if (document.getElementById('verification-code')) {
+        document.getElementById('verification-code').value = '';
+      }
+      if (document.getElementById('email')) {
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+      }
+    }
+
+    // Show/Hide UI sections
+    function showInitialView() {
+      initialView.classList.remove('hidden');
+      verificationCodeSection.classList.add('hidden');
+      emailFormSection.classList.add('hidden');
+      clearError();
+    }
+
+    function showVerificationView(message) {
+      initialView.classList.add('hidden');
+      verificationCodeSection.classList.remove('hidden');
+      emailFormSection.classList.add('hidden');
+      document.getElementById('verification-message').textContent = message;
+      clearError();
+    }
+
+    function showEmailFormView() {
+      initialView.classList.add('hidden');
+      verificationCodeSection.classList.add('hidden');
+      emailFormSection.classList.remove('hidden');
+      clearError();
+    }
+
+    // Error handling
+    function showError(message) {
+      errorMessageDiv.textContent = message;
+      errorMessageDiv.classList.remove('hidden');
+    }
+
+    function clearError() {
+      errorMessageDiv.textContent = '';
+      errorMessageDiv.classList.add('hidden');
+    }
+
+    // Setup reCAPTCHA
+    function setupRecaptcha() {
+      if (!window.recaptchaVerifier || window.recaptchaVerifier.container.innerHTML === '') {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
+          'size': 'invisible',
+          'callback': (response) => {},
+          'expired-callback': () => {
+            showError("reCAPTCHA check expired. Please try submitting again.");
+            resetRecaptcha();
+          }
+        });
+        window.recaptchaVerifier.render().catch(err => {
+          console.error("Recaptcha render error:", err);
+          showError("Could not initialize security check. Please refresh the page.");
+        });
+      }
+    }
+
+    function resetRecaptcha() {
+      if (window.recaptchaVerifier) {
+        recaptchaContainer.innerHTML = '';
+        window.recaptchaVerifier = null;
+        setupRecaptcha();
+      } else {
+        setupRecaptcha();
+      }
+    }
+
+    // Phone Authentication
+    document.getElementById('phone-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearError();
+
+      const countryCode = document.getElementById('country-region').value;
+      const localPhoneNumber = document.getElementById('phone-number').value.trim();
+
+      if (!localPhoneNumber) {
+        showError("Please enter your phone number.");
+        return;
+      }
+
+      const formattedPhoneNumber = localPhoneNumber.replace(/^0+/, '');
+      const fullPhoneNumber = countryCode + formattedPhoneNumber;
+
+      if (!window.recaptchaVerifier) {
+        setupRecaptcha();
+        setTimeout(() => { proceedWithPhoneAuth(fullPhoneNumber); }, 500);
+        return;
+      }
+      proceedWithPhoneAuth(fullPhoneNumber);
+    });
+
+    function proceedWithPhoneAuth(fullPhoneNumber) {
+      const appVerifier = window.recaptchaVerifier;
+      document.getElementById('continue-phone-btn').disabled = true;
+      document.getElementById('continue-phone-btn').textContent = 'Sending...';
+
+      auth.signInWithPhoneNumber(fullPhoneNumber, appVerifier)
+        .then((result) => {
+          confirmationResult = result;
+          showVerificationView(`Please check your SMS sent to ${fullPhoneNumber} for the verification code.`);
+        })
+        .catch((error) => {
+          showError(`Error sending verification code: ${error.message}`);
+          resetRecaptcha();
+        })
+        .finally(() => {
+          document.getElementById('continue-phone-btn').disabled = false;
+          document.getElementById('continue-phone-btn').textContent = 'Continue';
+        });
+    }
+
+    // Verification Code Submission
+    document.getElementById('verification-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearError();
+
+      const code = document.getElementById('verification-code').value.trim();
+      if (!code || !/^\d{6}$/.test(code)) {
+        showError("Please enter the 6-digit verification code.");
+        return;
+      }
+
+      if (confirmationResult) {
+        document.getElementById('verify-code-btn').disabled = true;
+        document.getElementById('verify-code-btn').textContent = 'Verifying...';
+
+        confirmationResult.confirm(code)
+          .then((result) => {
+            const user = result.user;
+            closeAuthModal();
+            alert(`Welcome, ${user.phoneNumber}!`);
+          })
+          .catch((error) => {
+            if (error.code === 'auth/invalid-verification-code' || error.code === 'auth/code-expired') {
+              showError("Retry - verification code doesn't match or has expired");
+            } else {
+              showError(`Error verifying code: ${error.message}`);
+            }
+            document.getElementById('verification-code').value = '';
+          })
+          .finally(() => {
+            document.getElementById('verify-code-btn').disabled = false;
+            document.getElementById('verify-code-btn').textContent = 'Verify Code';
+          });
+      } else {
+        showError("Verification process not initiated correctly. Please try sending the code again.");
+        showInitialView();
+      }
+    });
+
+    // Email & Password Authentication
+    document.getElementById('email-signin-btn').addEventListener('click', () => {
+      showEmailFormView();
+    });
+
+    document.getElementById('email-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      
+      if (!email || !password) {
+        showError("Please enter both email and password.");
+        return;
+      }
+      
+      document.getElementById('signin-email-btn').disabled = true;
+      document.getElementById('signin-email-btn').textContent = 'Signing in...';
+      
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          closeAuthModal();
+        })
+        .catch((error) => {
+          showError(`Sign-in failed: ${error.message}`);
+        })
+        .finally(() => {
+          document.getElementById('signin-email-btn').disabled = false;
+          document.getElementById('signin-email-btn').textContent = 'Sign In';
+        });
+    });
+    
+    document.getElementById('register-email-btn').addEventListener('click', () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      
+      if (!email || !password) {
+        showError("Please enter both email and password.");
+        return;
+      }
+      
+      if (password.length < 6) {
+        showError("Password must be at least 6 characters long.");
+        return;
+      }
+      
+      document.getElementById('register-email-btn').disabled = true;
+      document.getElementById('register-email-btn').textContent = 'Registering...';
+      
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          closeAuthModal();
+          alert(`Account created successfully! Welcome to IZZY.`);
+        })
+        .catch((error) => {
+          showError(`Registration failed: ${error.message}`);
+        })
+        .finally(() => {
+          document.getElementById('register-email-btn').disabled = false;
+          document.getElementById('register-email-btn').textContent = 'Register';
+        });
+    });
+
+    // Google Sign-in
+    document.getElementById('google-signin-btn').addEventListener('click', () => {
+      clearError();
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          closeAuthModal();
+        })
+        .catch((error) => {
+          showError(`Google Sign-in failed: ${error.message}`);
+        });
+    });
+
+    // Facebook Sign-in
+    document.getElementById('facebook-signin-btn').addEventListener('click', () => {
+      clearError();
+      const provider = new firebase.auth.FacebookAuthProvider();
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          closeAuthModal();
+        })
+        .catch((error) => {
+          showError(`Facebook Sign-in failed: ${error.message}`);
+        });
+    });
+
+    // Apple Sign-in 
+    document.getElementById('apple-signin-btn').addEventListener('click', () => {
+      clearError();
+      const provider = new firebase.auth.OAuthProvider('apple.com');
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          closeAuthModal();
+        })
+        .catch((error) => {
+          showError(`Apple Sign-in failed: ${error.message}`);
+        });
+    });
+
+    // Logout
+    function logout() {
+      auth.signOut().then(() => {
+        // No need to reload the page, the auth state listener will handle UI changes
+      }).catch((error) => {
+        alert(`Error signing out: ${error.message}`);
+      });
+    }
+
+    // IZZY Avatar Functionality
+    function startDictation() {
+      if (window.hasOwnProperty('webkitSpeechRecognition')) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "en-US";
+        recognition.start();
+        
+        recognition.onresult = function(e) {
+          document.getElementById('userInput').value = e.results[0][0].transcript;
+          recognition.stop();
+        };
+        
+        recognition.onerror = function(e) {
+          recognition.stop();
+          alert("Speech recognition error. Please try again or type your message.");
+        };
+      } else {
+        alert("Your browser doesn't support speech recognition. Please type your message instead.");
+      }
+    }
+
+    function handlePrompt() {
+      const userInput = document.getElementById('userInput').value.trim();
+      if (!userInput) {
+        alert("Please type or speak something to IZZY first.");
+        return;
+      }
+      
+      // Here you would typically send the input to your backend or API
+      // For now, we'll just show the restart button as if a conversation started
+      document.getElementById('restartBtn').classList.remove('hidden');
+      
+      // Clear the input field
+      document.getElementById('userInput').value = "";
+      
+      // In a real implementation, you would process the response and update the avatar
+      console.log("Sending to IZZY:", userInput);
+    }
+
+    function restartConversation() {
+      // Reset conversation state
+      document.getElementById('restartBtn').classList.add('hidden');
+      document.getElementById('userInput').value = "";
+      
+      // In a real implementation, you would reset the conversation with the avatar
+      console.log("Conversation restarted");
+    }
+  </script>
+  <script>
+    window.onload = () => {
+  firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+      openAuthModal();
+    }
+  });
+};
+
+// Prevent ESC and outside click from closing the modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === "Escape") {
+    e.preventDefault(); // Stop ESC from closing modal
+  }
+});
+
+document.getElementById('authModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    // Prevent clicking outside the modal content
+    e.stopPropagation();
+  }
+});
+
+  </script>  
+  
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+    }
+    .card {
+      max-width: 400px;
+      width: 100%;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+    }
+    .btn-primary {
+      background-color: #ff4b5c;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: center;
+      width: 100%;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+    .btn-secondary {
+      background-color: #4c8bf5;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: center;
+      width: 100%;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+    .btn-google {
+      background-color: #db4437;
+      color: white;
+    }
+    .btn-facebook {
+      background-color: #3b5998;
+      color: white;
+    }
+    .btn-apple {
+      background-color: #000000;
+      color: white;
+    }
+    .divider {
+      text-align: center;
+      margin: 20px 0;
+      color: #b0b0b0;
+      font-size: 14px;
+    }
+    .divider span {
+      background-color: #fff;
+      padding: 0 10px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="card">
+    <h2 class="text-3xl font-semibold text-center text-[#0047AB] mb-4">Sign Up for IZZY</h2>
+
+    <input type="email" id="email" class="input-field" placeholder="Email" required />
+    <input type="password" id="password" class="input-field" placeholder="Password" required />
+
+    <button class="btn-primary" onclick="register()">Register</button>
+
+    <div class="divider">
+      <span>or</span>
+    </div>
+
+    <button class="btn-secondary btn-google">Continue with Google</button>
+    <button class="btn-secondary btn-apple">Continue with Apple</button>
+    <button class="btn-secondary btn-facebook">Continue with Facebook</button>
+    
+    <div id="phone-section" class="hidden">
+      <label for="phone" class="text-sm text-gray-600">Phone Number</label>
+      <input type="tel" id="phone" class="input-field" placeholder="Phone Number" required />
+      <button class="btn-primary" onclick="verifyPhone()">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      // Perform registration logic (Firebase or your API)
+      console.log('Registered with:', email, password);
+    }
+
+    function verifyPhone() {
+      const phone = document.getElementById("phone").value;
+      console.log('Phone verified:', phone);
+    }
+  </script>
+
+</body>
+</html>

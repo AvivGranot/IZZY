@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #F8F9FA;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: #FF5A5F;
+      color: white;
+      padding: 12px;
+      border-radius: 1rem;
+      width: 100%;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .btn-secondary {
+      background-color: #007A87;
+      color: white;
+      padding: 12px;
+      border-radius: 1rem;
+      width: 100%;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    .divider {
+      margin: 1.5rem 0;
+      text-align: center;
+      font-weight: 500;
+      color: #999;
+    }
+
+    .social-button {
+      background-color: #0073E6;
+      color: white;
+      border-radius: 1rem;
+      padding: 12px;
+      margin-top: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .social-button i {
+      margin-right: 8px;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      background-size: cover;
+    }
+
+    .logo-google {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/49/Google.svg');
+    }
+
+    .logo-apple {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/af/Apple_logo_black.svg');
+    }
+
+    .logo-facebook {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <div class="card">
+    <h2 class="text-2xl font-bold text-[#0047AB] mb-6">Sign Up for IZZY</h2>
+    
+    <!-- Email and Password Form -->
+    <form id="register-form">
+      <input type="email" id="email" placeholder="Email" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <input type="password" id="password" placeholder="Password" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+
+      <button type="submit" class="btn-primary">Register</button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">or</div>
+
+    <!-- Social Logins -->
+    <button class="social-button">
+      <span class="icon logo-google"></span> 
+      <span>Continue with Google</span>
+    </button>
+
+    <button class="social-button">
+      <span class="icon logo-apple"></span> 
+      <span>Continue with Apple</span>
+    </button>
+
+    <button class="social-button">
+      <span class="icon logo-facebook"></span> 
+      <span>Continue with Facebook</span>
+    </button>
+
+    <!-- Phone Number Section -->
+    <form id="phone-form" class="hidden">
+      <input type="tel" id="phone" placeholder="Phone Number" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <button type="submit" class="btn-secondary">Continue</button>
+    </form>
+
+    <!-- Email Verification Section -->
+    <div id="verification-section" class="hidden">
+      <h3 class="text-lg font-semibold text-[#0047AB] mb-4">Verification Code</h3>
+      <input type="text" id="verificationCode" placeholder="Enter Code" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <button id="verify-btn" class="btn-primary">Verify Code</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const registerForm = document.getElementById("register-form");
+  const phoneForm = document.getElementById("phone-form");
+  const verificationSection = document.getElementById("verification-section");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const verifyBtn = document.getElementById("verify-btn");
+
+  // Handle Register Form submission
+  registerForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        // Open phone verification form or show verification section
+        phoneForm.classList.remove("hidden");
+      })
+      .catch((error) => {
+        console.error("Error registering:", error);
+      });
+  });
+
+  // Handle Phone Form submission (you can replace it with actual phone authentication logic)
+  phoneForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    phoneForm.classList.add("hidden");
+    verificationSection.classList.remove("hidden");
+    // Proceed with phone number verification logic
+  });
+
+  // Handle Verify Code
+  verifyBtn.addEventListener("click", function () {
+    const verificationCode = document.getElementById("verificationCode").value;
+    // Add your verification code logic here
+    alert("Verification code received: " + verificationCode);
+    // After success, you can redirect to the main page or show confirmation.
+  });
+</script>
+
+</body>
+</html>

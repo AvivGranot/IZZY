@@ -14,16 +14,6 @@
       padding: 0;
     }
 
-  /* Make modal background feel unclickable */
-  #authModal {
-    cursor: not-allowed;
-  }
-
-  /* Optional: allow normal cursor inside the modal */
-  #authModal .registration-card {
-    cursor: default;
-  }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f0f2f5;
@@ -310,16 +300,16 @@
             <input type="password" id="password" name="password" placeholder="Your password">
           </div>
           <button type="submit" id="signin-email-btn" class="auth-btn btn-primary">Sign In</button>
-<button type="button" id="register-email-btn" class="auth-btn btn-secondary">Register</button>
-</form>
-</div>
+          <button type="button" id="register-email-btn" class="auth-btn btn-secondary">Register</button>
+        </form>
+      </div>
 
-<p class="text-sm text-gray-600 mt-4">You must register or sign in to begin using IZZY.</p>
-
-<div id="error-message"></div>
-<div id="recaptcha-container"></div>
-
+      <div id="error-message"></div>
+      <div id="recaptcha-container"></div>
       
+      <div class="mt-4">
+        <button onclick="closeAuthModal()" class="text-red-500 hover:underline">Close</button>
+      </div>
     </div>
   </div>
 
@@ -758,22 +748,6 @@
     }
   });
 };
-
-// Prevent ESC and outside click from closing the modal
-document.addEventListener('keydown', function(e) {
-  if (e.key === "Escape") {
-    e.preventDefault(); // Stop ESC from closing modal
-  }
-});
-
-document.getElementById('authModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    // Prevent clicking outside the modal content
-    e.stopPropagation();
-  }
-});
-
   </script>  
-  
 </body>
 </html>

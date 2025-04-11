@@ -1,3 +1,5 @@
+/* === Original Styles === */
+
 /* Basic Reset & Body Styling */
 * {
     box-sizing: border-box;
@@ -7,17 +9,20 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5; /* Light grey background like typical app backgrounds */
+    background-color: #f0f2f5; /* Light grey background */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     color: #333;
+    padding: 20px; /* Add padding to body for spacing on small screens */
 }
 
 /* Container to center the card */
 .container {
-    padding: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 /* Registration Card Styling */
@@ -34,7 +39,7 @@ body {
 h1 {
     font-size: 1.8em;
     margin-bottom: 25px;
-    color: #1c1e21; /* Darker text color */
+    color: #1c1e21;
     font-weight: 600;
 }
 
@@ -49,7 +54,7 @@ label {
     font-size: 0.85em;
     font-weight: 600;
     margin-bottom: 6px;
-    color: #606770; /* Slightly muted label color */
+    color: #606770;
 }
 
 input[type="tel"],
@@ -59,7 +64,7 @@ select {
     border: 1px solid #ccd0d5;
     border-radius: 8px;
     font-size: 1em;
-    background-color: #f5f6f7; /* Input background color */
+    background-color: #f5f6f7;
     color: #1c1e21;
 }
 
@@ -95,12 +100,11 @@ select {
     font-size: 0.8em;
 }
 
-
 /* Button Styling */
 .btn {
-    display: flex; /* Use flexbox for icon alignment */
+    display: flex;
     align-items: center;
-    justify-content: center; /* Center content horizontally */
+    justify-content: center;
     width: 100%;
     padding: 12px 15px;
     border-radius: 8px;
@@ -109,27 +113,32 @@ select {
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    margin-bottom: 12px; /* Space between buttons */
+    margin-bottom: 12px;
 }
 
-/* Primary Button (Continue) */
+/* Primary Button (Continue / Verify Code) */
 .btn-primary {
     background-color: #e60023; /* Bright Red */
     color: #ffffff;
     font-size: 1.05em;
-    padding: 14px 15px; /* Slightly larger padding */
+    padding: 14px 15px;
 }
 
 .btn-primary:hover {
     background-color: #cc001f; /* Darker red on hover */
 }
+.btn-primary:disabled { /* Style for disabled button during verification */
+    background-color: #f5627b;
+    cursor: wait;
+}
+
 
 /* Separator Styling */
 .separator {
     display: flex;
     align-items: center;
     text-align: center;
-    color: #8a8d91; /* Grey color for 'or' */
+    color: #8a8d91;
     margin: 25px 0;
     font-size: 0.85em;
     font-weight: 600;
@@ -139,45 +148,108 @@ select {
 .separator::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #ccd0d5; /* Light grey line */
+    border-bottom: 1px solid #ccd0d5;
 }
 
 .separator span {
-    padding: 0 10px; /* Space around 'or' text */
+    padding: 0 10px;
 }
 
 /* Secondary Buttons (Social Logins) */
 .social-logins {
-    margin-top: 10px; /* Align with bottom of separator */
+    margin-top: 10px;
 }
 
 .btn-secondary {
     background-color: #ffffff;
-    color: #1c1e21; /* Dark text */
-    border: 1px solid #ccd0d5; /* Light grey border */
-    text-align: center; /* Center text within button */
+    color: #1c1e21;
+    border: 1px solid #ccd0d5;
+    text-align: center;
 }
 
 .btn-secondary:hover {
-    background-color: #f5f6f7; /* Slight grey background on hover */
+    background-color: #f5f6f7;
 }
 
 .btn-secondary i {
-    font-size: 1.2em; /* Icon size */
-    /* Position icon to the left using flex spacing */
-    margin-right: 10px; /* Space between icon and text */
-    width: 20px; /* Fixed width for alignment */
+    font-size: 1.2em;
+    margin-right: 10px;
+    width: 20px;
     text-align: center;
 }
 
 .btn-secondary span {
-    flex-grow: 1; /* Allow text to take remaining space */
-    text-align: center; /* Ensure text is centered if icon is fixed width */
-    margin-left: -30px; /* Adjust span left margin to compensate icon margin + width for better centering */
-    padding-right: 0; /* Remove padding compensation if not needed */
+    flex-grow: 1;
+    text-align: center;
+    margin-left: -30px; /* Adjust span left margin to compensate icon margin+width */
+    padding-right: 0;
 }
 
 /* Remove margin from the last button */
 .btn:last-child {
     margin-bottom: 0;
+}
+
+
+/* === Styles Added for Verification/Error Elements === */
+
+.hidden {
+    display: none;
+}
+
+#error-message {
+    color: red;
+    margin-top: 15px; /* Increased margin for better spacing */
+    margin-bottom: 5px; /* Add some space below */
+    font-weight: bold;
+    font-size: 0.9em;
+    min-height: 1.2em; /* Ensure space is reserved even when empty */
+    text-align: center; /* Center error text */
+}
+
+#verification-code-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #1c1e21;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+#verification-message {
+    margin-bottom: 20px; /* Increased margin */
+    font-size: 0.95em;
+    color: #333;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Ensure inputs in verification section are styled consistently */
+#verification-code-section input[type="text"],
+#verification-code-section input[type="number"] {
+    box-sizing: border-box; /* Explicitly set box-sizing */
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccd0d5;
+    border-radius: 8px;
+    font-size: 1em;
+    background-color: #f5f6f7;
+    color: #1c1e21;
+    margin-bottom: 20px; /* Space before button */
+    text-align: center; /* Center code input */
+}
+
+#verification-code-section .form-group label {
+    display: block;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #606770;
+    text-align: left; /* Keep label left-aligned */
+}
+
+/* reCAPTCHA container - usually invisible, but good to have a placeholder */
+#recaptcha-container {
+    margin-top: 15px;
+    /* Add styling here if you switch to visible reCAPTCHA */
 }

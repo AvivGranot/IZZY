@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - IZZY</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Add styles for hidden sections and errors */
+        /* מומלץ להעביר סגנונות אלו לקובץ style.css */
+        .hidden {
+            display: none;
+        }
+        #error-message {
+            color: red;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.9em;
+            min-height: 1.2em; /* Ensure space even when empty */
+        }
+        #verification-message {
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            color: #333;
+        }
+         /* Ensure inputs in verification section are full width */
+        #verification-code-section input[type="text"],
+        #verification-code-section input[type="number"] {
+             width: 100%;
+             padding: 12px 15px;
+             border: 1px solid #ccd0d5;
+             border-radius: 8px;
+             font-size: 1em;
+             background-color: #f5f6f7;
+             color: #1c1e21;
+             margin-bottom: 15px; /* Space before button */
+         }
+         #verification-code-section .form-group label {
+            display: block;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #606770;
+            text-align: left;
+         }
+          #verification-code-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #1c1e21;
+            font-weight: 600;
+         }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="registration-card">
+
+            <div id="initial-view">
+                <h1>Welcome to IZZY</h1>
+
+                <form id="phone-form">
+                    <div class="form-group">
+                        <label for="country-region">Country/region</label>
+                        <div class="select-wrapper">
+                            <select id="country-region" name="country-region">
+                                <option value="+972" selected>Israel (+972)</option>
+                                <option value="+1">United States (+1)</option>
+                                <option value="+44">United Kingdom (+44)</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone-number">Phone number</label>
+                        <input type="tel" id="phone-number" name="phone-number" placeholder="Phone number">
+                    </div>
+
+                    <button type="submit" id="continue-phone-btn" class="btn btn-primary">Continue</button>
+                </form>
+
+                <div class="separator">
+                    <span>or</span>
+                </div>
+
+                <div class="social-logins">
+                    <button type="button" id="google-signin-btn" class="btn btn-secondary">
+                        <i class="fab fa-google"></i>
+                        <span>Continue with Google</span>
+                    </button>
+                    <button type="button" id="apple-signin-btn" class="btn btn-secondary">
+                        <i class="fab fa-apple"></i>
+                        <span>Continue with Apple</span>
+                    </button>
+                    <button type="button" id="email-signin-btn" class="btn btn-secondary">
+                        <i class="fas fa-envelope"></i>
+                        <span>Continue with email</span>
+                    </button>
+                    <button type="button" id="facebook-signin-btn" class="btn btn-secondary">
+                        <i class="fab fa-facebook"></i>
+                        <span>Continue with Facebook</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="verification-code-section" class="hidden">
+                <h2>Enter Verification Code</h2>
+                <p id="verification-message">Please check your SMS for the verification code.</p>
+                <form id="verification-form">
+                    <div class="form-group">
+                         <label for="verification-code">Verification Code</label>
+                         <input type="number" id="verification-code" name="verification-code" placeholder="Enter code">
+                    </div>
+                    <button type="submit" id="verify-code-btn" class="btn btn-primary">Verify Code</button>
+                </form>
+            </div>
+
+            <div id="error-message"></div>
+
+            <div id="recaptcha-container"></div>
+
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+    <script>
+        /* --- START Firebase Configuration --- */
+        // TODO: Replace with your app's Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+            authDomain: "Yizzy-auth.firebaseapp.com",
+            projectId: "izzy-auth"
+            storageBucket: "izzy-auth.firebasestorage.app",
+            messagingSenderId: "573135779043",
+            appId: "1:573135779043:web:f6c59473f9956c917041d6"
+        };
+        /* --- END Firebase Configuration --- */
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // --- DOM Elements ---
+        const initialView = document.getElementById('initial-view');
+        const verificationCodeSection = document.getElementById('verification-code-section');
+        const phoneForm = document.getElementById('phone-form');
+        const countryRegionSelect = document.getElementById('country-region');
+        const phoneNumberInput = document.getElementById('phone-number');
+        const continuePhoneBtn = document.getElementById('continue-phone-btn');
+        const googleSigninBtn = document.getElementById('google-signin-btn');
+        const emailSigninBtn = document.getElementById('email-signin-btn');
+        const appleSigninBtn = document.getElementById('apple-signin-btn'); // Kept for display
+        const facebookSigninBtn = document.getElementById('facebook-signin-btn'); // Kept for display
+
+        const verificationForm = document.getElementById('verification-form');
+        const verificationMessage = document.getElementById('verification-message');
+        const verificationCodeInput = document.getElementById('verification-code');
+        const verifyCodeBtn = document.getElementById('verify-code-btn');
+        const errorMessageDiv = document.getElementById('error-message');
+        const recaptchaContainer = document.getElementById('recaptcha-container');
+
+        // --- Global Variables ---
+        let confirmationResult = null; // To store phone auth confirmation
+        window.recaptchaVerifier = null; // To store reCAPTCHA instance
+
+        // --- UI Helper Functions ---
+        function showInitialView() {
+            initialView.classList.remove('hidden');
+            verificationCodeSection.classList.add('hidden');
+            clearError();
+        }
+
+        function showVerificationView(message) {
+            initialView.classList.add('hidden');
+            verificationCodeSection.classList.remove('hidden');
+            verificationMessage.textContent = message;
+             // Make sure verification form is visible if needed
+             verificationForm.classList.remove('hidden');
+            clearError();
+        }
+
+        function showError(message) {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.classList.remove('hidden');
+        }
+
+        function clearError() {
+            errorMessageDiv.textContent = '';
+            errorMessageDiv.classList.add('hidden');
+        }
+
+        // --- Initialize reCAPTCHA ---
+        function setupRecaptcha() {
+           // Only setup if it hasn't been done or needs reset
+           if (!window.recaptchaVerifier || window.recaptchaVerifier.container.innerHTML === '') {
+                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
+                    'size': 'invisible', // Use invisible reCAPTCHA
+                    'callback': (response) => {
+                        // reCAPTCHA solved, allow signInWithPhoneNumber.
+                        // console.log("reCAPTCHA solved");
+                    },
+                    'expired-callback': () => {
+                        // Response expired. Ask user to solve reCAPTCHA again.
+                        showError("reCAPTCHA check expired. Please try submitting again.");
+                        resetRecaptcha(); // Reset reCAPTCHA on expiration
+                    }
+                });
+                // Render only if the container is available and not already rendered
+                if(document.getElementById('recaptcha-container')) {
+                     window.recaptchaVerifier.render().catch(err => {
+                        console.error("Recaptcha render error:", err);
+                        showError("Could not initialize security check. Please refresh the page.");
+                    });
+                }
+           }
+        }
+
+        function resetRecaptcha() {
+            if (window.recaptchaVerifier) {
+                try {
+                    // Attempt to clear the existing widget. For invisible, clearing might be enough.
+                    recaptchaContainer.innerHTML = '';
+                    window.recaptchaVerifier = null; // Nullify to force re-creation
+                    console.log("Recaptcha reset.");
+                    // Re-setup immediately or let the next action trigger it
+                     setupRecaptcha(); // Attempt re-render immediately after reset
+                } catch (error) {
+                    console.error("Error resetting reCAPTCHA", error);
+                }
+            } else {
+                 // If verifier is null, just ensure setup is called
+                 setupRecaptcha();
+            }
+        }
+
+
+        // --- Event Listeners ---
+
+        // Initialize reCAPTCHA on load
+        window.onload = () => {
+            // Delay setup slightly to ensure DOM is fully ready
+             setTimeout(setupRecaptcha, 100);
+             handleEmailLinkSignIn(); // Check if user arrived via email link
+        };
+
+        // Phone Sign-in
+        phoneForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clearError();
+
+            const countryCode = countryRegionSelect.value;
+            const localPhoneNumber = phoneNumberInput.value.trim();
+
+            if (!localPhoneNumber) {
+                showError("Please enter your phone number.");
+                return;
+            }
+
+            // Basic validation - remove leading zeros or formatting if necessary
+            const formattedPhoneNumber = localPhoneNumber.replace(/^0+/, ''); // Remove leading 0s
+            const fullPhoneNumber = countryCode + formattedPhoneNumber;
+
+            // Ensure reCAPTCHA is ready
+             if (!window.recaptchaVerifier) {
+                console.log("Recaptcha not ready, setting up...");
+                setupRecaptcha();
+                 // Add a small delay to allow recaptcha to render if setup was just called
+                 setTimeout(() => { proceedWithPhoneAuth(fullPhoneNumber); }, 500);
+                 return; // Exit for now, will proceed after delay if needed
+             }
+             proceedWithPhoneAuth(fullPhoneNumber); // Proceed if recaptcha is already initialized
+        });
+
+        function proceedWithPhoneAuth(fullPhoneNumber) {
+             const appVerifier = window.recaptchaVerifier;
+             console.log(`Attempting sign in with phone number: ${fullPhoneNumber}`);
+
+            auth.signInWithPhoneNumber(fullPhoneNumber, appVerifier)
+                .then((result) => {
+                    console.log("SMS sent successfully.");
+                    confirmationResult = result; // Store confirmation result
+                    showVerificationView(`Please check your SMS sent to ${fullPhoneNumber} for the verification code.`);
+                })
+                .catch((error) => {
+                    console.error("Error sending SMS:", error);
+                    if (error.code === 'auth/invalid-phone-number') {
+                         showError("Invalid phone number format. Please check the number.");
+                    } else if (error.code === 'auth/too-many-requests') {
+                         showError("Too many requests. Please try again later.");
+                    } else if (error.code === 'auth/captcha-check-failed' || error.message.includes('reCAPTCHA')) {
+                        showError("Security check failed. Please try again.");
+                    }
+                     else {
+                        showError(`Error sending verification code: ${error.message}`);
+                    }
+                    resetRecaptcha(); // Reset reCAPTCHA on error
+                });
+        }
+
+
+        // Verification Code Submission (for Phone Auth)
+        verificationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clearError();
+
+            const code = verificationCodeInput.value.trim();
+            if (!code || !/^\d{6}$/.test(code)) { // Assuming 6 digit codes
+                showError("Please enter the 6-digit verification code.");
+                return;
+            }
+
+            if (confirmationResult) {
+                console.log(`Verifying code: ${code}`);
+                 // Disable button while verifying
+                 verifyCodeBtn.disabled = true;
+                 verifyCodeBtn.textContent = 'Verifying...';
+
+                confirmationResult.confirm(code)
+                    .then((result) => {
+                        // User signed in successfully.
+                        const user = result.user;
+                        console.log("Phone number verified successfully! User:", user);
+                        alert(`Welcome, ${user.phoneNumber}!`); // Replace with actual redirect/UI update
+                        // window.location.href = '/dashboard.html'; // Example redirect
+                        showInitialView(); // Go back to initial view for demo purposes
+                    })
+                    .catch((error) => {
+                        // User couldn't sign in (bad verification code?)
+                        console.error("Error verifying code:", error);
+                        if (error.code === 'auth/invalid-verification-code' || error.code === 'auth/code-expired') {
+                             showError("Retry - verification code doesn't match or has expired");
+                        } else {
+                             showError(`Error verifying code: ${error.message}`);
+                        }
+                        verificationCodeInput.value = ''; // Clear input on error
+                    }).finally(() => {
+                         // Re-enable button
+                         verifyCodeBtn.disabled = false;
+                         verifyCodeBtn.textContent = 'Verify Code';
+                    });
+            } else {
+                showError("Verification process not initiated correctly. Please try sending the code again.");
+                showInitialView(); // Go back if state is lost
+            }
+        });
+
+        // Google Sign-in
+        googleSigninBtn.addEventListener('click', () => {
+            clearError();
+            const provider = new firebase.auth.GoogleAuthProvider();
+            console.log("Attempting Google Sign-in...");
+
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    // const credential = result.credential; // Contains credential info if needed
+                    const user = result.user;
+                    console.log("Google Sign-in successful! User:", user);
+                    alert(`Welcome, ${user.displayName || user.email}!`); // Replace with actual redirect/UI update
+                    // window.location.href = '/dashboard.html'; // Example redirect
+                     showInitialView(); // Go back to initial view for demo purposes
+                }).catch((error) => {
+                    console.error(`Google Sign-in Error (${error.code}): ${error.message}`, error);
+                    if (error.code === 'auth/popup-closed-by-user') {
+                        // Don't show error, user intentionally closed
+                    } else if (error.code === 'auth/account-exists-with-different-credential') {
+                         showError("An account already exists with this email using a different sign-in method.");
+                    }
+                     else {
+                        showError(`Google Sign-in failed: ${error.message}`);
+                    }
+                });
+        });
+
+        // Email Link Sign-in (Passwordless)
+        emailSigninBtn.addEventListener('click', () => {
+            clearError();
+            const email = prompt("Please enter your email address:", window.localStorage.getItem('emailForSignIn') || ''); // Pre-fill if available
+
+            if (!email) return; // User cancelled prompt
+
+             // Basic email validation
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                showError("Please enter a valid email address.");
+                return;
+            }
+
+            const actionCodeSettings = {
+                 url: window.location.href, // Use current URL
+                 handleCodeInApp: true
+            };
+
+            console.log(`Sending sign-in link to: ${email}`);
+             // Disable button temporarily
+             emailSigninBtn.disabled = true;
+
+            auth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .then(() => {
+                    window.localStorage.setItem('emailForSignIn', email);
+                    showVerificationView(`A sign-in link has been sent to ${email}. Please check your inbox (and spam folder!) and click the link to sign in.`);
+                    // Hide the verification form elements as they are not needed for email link
+                    verificationForm.classList.add('hidden');
+                })
+                .catch((error) => {
+                    console.error("Error sending email link:", error);
+                     showError(`Error sending sign-in link: ${error.message}`);
+                }).finally(() => {
+                     // Re-enable button
+                     emailSigninBtn.disabled = false;
+                });
+        });
+
+
+        // --- Handle Email Link Sign-in on Page Load ---
+        function handleEmailLinkSignIn() {
+            if (auth.isSignInWithEmailLink(window.location.href)) {
+                let email = window.localStorage.getItem('emailForSignIn');
+                if (!email) {
+                    // User opened the link on a different device. Ask for email again.
+                    email = window.prompt('It looks like you opened the sign-in link on a different browser or device. Please provide your email again for confirmation:');
+                     if (!email) {
+                         showError("Email address is required to complete sign-in.");
+                         return; // User cancelled prompt
+                     }
+                }
+
+                console.log("Attempting sign-in with email link...");
+                 showVerificationView("Verifying your sign-in link, please wait...");
+                 verificationForm.classList.add('hidden'); // Hide form elements
+
+                auth.signInWithEmailLink(email, window.location.href)
+                    .then((result) => {
+                        window.localStorage.removeItem('emailForSignIn');
+                        console.log("Email link sign-in successful! User:", result.user);
+                         alert(`Welcome, ${result.user.email}!`); // Replace action
+                         // window.location.href = '/dashboard.html';
+
+                         // Clean the URL
+                         if (window.history && window.history.replaceState) {
+                             window.history.replaceState(null, null, window.location.pathname);
+                         }
+                         showInitialView();
+                    })
+                    .catch((error) => {
+                         console.error("Error signing in with email link:", error);
+                         showError(`Error signing in: ${error.message}. The link might be invalid or expired.`);
+                         // Clean the URL even on error if needed
+                          if (window.history && window.history.replaceState) {
+                             window.history.replaceState(null, null, window.location.pathname);
+                         }
+                         showInitialView(); // Go back to allow retry
+                    });
+            }
+        }
+
+        // Placeholder listeners for non-functional buttons
+        appleSigninBtn.addEventListener('click', () => {
+            clearError();
+            alert('Apple Sign-in requires additional setup and an Apple Developer account.');
+        });
+
+        facebookSigninBtn.addEventListener('click', () => {
+             clearError();
+             alert('Facebook Sign-in requires additional setup in Firebase and Facebook Developers.');
+        });
+
+    </script>
+
+</body>
+</html>

@@ -744,12 +744,8 @@
   </script>
   <script>
     window.onload = () => {
-  firebase.auth().onAuthStateChanged(user => {
-    if (!user) {
       openAuthModal();
-    }
-  });
-};
+    };
   </script>  
 </body>
 </html>

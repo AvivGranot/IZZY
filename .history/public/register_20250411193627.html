@@ -88,32 +88,21 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-// הרשמה עם אימייל וסיסמא
-function register() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const message = document.getElementById("message");
+    // הרשמה עם אימייל וסיסמא
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
 
-  // נוודא שהשדות לא ריקים
-  if (!email || !password) {
-    message.textContent = "Please fill in both email and password.";
-    message.style.color = 'red';
-    return;
-  }
-
-  // יצירת משתמש חדש ב-Firebase
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      // שליחת קוד אימות
-      sendVerificationCode();
-      message.textContent = "Check your email inbox for our unique verification code.";
-      message.style.color = 'green';  // הצגת הודעה חיובית
-    })
-    .catch((error) => {
-      message.textContent = error.message;  // הצגת שגיאה אם יש
-      message.style.color = 'red';
-    });
-}
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          sendVerificationCode();
+          message.textContent = "Check your email inbox for our unique verification code";
+        })
+        .catch((error) => {
+          message.textContent = error.message;
+        });
+    }
 
     // שליחת קוד אימות
     function sendVerificationCode() {

@@ -17,17 +17,16 @@
       border-radius: 1rem;
       padding: 2rem;
       box-shadow: 0 20px 25px rgba(0,0,0,0.05);
-    }
 
-    /* Add this style for blur effect on home page */
-    .blur-background {
-      filter: blur(8px); /* You can change the blur intensity here */
-      pointer-events: none; /* Disable interaction with background elements */
-    }
+  /* Add this style for blur effect on home page */
+  .blur-background {
+    filter: blur(8px); /* You can change the blur intensity here */
+    pointer-events: none; /* Disable interaction with background elements */
+  }
 
-    /* This style keeps the modal content in the front */
-    .popout-modal {
-      z-index: 999; /* Ensure it's in front of everything else */
+  /* This style keeps the modal content in the front */
+  .popout-modal {
+    z-index: 999; /* Ensure it's in front of everything else */
     }
   </style>
 </head>
@@ -82,20 +81,37 @@
       } catch (err) {
         msg.textContent = err.message;
       }
+
+      <!-- Registration Form (Popout Modal) -->
+<div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden popout-modal">
+  <div class="bg-white p-6 rounded-xl max-w-sm w-full text-center animate-fade-in">
+    <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Sign Up for IZZY</h2>
+    <input type="email" id="emailInput" placeholder="Email" class="w-full px-3 py-2 border mb-2 rounded-md">
+    <input type="password" id="passwordInput" placeholder="Password" class="w-full px-3 py-2 border mb-2 rounded-md">
+    <button onclick="registerUser()" class="w-full bg-blue-600 text-white py-2 rounded-md mb-2 hover:bg-blue-700">Register</button>
+    <h3 class="text-lg font-semibold mb-2">Verification Code</h3>
+    <input type="text" id="verificationCode" placeholder="Enter Code" class="w-full px-3 py-2 border mb-2 rounded-md">
+    <button onclick="verifyCode()" class="w-full bg-green-600 text-white py-2 rounded-md mb-4 hover:bg-green-700">Verify Code</button>
+    <button onclick="closeModal()" class="text-red-500">Close</button>
+  </div>
+</div>
+
+      
     };
   </script>
 
-  <!-- Registration Form (Popout Modal) -->
-  <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden popout-modal">
+  <!-- Auth Modal -->
+  <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-xl max-w-sm w-full text-center animate-fade-in">
-      <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Sign Up for IZZY</h2>
+      <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Welcome to IZZY</h2>
+      <button onclick="continueWithGoogle()" class="flex items-center justify-center w-full bg-white border rounded-md px-4 py-2 shadow hover:bg-gray-100 mb-4">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2"> Continue with Google
+      </button>
       <input type="email" id="emailInput" placeholder="Email" class="w-full px-3 py-2 border mb-2 rounded-md">
       <input type="password" id="passwordInput" placeholder="Password" class="w-full px-3 py-2 border mb-2 rounded-md">
-      <button onclick="registerUser()" class="w-full bg-blue-600 text-white py-2 rounded-md mb-2 hover:bg-blue-700">Register</button>
-      <h3 class="text-lg font-semibold mb-2">Verification Code</h3>
-      <input type="text" id="verificationCode" placeholder="Enter Code" class="w-full px-3 py-2 border mb-2 rounded-md">
-      <button onclick="verifyCode()" class="w-full bg-green-600 text-white py-2 rounded-md mb-4 hover:bg-green-700">Verify Code</button>
-      <button onclick="closeModal()" class="text-red-500">Close</button>
+      <button onclick="authEmail('login')" class="w-full bg-blue-600 text-white py-2 rounded-md mb-2 hover:bg-blue-700">Login</button>
+      <button onclick="authEmail('register')" class="w-full border border-blue-600 text-blue-600 py-2 rounded-md hover:bg-blue-50">Register</button>
+      <p id="authMessage" class="text-sm text-red-500 mt-2"></p>
     </div>
   </div>
 
@@ -108,7 +124,7 @@
     <a href="share.html" class="text-[#0047AB] font-semibold hover:underline">Share</a> <!-- Added Share link -->
   </nav>
 
-  <div id="mainContent" class="pt-32 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
+  <div class="pt-32 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
     <h1 class="text-6xl md:text-7xl font-extrabold text-[#0047AB] text-center mb-4 uppercase">
       THE WORLD'S FIRST<br>AI-AVATAR FOR REAL LIFE
     </h1>
@@ -145,32 +161,88 @@
   </div>
 
   <script>
-    // Modal interaction functions
-    function openModal() {
-      // Show the registration modal
-      document.getElementById("authModal").classList.remove("hidden");
-      // Apply the blur effect to the main content
-      document.getElementById("mainContent").classList.add("blur-background");
+    let promptCounter = parseInt(localStorage.getItem("promptCounter")) || 0;
+    const maxFreePrompts = 3;
+
+    function countWords(str) {
+      return str.trim().split(/\s+/).length;
     }
 
-    function closeModal() {
-      // Close the registration modal
-      document.getElementById("authModal").classList.add("hidden");
-      // Remove the blur effect from the main content
-      document.getElementById("mainContent").classList.remove("blur-background");
+    function handlePrompt() {
+      const input = document.getElementById("userInput");
+      const text = input.value.trim();
+      if (!text || countWords(text) > 50) {
+        alert("Please limit your prompt to 50 words.");
+        return;
+      }
+
+      promptCounter++;
+      localStorage.setItem("promptCounter", promptCounter);
+      input.value = "";
+
+      if (promptCounter >= maxFreePrompts) {
+        alert("Free prompt limit reached. Please subscribe to continue.");
+        return;
+      }
+
+      document.getElementById("restartBtn").classList.remove("hidden");
+      const frame = document.getElementById('avatarFrame');
+      frame.src = frame.src;
     }
 
-    function registerUser() {
-      const email = document.getElementById("emailInput").value;
-      const password = document.getElementById("passwordInput").value;
-      // Your Firebase registration logic goes here
+    function restartConversation() {
+      const frame = document.getElementById('avatarFrame');
+      frame.src = frame.src;
+      document.getElementById("userInput").value = "";
+      document.getElementById("restartBtn").classList.add("hidden");
     }
 
-    function verifyCode() {
-      const verificationCode = document.getElementById("verificationCode").value;
-      // Your verification logic goes here
+    function startDictation() {
+      if (!('webkitSpeechRecognition' in window)) {
+        alert("Your browser doesn't support speech recognition. Try Chrome.");
+        return;
+      }
+
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById("userInput").value = transcript;
+        handlePrompt();
+      };
+
+      recognition.start();
     }
+
+  function openModal() {
+    // Show the registration modal
+    document.getElementById("authModal").classList.remove("hidden");
+    // Apply the blur effect to the main content
+    document.getElementById("mainContent").classList.add("blur-background");
+  }
+
+  function closeModal() {
+    // Close the registration modal
+    document.getElementById("authModal").classList.add("hidden");
+    // Remove the blur effect from the main content
+    document.getElementById("mainContent").classList.remove("blur-background");
+  }
+
+  function registerUser() {
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("passwordInput").value;
+    // Your Firebase registration logic goes here
+  }
+
+  function verifyCode() {
+    const verificationCode = document.getElementById("verificationCode").value;
+    // Your verification logic goes here
+  }
+</script>
+
   </script>
-
 </body>
 </html>

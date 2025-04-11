@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribe to IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Firebase Initialization
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    let shareCount = 0;
+
+    // Firebase Authentication State Management
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        getShareCount(user.uid); // Get user-specific share count
+      }
+    });
+
+    // Fetch share count from Firebase
+    function getShareCount(userId) {
+      const shareRef = ref(database, 'shares/' + userId);
+      get(shareRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          shareCount = snapshot.val();
+        } else {
+          set(ref(database, 'shares/' + userId), 0); // Initialize share count
+        }
+        updateRewards();
+      });
+    }
+
+    // Handle share count and rewards update
+    function shareCount(link) {
+      if (shareCount < 3) {
+        shareCount += 1;
+        updateRewards();
+        
+        // Update Firebase with new share count
+        const userId = auth.currentUser.uid;
+        set(ref(database, 'shares/' + userId), shareCount);
+
+        // Open the share link
+        window.open(link, '_blank');
+      } else {
+        alert("You've reached the maximum share limit of 3!");
+      }
+    }
+
+    function updateRewards() {
+      const rewardsText = document.getElementById("rewardsText");
+      if (shareCount >= 3) {
+        rewardsText.textContent = "You've shared 3 times! Enjoy 20 free prompts!";
+      } else if (shareCount >= 2) {
+        rewardsText.textContent = "You've shared 2 times! Enjoy 15 free prompts!";
+      } else if (shareCount >= 1) {
+        rewardsText.textContent = "You've shared 1 time! Enjoy 5 free prompts!";
+      } else {
+        rewardsText.textContent = "Start sharing to earn free prompts!";
+      }
+    }
+
+    // Open sharing modal
+    function openShareModal() {
+      document.getElementById("shareModal").classList.remove("hidden");
+    }
+
+    // Close sharing modal
+    function closeShareModal() {
+      document.getElementById("shareModal").classList.add("hidden");
+    }
+  </script>
+  <style>
+    @keyframes borderFlow {
+      0% {
+        box-shadow: inset 0 -4px 0 0 #0047AB;
+      }
+      25% {
+        box-shadow: inset 4px 0 0 0 #0047AB;
+      }
+      50% {
+        box-shadow: inset 0 4px 0 0 #0047AB;
+      }
+      75% {
+        box-shadow: inset -4px 0 0 0 #0047AB;
+      }
+      100% {
+        box-shadow: inset 0 -4px 0 0 #0047AB;
+      }
+    }
+
+    .animate-borderFlow {
+      animation: borderFlow 2s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+  <!-- Share Modal -->
+  <div id="shareModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-xl max-w-sm w-full text-center">
+      <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Share IZZY</h2>
+      <button onclick="shareCount('https://api.whatsapp.com/send?text=Check out IZZY – the first AI Avatar for Real Men! https://izzy-auth.web.app')" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">WhatsApp</button>
+      <button onclick="shareCount('mailto:?subject=Try IZZY&body=Check out this AI Avatar for Real Men: https://izzy-auth.web.app')" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Email</button>
+      <button onclick="shareCount('https://www.facebook.com/sharer/sharer.php?u=https://izzy-auth.web.app')" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Facebook</button>
+      <button onclick="shareCount('https://twitter.com/intent/tweet?text=Try IZZY: https://izzy-auth.web.app')" class="bg-blue-400 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Twitter</button>
+      <button onclick="shareCount('https://www.reddit.com/submit?url=https://izzy-auth.web.app')" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Reddit</button>
+      <button onclick="closeShareModal()" class="mt-4 text-red-500">Close</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="min-h-screen flex flex-col items-center justify-center p-6">
+    <h1 class="text-4xl md:text-6xl font-bold text-[#0047AB] mb-8 text-center">Help IZZY Grow</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-2">Share with 1 friend</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">5 free prompts</p>
+        <a href="#" onclick="openShareModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Share Now</a>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center relative animate-borderFlow overflow-hidden">
+        <h2 class="text-2xl font-semibold mb-2">Share with 2 friends</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">10 free prompts</p>
+        <a href="#" onclick="openShareModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Share & Resume Practise</a>
+      </div>
+      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
+        <h2 class="text-2xl font-semibold mb-2">Share with 3 friends</h2>
+        <p class="text-3xl font-bold text-[#0047AB] mb-4">20 free prompts</p>
+        <a href="#" onclick="openShareModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Unlock 20 free promts!</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | IZZY</title>
+  <script src="https://cdn.tailwindcss.com"></script> <!-- ייבוא Tailwind CSS -->
+  <style>
+    /* מטושטש ברקע */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6); /* רקע כהה עם שקיפות */
+      backdrop-filter: blur(10px); /* מטושטש */
+      z-index: 9999; /* חשוב שיהיה מעל הכל */
+    }
+
+    /* חלון ההרשמה */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      z-index: 10000; /* יש לשים אותו מעל לרקע המטושטש */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+  <!-- כפתור שפותח את החלון -->
+  <button onclick="openRegisterModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800 transition duration-200">
+    Register
+  </button>
+
+  <!-- Overlay ו-Popup של הרשמה -->
+  <div id="overlay" class="overlay hidden">
+    <div class="popup">
+      <h2 class="text-3xl font-semibold text-[#0047AB] text-center mb-6">Sign Up</h2>
+
+      <!-- טופס הרשמה -->
+      <input type="email" id="email" placeholder="Email" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <input type="password" id="password" placeholder="Password" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      
+      <button onclick="register()" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-200 mb-4">
+        Register
+      </button>
+
+      <p id="message" class="text-red-500 text-center mb-4"></p>
+
+      <!-- קוד אימות -->
+      <h3 class="text-xl font-semibold text-center text-[#0047AB] mb-4">Verification Code</h3>
+      <input type="text" id="verificationCode" placeholder="Enter Code" class="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <button onclick="verifyCode()" class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200">
+        Verify Code
+      </button>
+
+      <button onclick="closeRegisterModal()" class="mt-4 text-red-500">Close</button>
+    </div>
+  </div>
+
+  <!-- Firebase Configuration and Script -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // הרשמה עם אימייל וסיסמא
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
+      
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          sendVerificationCode();
+          message.textContent = "Check your email for the verification code!";
+        })
+        .catch((error) => {
+          message.textContent = error.message;
+        });
+    }
+
+    // שליחת קוד אימות
+    function sendVerificationCode() {
+      const user = firebase.auth().currentUser;
+      user.sendEmailVerification().then(() => {
+        console.log("Verification email sent.");
+      }).catch((error) => {
+        console.log(error.message);
+      });
+    }
+
+    // אימות קוד שנשלח למייל
+    function verifyCode() {
+      const verificationCode = document.getElementById("verificationCode").value;
+      const user = firebase.auth().currentUser;
+
+      // כאן היינו צריכים להוסיף קוד לאימות הקוד שמגיע למייל - אך Firebase לא תומך בקוד אימות ישירות (יש צורך במערכת צד-שלישי)
+      alert("Verification not implemented here.");
+    }
+
+    // פתיחת חלון ההרשמה
+    function openRegisterModal() {
+      document.getElementById("overlay").classList.remove("hidden");
+    }
+
+    // סגירת חלון ההרשמה
+    function closeRegisterModal() {
+      document.getElementById("overlay").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

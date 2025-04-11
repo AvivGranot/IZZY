@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | IZZY</title>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
+</head>
+<body>
+  <h2>Sign Up</h2>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <button onclick="register()">Register</button>
+  <p id="message"></p>
+  
+  <h3>Verification Code</h3>
+  <input type="text" id="verificationCode" placeholder="Enter Code" required>
+  <button onclick="verifyCode()">Verify Code</button>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Register function
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          // Send email verification
+          user.sendEmailVerification()
+            .then(() => {
+              document.getElementById("message").textContent = "Verification email sent!";
+            })
+            .catch((error) => {
+              document.getElementById("message").textContent = error.message;
+            });
+        })
+        .catch((error) => {
+          document.getElementById("message").textContent = error.message;
+        });
+    }
+
+    // Verify the code from email or SMS
+    function verifyCode() {
+      const code = document.getElementById("verificationCode").value;
+      const user = auth.currentUser;
+      
+      // Check if the verification code is correct
+      user.applyActionCode(code)
+        .then(() => {
+          document.getElementById("message").textContent = "Account verified!";
+        })
+        .catch((error) => {
+          document.getElementById("message").textContent = error.message;
+        });
+    }
+  </script>
+</body>
+</html>

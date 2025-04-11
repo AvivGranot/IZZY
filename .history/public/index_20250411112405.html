@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IZZY – AI Avatar for Real Conversations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes dropIn {
+      0% { transform: translateY(-80px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .pop { 
+      display: inline-block; 
+      animation: dropIn 0.6s ease-out forwards; 
+      transform: translateY(-80px); 
+      opacity: 0;
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 20px 25px rgba(0,0,0,0.05);
+    }
+
+    /* Modal styles for the popout */
+    .modal {
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0, 0, 0, 0.7); 
+      justify-content: center; 
+      align-items: center;
+    }
+    .modal-content {
+      background: white; 
+      border-radius: 10px; 
+      padding: 2rem; 
+      width: 80%; 
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body class="text-gray-900 bg-white">
+
+  <!-- Existing Content of index.html goes here, make sure not to delete any of the existing code -->
+  <div class="min-h-screen flex flex-col items-center justify-center p-6">
+    <h1 class="text-4xl md:text-6xl font-bold text-[#0047AB] mb-8 text-center">Welcome to IZZY</h1>
+    <button onclick="openModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Sign Up</button>
+  </div>
+
+  <!-- The Modal for Sign Up -->
+  <div id="registerModal" class="modal flex">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Sign Up for IZZY</h2>
+
+      <!-- Registration Form -->
+      <div>
+        <input type="email" id="emailInput" placeholder="Email" class="w-full px-3 py-2 border mb-4 rounded-md" required>
+        <input type="password" id="passwordInput" placeholder="Password" class="w-full px-3 py-2 border mb-4 rounded-md" required>
+        <button onclick="register()" class="w-full bg-blue-600 text-white py-2 rounded-md mb-4 hover:bg-blue-700">Register</button>
+      </div>
+
+      <h3 class="text-xl font-bold text-[#0047AB] mb-4">Verification Code</h3>
+      <input type="text" id="verificationCode" placeholder="Enter Code" class="w-full px-3 py-2 border mb-4 rounded-md" required>
+      <button onclick="verifyCode()" class="w-full bg-green-600 text-white py-2 rounded-md mb-4 hover:bg-green-700">Verify Code</button>
+
+      <button onclick="closeModal()" class="mt-4 text-red-500">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Open modal
+    function openModal() {
+      document.getElementById("registerModal").style.display = "flex";
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById("registerModal").style.display = "none";
+    }
+
+    // Register function
+    function register() {
+      const email = document.getElementById("emailInput").value;
+      const password = document.getElementById("passwordInput").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Send email verification
+          userCredential.user.sendEmailVerification()
+            .then(() => {
+              alert("Verification email sent!");
+            });
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    }
+
+    // Verify Code function
+    function verifyCode() {
+      const code = document.getElementById("verificationCode").value;
+      const user = auth.currentUser;
+
+      user.applyActionCode(code).then(() => {
+        alert("Account verified!");
+        // Proceed with next steps like login or redirect to a welcome page
+      }).catch((error) => {
+        alert("Error: " + error.message);
+      });
+    }
+  </script>
+
+</body>
+</html>

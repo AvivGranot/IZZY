@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "izzy-auth"
-  }
+    "default": "izzy-auth",
+    "firebase deploy": "izzy-auth"
+  },
+  "targets": {},
+  "etags": {}
 }

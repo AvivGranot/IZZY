@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IZZY – AI Avatar for Real Conversations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes dropIn {
+      0% { transform: translateY(-80px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .pop { display: inline-block; animation: dropIn 0.6s ease-out forwards; transform: translateY(-80px); opacity: 0; }
+    .glass {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 20px 25px rgba(0,0,0,0.05);
+    }
+
+    /* טשטוש הרקע */
+    .blurred-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy') center center no-repeat;
+      background-size: cover;
+      filter: blur(10px); /* טשטוש */
+      z-index: -1; /* להבטיח שהרקע יהיה מאחורי האלמנטים האחרים */
+    }
+
+    /* סגנון חלון ההרשמה */
+    .popup {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      width: 300px;
+      margin: auto;
+      z-index: 9999;
+    }
+
+    .popup button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="text-gray-900 bg-white">
+
+  <!-- רקע מטושטש -->
+  <div class="blurred-background"></div>
+
+  <!-- חלון הרשמה -->
+  <div class="popup">
+    <h2>Sign Up for IZZY</h2>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="register()">Register</button>
+
+    <h3>Verification Code</h3>
+    <input type="text" id="verificationCode" placeholder="Enter Code" required>
+    <button onclick="verifyCode()">Verify Code</button>
+    <button onclick="closeModal()">Close</button>
+  </div>
+
+  <script>
+    // קוד Firebase שלכם
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+      authDomain: "izzy-auth.firebaseapp.com",
+      projectId: "izzy-auth",
+      storageBucket: "izzy-auth.appspot.com",
+      messagingSenderId: "573135779043",
+      appId: "1:573135779043:web:f6c59473f9956c917041d6"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          sendVerificationEmail();
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+
+    function sendVerificationEmail() {
+      const user = auth.currentUser;
+      user.sendEmailVerification()
+        .then(() => {
+          alert("Verification email sent!");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+
+    function verifyCode() {
+      const code = document.getElementById("verificationCode").value;
+      // כאן תוכל לבדוק את הקוד שהתקבל מהמשתמש
+    }
+
+    function closeModal() {
+      document.getElementById("verificationCode").value = '';
+    }
+  </script>
+</body>
+</html>

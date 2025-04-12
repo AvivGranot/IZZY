@@ -106,6 +106,52 @@
   </div>
 </div>
 
+<!-- ───────────────────────── SUBSCRIBE MODAL ───────────────────────── -->
+<div id="subscribeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full fade-in">
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+        <span class="text-white text-2xl font-bold">IZZY</span>
+      </div>
+    </div>
+    
+    <!-- Content -->
+    <h2 class="text-2xl font-bold text-center mb-4">Upgrade Your Experience</h2>
+    <p class="text-center mb-6">You've used all your free prompts. Subscribe now to get unlimited conversations with IZZY!</p>
+    
+    <!-- Subscription Options -->
+    <div class="space-y-4 mb-6">
+      <div class="border border-purple-200 p-4 rounded-lg hover:bg-purple-50 cursor-pointer">
+        <div class="flex justify-between">
+          <h3 class="font-bold">Monthly</h3>
+          <span class="font-bold">$9.99/mo</span>
+        </div>
+        <p class="text-sm text-gray-500">Cancel anytime</p>
+      </div>
+      
+      <div class="border-2 border-purple-500 p-4 rounded-lg bg-purple-50 cursor-pointer">
+        <div class="flex justify-between">
+          <h3 class="font-bold">Annual</h3>
+          <span class="font-bold">$7.99/mo</span>
+        </div>
+        <p class="text-sm text-gray-500">Save 20% - billed annually</p>
+        <span class="inline-block mt-1 bg-purple-600 text-white text-xs px-2 py-1 rounded-full">BEST VALUE</span>
+      </div>
+    </div>
+    
+    <!-- CTA Button -->
+    <a href="subscribe.html" class="block w-full py-3 rounded-full text-white font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-center">
+      Subscribe Now
+    </a>
+    
+    <!-- Close button -->
+    <button onclick="closeSubscribeModal()" class="block w-full text-gray-500 mt-4 hover:underline">
+      Maybe Later
+    </button>
+  </div>
+</div>
+
 <div id="recaptcha-container"></div>
 
 <!-- ───────────────────────── NAVBAR ───────────────────────── -->
@@ -142,7 +188,7 @@
            placeholder="Type your question here… (max 50 words)"
            class="w-full px-4 py-3 border rounded-lg mb-2" />
     <button onclick="startDictation()" class="text-sm text-purple-600 hover:underline mb-3">🎤 Speak to IZZY</button><br/>
-    <button onclick="handlePrompt()"
+    <button id="sendButton" onclick="handlePrompt()"
             class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full shadow hover:from-purple-700 hover:to-pink-600">
       Send
     </button>
@@ -150,6 +196,10 @@
             class="hidden mt-3 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">
       Restart Conversation
     </button>
+    
+    <div id="prompts-warning" class="text-sm text-orange-600 mt-2 hidden">
+      <strong>Note:</strong> You have <span id="prompts-warning-count">0</span> prompts left in your free trial.
+    </div>
   </section>
 
   <!-- Conversation history -->
@@ -189,7 +239,7 @@
         <div class="text-sm text-gray-500">Level</div>
       </div>
       <div>
-        <div id="prompts-left" class="text-2xl font-bold text-purple-600">5</div>
+        <div id="prompts-left" class="text-2xl font-bold text-purple-600">3</div>
         <div class="text-sm text-gray-500">Prompts Left</div>
       </div>
     </div>
@@ -227,6 +277,9 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.database();
 
+// Constants
+const FREE_PROMPT_LIMIT = 3;
+
 /* ---------------- Referral‑credit logic ----------------
    URL pattern:  https://your-site.web.app/?ref=<inviterUid>
 --------------------------------------------------------*/
@@ -249,6 +302,7 @@ if (inviterUid && inviterUid !== 'undefined') {
 
 /* ---------------- Auth State ---------------- */
 const authModal        = document.getElementById('authModal');
+const subscribeModal   = document.getElementById('subscribeModal');
 const mainContent      = document.getElementById('mainContent');
 const errorMessageDiv  = document.getElementById('error-message');
 const authButton       = document.getElementById('authButton');
@@ -257,11 +311,17 @@ const recaptchaContainer = document.getElementById('recaptcha-container');
 const emailForm        = document.getElementById('email-form');
 const chatContainer    = document.getElementById('chat-container');
 const conversationHistory = document.getElementById('conversation-history');
+const promptsWarning   = document.getElementById('prompts-warning');
+const promptsWarningCount = document.getElementById('prompts-warning-count');
 let recaptchaVerifier  = null;
+let currentUser = null;
 let promptsUsed = 0;
+let promptsLeft = FREE_PROMPT_LIMIT;
+let isSubscribed = false;
 
 auth.onAuthStateChanged(user => {
   if (user) {
+    currentUser = user;
     authButton.classList.add('hidden');
     logoutButton.classList.remove('hidden');
     authModal.classList.add('hidden');
@@ -279,6 +339,7 @@ auth.onAuthStateChanged(user => {
     }
 
   } else {
+    currentUser = null;
     authButton.classList.remove('hidden');
     logoutButton.classList.add('hidden');
     openAuthModal();
@@ -288,29 +349,71 @@ auth.onAuthStateChanged(user => {
 /* ---------------- User Data ---------------- */
 function loadUserData(userId) {
   db.ref(`users/${userId}`).once('value').then(snapshot => {
-    const userData = snapshot.val() || { conversations: 0, promptsLeft: 5, level: 'Beginner' };
+    const userData = snapshot.val() || { 
+      conversations: 0, 
+      promptsUsed: 0,
+      promptsLeft: FREE_PROMPT_LIMIT, 
+      level: 'Beginner',
+      subscribed: false
+    };
+    
+    // Set global variables
+    promptsUsed = userData.promptsUsed || 0;
+    promptsLeft = userData.promptsLeft !== undefined ? userData.promptsLeft : FREE_PROMPT_LIMIT;
+    isSubscribed = userData.subscribed || false;
+    
+    // Update UI
     document.getElementById('conversation-count').textContent = userData.conversations || 0;
     document.getElementById('skill-level').textContent = userData.level || 'Beginner';
-    document.getElementById('prompts-left').textContent = userData.promptsLeft || 5;
+    document.getElementById('prompts-left').textContent = promptsLeft;
+    
+    // Show warning if close to limit
+    if (promptsLeft <= 1 && !isSubscribed) {
+      promptsWarning.classList.remove('hidden');
+      promptsWarningCount.textContent = promptsLeft;
+    } else {
+      promptsWarning.classList.add('hidden');
+    }
     
     // Load conversation history if exists
-    if (userData.chatHistory && userData.chatHistory.length > 0) {
+    if (userData.chatHistory && Object.keys(userData.chatHistory).length > 0) {
       // Show conversation history section
       conversationHistory.classList.remove('hidden');
       
       // Clear existing history
       chatContainer.innerHTML = '';
       
-      // Add messages to history
-      userData.chatHistory.forEach(msg => {
+      // Add messages to history - sort by timestamp
+      const messages = Object.values(userData.chatHistory).sort((a, b) => a.timestamp - b.timestamp);
+      messages.forEach(msg => {
         addMessageToHistory(msg.text, msg.sender);
       });
+    }
+    
+    // Check for subscription status
+    if (promptsLeft <= 0 && !isSubscribed) {
+      disableSendButton();
+      openSubscribeModal();
     }
   });
 }
 
 function updateUserData(userId, data) {
-  db.ref(`users/${userId}`).update(data);
+  return db.ref(`users/${userId}`).update(data);
+}
+
+function disableSendButton() {
+  const sendButton = document.getElementById('sendButton');
+  sendButton.disabled = true;
+  sendButton.classList.add('opacity-50');
+  sendButton.classList.add('cursor-not-allowed');
+}
+
+function enableSendButton() {
+  const sendButton = document.getElementById('sendButton');
+  sendButton.disabled = false;
+  sendButton.classList.remove('opacity-50');
+  sendButton.classList.remove('cursor-not-allowed');
 }
 
 /* ---------------- Modal helpers ---------------- */
@@ -323,6 +426,16 @@ function openAuthModal(){
 
 function closeAuthModal(){
   authModal.classList.add('hidden');
+  mainContent.classList.remove('blur-background');
+}
+
+function openSubscribeModal(){
+  subscribeModal.classList.remove('hidden');
+  mainContent.classList.add('blur-background');
+}
+
+function closeSubscribeModal(){
+  subscribeModal.classList.add('hidden');
   mainContent.classList.remove('blur-background');
 }
 
@@ -397,6 +510,15 @@ function logout(){
     chatContainer.innerHTML = '';
     conversationHistory.classList.add('hidden');
     document.getElementById('restartBtn').classList.add('hidden');
+    promptsWarning.classList.add('hidden');
+    
+    // Reset variables
+    promptsUsed = 0;
+    promptsLeft = FREE_PROMPT_LIMIT;
+    isSubscribed = false;
+    
+    // Enable send button
+    enableSendButton();
   });
 }
 
@@ -434,145 +556,91 @@ const botResponses = [
   "That's a good question! I got this at a small boutique downtown."
 ];
 
-function handlePrompt() {
-  const userInput = document.getElementById('userInput').value.trim();
-  if(!userInput) {
-    alert('Please type or speak something first');
-    return;
-  }
-  
-  // Check if user is logged in
-  const user = auth.currentUser;
-  if (!user) {
-    openAuthModal();
-    return;
-  }
-  
-  // Show conversation history section if hidden
-  conversationHistory.classList.remove('hidden');
-  
-  // Get user message and add to history
-  addMessageToHistory(userInput, 'user');
-  
-  // Update database with new message
-  const userPath = `users/${user.uid}`;
-  const newMessage = { text: userInput, sender: 'user', timestamp: Date.now() };
-  
-  db.ref(`${userPath}/chatHistory`).push(newMessage);
-  
-  // Update prompts used
-  promptsUsed++;
-  const promptsLeft = Math.max(0, 5 - promptsUsed);
-  document.getElementById('prompts-left').textContent = promptsLeft;
-  
-  // Update user data
-  updateUserData(user.uid, {
-    promptsLeft: promptsLeft,
-    conversations: promptsUsed
+<script>
+/* ---------------- CONSTANTS ---------------- */
+const FREE_PROMPT_LIMIT = 3;
+const LS_KEY = 'izzy_prompts_left';   // localStorage backup key
+
+/* ---------------- USER‑DATA LOAD ---------------- */
+function loadUserData(uid){
+  db.ref(`users/${uid}`).once('value').then(snap=>{
+    const data = snap.val() || {};
+    promptsUsed   = data.promptsUsed  || 0;
+    promptsLeft   = data.promptsLeft ?? FREE_PROMPT_LIMIT;
+    isSubscribed  = !!data.subscribed;
+
+    /* fallback if DB empty (first visit) */
+    if (!snap.exists()){
+      promptsLeft = parseInt(localStorage.getItem(LS_KEY)) || FREE_PROMPT_LIMIT;
+    }
+    refreshUI();
   });
-  
-  // Clear input
-  document.getElementById('userInput').value = '';
-  
-  // Show restart button
-  document.getElementById('restartBtn').classList.remove('hidden');
-  
-  // Simulate IZZY response (with delay for realism)
-  setTimeout(() => {
-    const responseIndex = Math.floor(Math.random() * botResponses.length);
-    const botResponse = botResponses[responseIndex];
-    
-    // Add bot response to history
-    addMessageToHistory(botResponse, 'assistant');
-    
-    // Update database with bot response
-    const botMessage = { text: botResponse, sender: 'assistant', timestamp: Date.now() };
-    db.ref(`${userPath}/chatHistory`).push(botMessage);
-  }, 1500);
 }
 
-function addMessageToHistory(text, sender) {
-  const messageEl = document.createElement('div');
-  messageEl.className = `chat-bubble ${sender === 'user' ? 'user-bubble' : 'assistant-bubble'}`;
-  messageEl.textContent = text;
-  
-  chatContainer.appendChild(messageEl);
-  
-  // Scroll to bottom of chat
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-}
+/* ---------------- UI REFRESH ---------------- */
+function refreshUI(){
+  document.getElementById('prompts-left').textContent = isSubscribed ? '∞' : promptsLeft;
+  promptsWarning.classList.toggle('hidden', isSubscribed || promptsLeft>1);
+  promptsWarningCount.textContent = promptsLeft;
 
-function restartConversation() {
-  // Check if user is logged in
-  const user = auth.currentUser;
-  if (!user) {
-    openAuthModal();
-    return;
+  const sendBtn = document.getElementById('sendButton');
+  if (!isSubscribed && promptsLeft<=0){
+    sendBtn.disabled = true;
+    sendBtn.classList.add('opacity-50','cursor-not-allowed');
+  } else {
+    sendBtn.disabled = false;
+    sendBtn.classList.remove('opacity-50','cursor-not-allowed');
   }
-  
-  // Clear chat history in UI
-  chatContainer.innerHTML = '';
-  
-  // Hide restart button and conversation history
-  document.getElementById('restartBtn').classList.add('hidden');
-  
-  // Clear chat history in database
-  db.ref(`users/${user.uid}/chatHistory`).remove();
-  
-  // Add welcome message
-  setTimeout(() => {
-    addMessageToHistory("Hi, I'm IZZY! Start a new conversation with me.", 'assistant');
-    
-    // Add to database
-    const welcomeMsg = { 
-      text: "Hi, I'm IZZY! Start a new conversation with me.", 
-      sender: 'assistant', 
-      timestamp: Date.now() 
-    };
-    db.ref(`users/${user.uid}/chatHistory`).push(welcomeMsg);
-  }, 500);
 }
 
-/* ---------------- Prompt suggestions ---------------- */
-function usePrompt(text) {
+/* ---------------- HANDLE PROMPT ---------------- */
+async function handlePrompt(){
+  const userInputEl = document.getElementById('userInput');
+  const input = userInputEl.value.trim();
+  if(!input) return alert('Please type or speak something first');
+  if(!currentUser) return openAuthModal();
+
+  /* Guard BEFORE accepting */
+  if(!isSubscribed && promptsLeft<=0){
+    openSubscribeModal(); return;
+  }
+
+  /* Atomic decrement in Firebase */
+  if(!isSubscribed){
+    const ref = db.ref(`users/${currentUser.uid}/promptsLeft`);
+    await ref.transaction(curr=>{
+      if (curr===null) curr = FREE_PROMPT_LIMIT;
+      return curr>0 ? curr-1 : curr;   // decrement or keep 0
+    }).then(res=>{
+      promptsLeft = res.snapshot.val();
+      localStorage.setItem(LS_KEY, promptsLeft);   // persist across refresh
+    });
+  }
+
+  /* Now count is updated – proceed */
+  addMessageToHistory(input,'user');
+  userInputEl.value = '';
+  document.getElementById('restartBtn').classList.remove('hidden');
+  document.getElementById('conversation-history').classList.remove('hidden');
+
+  refreshUI();
+
+  if(!isSubscribed && promptsLeft<=0){
+    setTimeout(()=>openSubscribeModal(), 600);
+  }
+
+  /* ---- Simulate IZZY response (keep your existing code) ---- */
+  const responseIndex = Math.floor(Math.random()*botResponses.length);
+  const botResponse   = botResponses[responseIndex];
+  setTimeout(async ()=>{
+    addMessageToHistory(botResponse,'assistant');
+    const botMsgRef = db.ref(`users/${currentUser.uid}/chatHistory`).push();
+    await botMsgRef.set({text:botResponse,sender:'assistant',timestamp:Date.now()});
+  }, 1200);
+}
+
+/* ---------------- USE PROMPT BUTTONS ---------------- */
+function usePrompt(text){
   document.getElementById('userInput').value = text;
 }
-
-/* ---------------- Modal backdrop click handler ---------------- */
-window.addEventListener('click', (e) => {
-  if(e.target === authModal) {
-    // Don't close modal on backdrop click - let user explicitly login or close
-  }
-});
-
-/* ---------------- Keyboard shortcuts ---------------- */
-document.addEventListener('keydown', (e) => {
-  const userInput = document.getElementById('userInput');
-  
-  // Enter key to send message when input is focused
-  if(e.key === 'Enter' && document.activeElement === userInput) {
-    e.preventDefault();
-    handlePrompt();
-  }
-  
-  // Escape key shouldn't close modal automatically
-  if(e.key === 'Escape') {
-    e.preventDefault();
-  }
-});
-
-/* ---------------- App initialization ---------------- */
-window.onload = () => { 
-  // Initialize auth state
-  if(!auth.currentUser) {
-    openAuthModal();
-  }
-  
-  // Add initial welcome message for logged in users
-  if(auth.currentUser) {
-    addMessageToHistory("Hi, I'm IZZY! How can I help you practice today?", 'assistant');
-  }
-};
 </script>
-</body>
-</html>

@@ -32,6 +32,24 @@
 
     /* Hidden helper */
     .hidden { display:none; }
+
+    /* Chat bubbles */
+    .chat-bubble {
+      border-radius: 18px;
+      padding: 10px 15px;
+      max-width: 80%;
+      margin-bottom: 10px;
+    }
+    .user-bubble {
+      background-color: #E9F3FF;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+    .assistant-bubble {
+      background-color: #F2F2F7;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
   </style>
 </head>
 
@@ -92,12 +110,12 @@
 
 <!-- ───────────────────────── NAVBAR ───────────────────────── -->
 <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-50 px-6 py-4 flex items-center space-x-8">
-  <a href="#about"        class="text-[#0047AB] font-semibold hover:underline">About</a>
-  <a href="#practice"     class="text-[#0047AB] font-semibold hover:underline">Practice</a>
+  <a href="#about" class="text-[#0047AB] font-semibold hover:underline">About</a>
+  <a href="#practice" class="text-[#0047AB] font-semibold hover:underline">Practice</a>
   <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
-  <a href="share.html"    class="text-[#0047AB] font-semibold hover:underline">Share</a>
-  <button id="authButton"   onclick="openAuthModal()" class="ml-auto text-[#0047AB] font-semibold hover:underline">Login</button>
-  <button id="logoutButton" onclick="logout()"        class="ml-auto text-red-500 font-semibold hover:underline hidden">Logout</button>
+  <a href="share.html" class="text-[#0047AB] font-semibold hover:underline">Share</a>
+  <button id="authButton" onclick="openAuthModal()" class="ml-auto text-[#0047AB] font-semibold hover:underline">Login</button>
+  <button id="logoutButton" onclick="logout()" class="ml-auto text-red-500 font-semibold hover:underline hidden">Logout</button>
 </nav>
 
 <!-- ───────────────────────── MAIN CONTENT ───────────────────────── -->
@@ -134,12 +152,55 @@
     </button>
   </section>
 
+  <!-- Conversation history -->
+  <section id="conversation-history" class="glass max-w-xl w-full mt-6">
+    <h3 class="font-semibold mb-3">Conversation History</h3>
+    <div id="chat-container" class="max-h-64 overflow-y-auto space-y-3">
+      <!-- Messages will be added here dynamically -->
+    </div>
+  </section>
+
+  <!-- Example prompts -->
+  <div class="mt-4 flex flex-wrap justify-center gap-2">
+    <button onclick="usePrompt('Hi, I noticed you at the coffee shop')" 
+            class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200">
+      Coffee Shop
+    </button>
+    <button onclick="usePrompt('Excuse me, I just wanted to introduce myself')" 
+            class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200">
+      Simple Intro
+    </button>
+    <button onclick="usePrompt('I like your style, where did you get that?')" 
+            class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200">
+      Compliment
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="mt-8 w-full max-w-xl">
+    <h3 class="text-lg font-semibold mb-2">Your Conversation Skills</h3>
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+        <div id="conversation-count" class="text-2xl font-bold text-purple-600">0</div>
+        <div class="text-sm text-gray-500">Conversations</div>
+      </div>
+      <div>
+        <div id="skill-level" class="text-2xl font-bold text-purple-600">Beginner</div>
+        <div class="text-sm text-gray-500">Level</div>
+      </div>
+      <div>
+        <div id="prompts-left" class="text-2xl font-bold text-purple-600">5</div>
+        <div class="text-sm text-gray-500">Prompts Left</div>
+      </div>
+    </div>
+  </div>
+
   <!-- About -->
   <section id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800 fade-in" style="animation-delay:.4s">
     <h2 class="text-3xl font-bold text-purple-700 mb-2">IZZY Was Built For You!</h2>
     <p class="text-lg italic font-bold text-purple-600 mb-4">No more texting. No more hiding behind a screen.</p>
     <p class="mt-4 text-lg leading-relaxed">
-      IZZY isn’t a dating app, but a personal coach.<br/>
+      IZZY isn't a dating app, but a personal coach.<br/>
       Our upcoming full version will let you personalize IZZY to match the
       real woman you want to approach. Stay tuned and help us empower more men
       to gain real confidence!
@@ -194,7 +255,10 @@ const authButton       = document.getElementById('authButton');
 const logoutButton     = document.getElementById('logoutButton');
 const recaptchaContainer = document.getElementById('recaptcha-container');
 const emailForm        = document.getElementById('email-form');
+const chatContainer    = document.getElementById('chat-container');
+const conversationHistory = document.getElementById('conversation-history');
 let recaptchaVerifier  = null;
+let promptsUsed = 0;
 
 auth.onAuthStateChanged(user => {
   if (user) {
@@ -202,6 +266,9 @@ auth.onAuthStateChanged(user => {
     logoutButton.classList.remove('hidden');
     authModal.classList.add('hidden');
     mainContent.classList.remove('blur-background');
+
+    // Load user data
+    loadUserData(user.uid);
 
     /* ---------- credit inviter on first sign‑up ---------- */
     const storedInviter = localStorage.getItem(INVITER_KEY);
@@ -212,9 +279,39 @@ auth.onAuthStateChanged(user => {
     }
 
   } else {
+    authButton.classList.remove('hidden');
+    logoutButton.classList.add('hidden');
     openAuthModal();
   }
 });
+
+/* ---------------- User Data ---------------- */
+function loadUserData(userId) {
+  db.ref(`users/${userId}`).once('value').then(snapshot => {
+    const userData = snapshot.val() || { conversations: 0, promptsLeft: 5, level: 'Beginner' };
+    document.getElementById('conversation-count').textContent = userData.conversations || 0;
+    document.getElementById('skill-level').textContent = userData.level || 'Beginner';
+    document.getElementById('prompts-left').textContent = userData.promptsLeft || 5;
+    
+    // Load conversation history if exists
+    if (userData.chatHistory && userData.chatHistory.length > 0) {
+      // Show conversation history section
+      conversationHistory.classList.remove('hidden');
+      
+      // Clear existing history
+      chatContainer.innerHTML = '';
+      
+      // Add messages to history
+      userData.chatHistory.forEach(msg => {
+        addMessageToHistory(msg.text, msg.sender);
+      });
+    }
+  });
+}
+
+function updateUserData(userId, data) {
+  db.ref(`users/${userId}`).update(data);
+}
 
 /* ---------------- Modal helpers ---------------- */
 function openAuthModal(){
@@ -223,75 +320,259 @@ function openAuthModal(){
   clearError();
   setupRecaptcha();
 }
+
 function closeAuthModal(){
   authModal.classList.add('hidden');
   mainContent.classList.remove('blur-background');
 }
+
 function showError(msg){ errorMessageDiv.textContent=msg; }
 function clearError()   { errorMessageDiv.textContent=''; }
 
 /* ---------------- reCAPTCHA (invisible) ---------------- */
 function setupRecaptcha(){
   if (!recaptchaVerifier){
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer,{size:'invisible'});
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
+      size: 'invisible',
+      callback: () => {
+        // reCAPTCHA solved, allow form submission
+      }
+    });
     recaptchaVerifier.render();
   }
 }
 
 /* ---------------- Email magic‑link ---------------- */
-emailForm.addEventListener('submit',e=>{
-  e.preventDefault(); clearError();
+emailForm.addEventListener('submit', e => {
+  e.preventDefault(); 
+  clearError();
+  
   const email = document.getElementById('email').value.trim();
-  if(!email){showError('Enter your email');return;}
-  auth.sendSignInLinkToEmail(email,{url:window.location.href,handleCodeInApp:true})
-    .then(()=>{localStorage.setItem('emailForSignIn',email);
-               showError('Magic link sent! Check your inbox.');})
-    .catch(err=>showError(err.message));
+  if(!email) {
+    showError('Enter your email');
+    return;
+  }
+  
+  const actionCodeSettings = {
+    url: window.location.href,
+    handleCodeInApp: true
+  };
+  
+  auth.sendSignInLinkToEmail(email, actionCodeSettings)
+    .then(() => {
+      localStorage.setItem('emailForSignIn', email);
+      showError('Magic link sent! Check your inbox.');
+    })
+    .catch(err => showError(err.message));
 });
-if(auth.isSignInWithEmailLink(window.location.href)){
-  let email = localStorage.getItem('emailForSignIn') || prompt('Confirm your email');
-  if(email){
-    auth.signInWithEmailLink(email,window.location.href)
-        .then(()=>{localStorage.removeItem('emailForSignIn');
-                   window.history.replaceState(null,null,window.location.pathname);})
-        .catch(err=>showError(err.message));
+
+// Check if coming back from email link
+if(auth.isSignInWithEmailLink(window.location.href)) {
+  let email = localStorage.getItem('emailForSignIn');
+  if(!email) {
+    email = prompt('Confirm your email to complete sign-in');
+  }
+  
+  if(email) {
+    auth.signInWithEmailLink(email, window.location.href)
+      .then(() => {
+        localStorage.removeItem('emailForSignIn');
+        window.history.replaceState(null, null, window.location.pathname);
+      })
+      .catch(err => showError(err.message));
   }
 }
 
 /* ---------------- Google sign‑in ---------------- */
-document.getElementById('google-signin-btn').onclick=()=>{
+document.getElementById('google-signin-btn').onclick = () => {
   clearError();
   auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      .catch(err=>showError(err.message));
+    .catch(err => showError(err.message));
 };
 
 /* ---------------- Logout ---------------- */
-function logout(){ auth.signOut(); }
-
-/* ---------------- IZZY demo handlers ---------------- */
-function startDictation(){
-  if(!('webkitSpeechRecognition'in window)){alert('Speech recognition not supported');return;}
-  const rec=new webkitSpeechRecognition();
-  rec.lang='en-US'; rec.start();
-  rec.onresult=e=>{document.getElementById('userInput').value=e.results[0][0].transcript; rec.stop();};
-  rec.onerror = ()=>rec.stop();
+function logout(){ 
+  auth.signOut().then(() => {
+    // Clear UI elements
+    chatContainer.innerHTML = '';
+    conversationHistory.classList.add('hidden');
+    document.getElementById('restartBtn').classList.add('hidden');
+  });
 }
-function handlePrompt(){
-  const val=document.getElementById('userInput').value.trim();
-  if(!val){alert('Type or speak first');return;}
-  console.log('Sending to IZZY:',val);
+
+/* ---------------- IZZY conversation handlers ---------------- */
+function startDictation() {
+  if(!('webkitSpeechRecognition' in window)) {
+    alert('Speech recognition not supported by your browser');
+    return;
+  }
+  
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  
+  recognition.start();
+  
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('userInput').value = transcript;
+    recognition.stop();
+  };
+  
+  recognition.onerror = () => {
+    recognition.stop();
+  };
+}
+
+// Responses for the demo (would be replaced with actual AI in production)
+const botResponses = [
+  "Hi there! I'm IZZY. It's nice to meet you!",
+  "That's interesting! Tell me more about yourself.",
+  "I appreciate you starting a conversation with me. What are you up to today?",
+  "I'm actually heading to a yoga class soon. Do you practice yoga?",
+  "That's a good question! I got this at a small boutique downtown."
+];
+
+function handlePrompt() {
+  const userInput = document.getElementById('userInput').value.trim();
+  if(!userInput) {
+    alert('Please type or speak something first');
+    return;
+  }
+  
+  // Check if user is logged in
+  const user = auth.currentUser;
+  if (!user) {
+    openAuthModal();
+    return;
+  }
+  
+  // Show conversation history section if hidden
+  conversationHistory.classList.remove('hidden');
+  
+  // Get user message and add to history
+  addMessageToHistory(userInput, 'user');
+  
+  // Update database with new message
+  const userPath = `users/${user.uid}`;
+  const newMessage = { text: userInput, sender: 'user', timestamp: Date.now() };
+  
+  db.ref(`${userPath}/chatHistory`).push(newMessage);
+  
+  // Update prompts used
+  promptsUsed++;
+  const promptsLeft = Math.max(0, 5 - promptsUsed);
+  document.getElementById('prompts-left').textContent = promptsLeft;
+  
+  // Update user data
+  updateUserData(user.uid, {
+    promptsLeft: promptsLeft,
+    conversations: promptsUsed
+  });
+  
+  // Clear input
+  document.getElementById('userInput').value = '';
+  
+  // Show restart button
   document.getElementById('restartBtn').classList.remove('hidden');
-  document.getElementById('userInput').value='';
-}
-function restartConversation(){
-  document.getElementById('restartBtn').classList.add('hidden');
-  document.getElementById('userInput').value='';
+  
+  // Simulate IZZY response (with delay for realism)
+  setTimeout(() => {
+    const responseIndex = Math.floor(Math.random() * botResponses.length);
+    const botResponse = botResponses[responseIndex];
+    
+    // Add bot response to history
+    addMessageToHistory(botResponse, 'assistant');
+    
+    // Update database with bot response
+    const botMessage = { text: botResponse, sender: 'assistant', timestamp: Date.now() };
+    db.ref(`${userPath}/chatHistory`).push(botMessage);
+  }, 1500);
 }
 
-/* ---------------- UX tweaks ---------------- */
-window.onload=()=>{ if(!auth.currentUser) openAuthModal(); };
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') e.preventDefault(); });
-authModal.addEventListener('click',e=>{ if(e.target===authModal) e.stopPropagation(); });
+function addMessageToHistory(text, sender) {
+  const messageEl = document.createElement('div');
+  messageEl.className = `chat-bubble ${sender === 'user' ? 'user-bubble' : 'assistant-bubble'}`;
+  messageEl.textContent = text;
+  
+  chatContainer.appendChild(messageEl);
+  
+  // Scroll to bottom of chat
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function restartConversation() {
+  // Check if user is logged in
+  const user = auth.currentUser;
+  if (!user) {
+    openAuthModal();
+    return;
+  }
+  
+  // Clear chat history in UI
+  chatContainer.innerHTML = '';
+  
+  // Hide restart button and conversation history
+  document.getElementById('restartBtn').classList.add('hidden');
+  
+  // Clear chat history in database
+  db.ref(`users/${user.uid}/chatHistory`).remove();
+  
+  // Add welcome message
+  setTimeout(() => {
+    addMessageToHistory("Hi, I'm IZZY! Start a new conversation with me.", 'assistant');
+    
+    // Add to database
+    const welcomeMsg = { 
+      text: "Hi, I'm IZZY! Start a new conversation with me.", 
+      sender: 'assistant', 
+      timestamp: Date.now() 
+    };
+    db.ref(`users/${user.uid}/chatHistory`).push(welcomeMsg);
+  }, 500);
+}
+
+/* ---------------- Prompt suggestions ---------------- */
+function usePrompt(text) {
+  document.getElementById('userInput').value = text;
+}
+
+/* ---------------- Modal backdrop click handler ---------------- */
+window.addEventListener('click', (e) => {
+  if(e.target === authModal) {
+    // Don't close modal on backdrop click - let user explicitly login or close
+  }
+});
+
+/* ---------------- Keyboard shortcuts ---------------- */
+document.addEventListener('keydown', (e) => {
+  const userInput = document.getElementById('userInput');
+  
+  // Enter key to send message when input is focused
+  if(e.key === 'Enter' && document.activeElement === userInput) {
+    e.preventDefault();
+    handlePrompt();
+  }
+  
+  // Escape key shouldn't close modal automatically
+  if(e.key === 'Escape') {
+    e.preventDefault();
+  }
+});
+
+/* ---------------- App initialization ---------------- */
+window.onload = () => { 
+  // Initialize auth state
+  if(!auth.currentUser) {
+    openAuthModal();
+  }
+  
+  // Add initial welcome message for logged in users
+  if(auth.currentUser) {
+    addMessageToHistory("Hi, I'm IZZY! How can I help you practice today?", 'assistant');
+  }
+};
 </script>
 </body>
 </html>

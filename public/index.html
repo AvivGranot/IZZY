@@ -1,49 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IZZY – AI Avatar for Real Conversations</title>
+
+  <!-- Tailwind & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
   <style>
-    /* Basic Reset & Body Styling */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body  { font-family: 'Inter', sans-serif; background: #fff; color:#333; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f2f5;
-      color: #333;
-      min-height: 100vh;
-    }
-
-    /* Make modal background feel unclickable */
-    #authModal {
-      cursor: not-allowed;
-    }
-
-    /* Optional: allow normal cursor inside the modal */
-    #authModal .registration-card {
-      cursor: default;
-    }
-
-    @keyframes dropIn {
-      0% { transform: translateY(-80px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
-    }
-    
-    .pop { 
-      display: inline-block; 
-      animation: dropIn 0.6s ease-out forwards; 
-      transform: translateY(-80px); 
-      opacity: 0; 
-    }
-    
+    /* Backdrop‑blur card */
     .glass {
       background: rgba(255,255,255,0.85);
       backdrop-filter: blur(10px);
@@ -52,369 +23,275 @@
       box-shadow: 0 20px 25px rgba(0,0,0,0.05);
     }
 
-    /* Registration Modal Styling */
-    .blur-background {
-      filter: blur(8px);
-      pointer-events: none;
-    }
+    /* Modal backdrop blur */
+    .blur-background { filter: blur(8px); pointer-events:none; }
 
-    /* Status Messages */
-    .hidden {
-      display: none;
-    }
+    /* Simple fade‑in */
+    @keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:none;} }
+    .fade-in { animation: fadeIn 0.6s ease-out forwards; }
 
-    #error-message {
-      color: red;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      font-weight: bold;
-      font-size: 0.9em;
-      min-height: 1.2em;
-      text-align: center;
-    }
+    /* Hidden helper */
+    .hidden { display:none; }
   </style>
 </head>
-<body class="text-gray-900 bg-white">
-  <!-- Updated Authentication Modal -->
-  <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
-      <div class="flex justify-center mb-6">
-        <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
-          <span class="text-white text-2xl font-bold">IZZY</span>
-        </div>
+
+<body class="text-gray-900">
+
+<!-- ───────────────────────── MODAL (Auth) ───────────────────────── -->
+<div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full fade-in">
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+        <span class="text-white text-2xl font-bold">IZZY</span>
       </div>
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-semibold text-gray-900">Real Conversations.</h1>
-        <h2 class="text-3xl font-semibold text-gray-900 mb-4">Real Confidence.</h2>
-      </div>
-      <div class="mb-4">
-        <button id="google-signin-btn" class="bg-white border border-gray-300 rounded-full py-3 px-6 w-full flex items-center justify-center hover:bg-gray-50 transition duration-300">
-          <svg class="mr-2 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-          </svg>
-          <span class="text-gray-700 font-medium">Continue with Google</span>
-        </button>
-      </div>
-      <div class="flex justify-center items-center text-gray-500 text-sm my-4">
-        <div class="border-t border-gray-300 w-20 mr-2"></div>
-        OR
-        <div class="border-t border-gray-300 w-20 ml-2"></div>
-      </div>
-      <form id="email-form">
-        <div class="mb-4">
-          <input type="email" id="email" name="email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-full border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-700 placeholder:text-gray-400 mb-3" required>
-          <button type="submit" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-full py-3 px-6 w-full hover:from-purple-600 hover:to-pink-600 transition duration-300">
-            Send Magic Link
-          </button>
-        </div>
-      </form>
-      
-      <!-- Error message container -->
-      <div id="error-message" class="text-sm text-red-600 mt-3 min-h-[1.2em]"></div>
-      
-      <p class="text-center text-xs text-gray-500 mt-4">
-        By continuing, you agree to our <a href="#" class="text-purple-500 hover:underline">Terms of Service</a> and <a href="#" class="text-purple-500 hover:underline">Privacy Policy</a>.
-      </p>
     </div>
-  </div>
+    <!-- Headings -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-semibold text-gray-900">Real Conversations.</h1>
+      <h2 class="text-3xl font-semibold text-gray-900 mb-4">Real Confidence.</h2>
+    </div>
 
-  <div id="recaptcha-container"></div>
+    <!-- Google Sign‑in -->
+    <button id="google-signin-btn"
+      class="w-full flex items-center justify-center border border-gray-300 rounded-full py-3 mb-4 hover:bg-gray-50">
+      <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.3 4 24 4c-7.7 0-14.4 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+      <span class="text-gray-700 font-medium">Continue with Google</span>
+    </button>
 
-  <!-- Navigation -->
-  <nav class="w-full flex justify-center items-center space-x-10 px-6 py-4 bg-white shadow-md fixed top-0 left-0 z-50">
-    <a href="#about" class="text-[#0047AB] font-semibold hover:underline">About</a>
-    <a href="#practice" class="text-[#0047AB] font-semibold hover:underline">Practice</a>
-    <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
-    <button id="authButton" onclick="openAuthModal()" class="ml-auto text-[#0047AB] font-semibold hover:underline">Login</button>
-    <button id="logoutButton" onclick="logout()" class="ml-auto text-red-500 font-semibold hover:underline hidden">Logout</button>
-    <a href="share.html" class="text-[#0047AB] font-semibold hover:underline">Share</a>
-  </nav>
+    <!-- Separator -->
+    <div class="flex items-center text-gray-500 text-sm my-4">
+      <div class="flex-1 border-t border-gray-300"></div>
+      <span class="px-3">OR</span>
+      <div class="flex-1 border-t border-gray-300"></div>
+    </div>
 
-  <div id="mainContent" class="pt-32 flex flex-col items-center justify-center min-h-screen px-6 pb-16 relative">
-    <h1 class="text-6xl md:text-7xl font-extrabold text-[#0047AB] text-center mb-4 uppercase">
-      THE WORLD'S FIRST<br>AI-AVATAR FOR REAL LIFE
-    </h1>
+    <!-- Email magic‑link -->
+    <form id="email-form">
+      <input type="email" id="email" placeholder="Enter your email"
+             class="w-full px-4 py-3 rounded-full border border-gray-300 focus:ring-2 focus:ring-purple-500 mb-3"
+             required />
+      <button type="submit"
+        class="w-full py-3 rounded-full text-white font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+        Send Magic Link
+      </button>
+    </form>
 
-    <p class="text-lg font-semibold text-center text-black uppercase mb-6">
-      NEVER BE AFRAID TO APPROACH A WOMAN AGAIN!<br>TRY IT FOR FREE
+    <!-- Error -->
+    <div id="error-message" class="text-center text-sm text-red-600 mt-3 min-h-[1.2em]"></div>
+
+    <p class="text-center text-xs text-gray-500 mt-4">
+      By continuing, you agree to our
+      <a href="#" class="text-purple-500 hover:underline">Terms</a> &
+      <a href="#" class="text-purple-500 hover:underline">Privacy</a>.
     </p>
+  </div>
+</div>
 
-    <iframe id="avatarFrame" class="w-full max-w-xl h-[420px] rounded-2xl shadow-xl mb-6 border border-blue-100"
+<div id="recaptcha-container"></div>
+
+<!-- ───────────────────────── NAVBAR ───────────────────────── -->
+<nav class="fixed top-0 left-0 w-full bg-white shadow-md z-50 px-6 py-4 flex items-center space-x-8">
+  <a href="#about"        class="text-[#0047AB] font-semibold hover:underline">About</a>
+  <a href="#practice"     class="text-[#0047AB] font-semibold hover:underline">Practice</a>
+  <a href="subscribe.html" class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
+  <a href="share.html"    class="text-[#0047AB] font-semibold hover:underline">Share</a>
+  <button id="authButton"   onclick="openAuthModal()" class="ml-auto text-[#0047AB] font-semibold hover:underline">Login</button>
+  <button id="logoutButton" onclick="logout()"        class="ml-auto text-red-500 font-semibold hover:underline hidden">Logout</button>
+</nav>
+
+<!-- ───────────────────────── MAIN CONTENT ───────────────────────── -->
+<main id="mainContent" class="pt-32 flex flex-col items-center px-6 pb-20">
+
+  <!-- Hero -->
+  <section class="text-center max-w-4xl mb-12 fade-in">
+    <h1 class="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight mb-4">
+      The World's First <br/> AI‑Avatar for Real Life
+    </h1>
+    <p class="text-lg text-gray-700 mb-8">Never be afraid to approach a woman again.<br/>Try it for free.</p>
+
+    <iframe id="avatarFrame"
+      class="w-full max-w-xl h-[420px] rounded-3xl shadow-lg border border-purple-200 mb-10"
       allow="microphone; autoplay"
       src="https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy">
     </iframe>
+  </section>
 
-    <div id="practice" class="glass max-w-xl w-full mx-auto text-center">
-      <label for="userInput" class="block text-lg font-semibold mb-2">Say something to IZZY:</label>
-      <input type="text" id="userInput" maxlength="400" placeholder="Type your question here... (max 50 words)" class="w-full px-4 py-3 border rounded-lg mb-2" />
-      <button onclick="startDictation()" class="text-sm text-[#0047AB] hover:underline mb-3">🎤 Speak to IZZY</button><br>
-      <button onclick="handlePrompt()" class="bg-[#0047AB] text-white px-6 py-3 rounded-xl shadow hover:bg-blue-800">Send</button>
-      <button onclick="restartConversation()" id="restartBtn" class="mt-3 hidden bg-gray-200 text-black px-4 py-2 rounded-md hover:bg-gray-300">Restart Conversation</button>
-    </div>
+  <!-- Practice box -->
+  <section id="practice" class="glass max-w-xl w-full text-center fade-in" style="animation-delay:.2s">
+    <label for="userInput" class="block text-lg font-semibold mb-2">Say something to IZZY:</label>
+    <input id="userInput" type="text" maxlength="400"
+           placeholder="Type your question here… (max 50 words)"
+           class="w-full px-4 py-3 border rounded-lg mb-2" />
+    <button onclick="startDictation()" class="text-sm text-purple-600 hover:underline mb-3">🎤 Speak to IZZY</button><br/>
+    <button onclick="handlePrompt()"
+            class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full shadow hover:from-purple-700 hover:to-pink-600">
+      Send
+    </button>
+    <button id="restartBtn" onclick="restartConversation()"
+            class="hidden mt-3 bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">
+      Restart Conversation
+    </button>
+  </section>
 
-    <div id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800">
-      <h2 class="text-3xl font-bold text-[#0047AB] mb-2">IZZY WAS BUILT FOR YOU!</h2>
-      <p class="text-lg italic font-bold text-[#0047AB] mb-4">No More Texting. No More Hiding Behind a Screen.</p>
-      <p class="mt-6 text-lg leading-relaxed">
-        IZZY is not a dating app, but rather a personal coach – one might say.
-      </p>
-      <p class="mt-6 text-lg leading-relaxed">
-        <strong>Our full version will include full personalization:</strong><br>
-        You will be able to personalize IZZY according to the actual girl you like to approach.<br>
-        So, stay tuned and help us help more men to gain real confidence with women!
-      </p>
-    </div>
-  </div>
+  <!-- About -->
+  <section id="about" class="max-w-4xl mt-20 px-8 text-center text-gray-800 fade-in" style="animation-delay:.4s">
+    <h2 class="text-3xl font-bold text-purple-700 mb-2">IZZY Was Built For You!</h2>
+    <p class="text-lg italic font-bold text-purple-600 mb-4">No more texting. No more hiding behind a screen.</p>
+    <p class="mt-4 text-lg leading-relaxed">
+      IZZY isn’t a dating app, but a personal coach.<br/>
+      Our upcoming full version will let you personalize IZZY to match the
+      real woman you want to approach. Stay tuned and help us empower more men
+      to gain real confidence!
+    </p>
+  </section>
+</main>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<!-- ───────────────────────── FIREBASE (compat for brevity) ───────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
-  <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
-      authDomain: "izzy-auth.firebaseapp.com",
-      projectId: "izzy-auth",
-      storageBucket: "izzy-auth.appspot.com",
-      messagingSenderId: "573135779043",
-      appId: "1:573135779043:web:f6c59473f9956c917041d6"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+<script>
+/* ---------------- Firebase Init ---------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+  authDomain: "izzy-auth.firebaseapp.com",
+  projectId: "izzy-auth",
+  storageBucket: "izzy-auth.appspot.com",
+  messagingSenderId: "573135779043",
+  appId: "1:573135779043:web:f6c59473f9956c917041d6"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.database();
 
-    // Global Variables
-    window.recaptchaVerifier = null;
+/* ---------------- Referral‑credit logic ----------------
+   URL pattern:  https://your-site.web.app/?ref=<inviterUid>
+--------------------------------------------------------*/
+const urlParams   = new URLSearchParams(window.location.search);
+const inviterUid  = urlParams.get('ref');
+const VISITED_KEY = 'visitedAsReferral';     // localStorage flag
+const INVITER_KEY = 'storedInviterUid';      // remember for later
 
-    // DOM References
-    const authModal = document.getElementById('authModal');
-    const mainContent = document.getElementById('mainContent');
-    const errorMessageDiv = document.getElementById('error-message');
-    const authButton = document.getElementById('authButton');
-    const logoutButton = document.getElementById('logoutButton');
-    const recaptchaContainer = document.getElementById('recaptcha-container');
-    const emailForm = document.getElementById('email-form');
+if (inviterUid && inviterUid !== 'undefined') {
+  // store inviter UID locally
+  localStorage.setItem(INVITER_KEY, inviterUid);
 
-    // Check authentication state and update UI
-    auth.onAuthStateChanged(function(user) {
-      if (user) {
-        // ✅ User is signed in
-        authButton.classList.add('hidden');
-        logoutButton.classList.remove('hidden');
-        authModal.classList.add('hidden');
-        mainContent.classList.remove('blur-background');
-      } else {
-        // ❌ User is NOT signed in – force open registration
-        openAuthModal(); // This will keep showing the modal until the user signs in
-      }
-    });
+  // If first time visiting through this inviter, add +1 to their count
+  if (!localStorage.getItem(VISITED_KEY+inviterUid)) {
+    const refPath = `referralsReceived/${inviterUid}`;
+    db.ref(refPath).transaction(curr => (curr || 0) + 1);
+    localStorage.setItem(VISITED_KEY+inviterUid, 'true');
+  }
+}
 
-    // Auth Modal Functions
-    function openAuthModal() {
-      authModal.classList.remove('hidden');
-      mainContent.classList.add('blur-background');
-      resetAuthForm();
-      setupRecaptcha();
+/* ---------------- Auth State ---------------- */
+const authModal        = document.getElementById('authModal');
+const mainContent      = document.getElementById('mainContent');
+const errorMessageDiv  = document.getElementById('error-message');
+const authButton       = document.getElementById('authButton');
+const logoutButton     = document.getElementById('logoutButton');
+const recaptchaContainer = document.getElementById('recaptcha-container');
+const emailForm        = document.getElementById('email-form');
+let recaptchaVerifier  = null;
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    authButton.classList.add('hidden');
+    logoutButton.classList.remove('hidden');
+    authModal.classList.add('hidden');
+    mainContent.classList.remove('blur-background');
+
+    /* ---------- credit inviter on first sign‑up ---------- */
+    const storedInviter = localStorage.getItem(INVITER_KEY);
+    if (storedInviter && storedInviter !== user.uid) {
+      const path = `successfulReferrals/${storedInviter}/${user.uid}`;
+      db.ref(path).set(true);  // mark this referral as successful
+      localStorage.removeItem(INVITER_KEY); // prevent double credit
     }
 
-    function closeAuthModal() {
-      authModal.classList.add('hidden');
-      mainContent.classList.remove('blur-background');
-    }
+  } else {
+    openAuthModal();
+  }
+});
 
-    function resetAuthForm() {
-      clearError();
-      // Reset form fields
-      if (document.getElementById('email')) {
-        document.getElementById('email').value = '';
-      }
-    }
+/* ---------------- Modal helpers ---------------- */
+function openAuthModal(){
+  authModal.classList.remove('hidden');
+  mainContent.classList.add('blur-background');
+  clearError();
+  setupRecaptcha();
+}
+function closeAuthModal(){
+  authModal.classList.add('hidden');
+  mainContent.classList.remove('blur-background');
+}
+function showError(msg){ errorMessageDiv.textContent=msg; }
+function clearError()   { errorMessageDiv.textContent=''; }
 
-    // Error handling
-    function showError(message) {
-      errorMessageDiv.textContent = message;
-      errorMessageDiv.classList.remove('hidden');
-    }
+/* ---------------- reCAPTCHA (invisible) ---------------- */
+function setupRecaptcha(){
+  if (!recaptchaVerifier){
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer,{size:'invisible'});
+    recaptchaVerifier.render();
+  }
+}
 
-    function clearError() {
-      errorMessageDiv.textContent = '';
-      errorMessageDiv.classList.add('hidden');
-    }
+/* ---------------- Email magic‑link ---------------- */
+emailForm.addEventListener('submit',e=>{
+  e.preventDefault(); clearError();
+  const email = document.getElementById('email').value.trim();
+  if(!email){showError('Enter your email');return;}
+  auth.sendSignInLinkToEmail(email,{url:window.location.href,handleCodeInApp:true})
+    .then(()=>{localStorage.setItem('emailForSignIn',email);
+               showError('Magic link sent! Check your inbox.');})
+    .catch(err=>showError(err.message));
+});
+if(auth.isSignInWithEmailLink(window.location.href)){
+  let email = localStorage.getItem('emailForSignIn') || prompt('Confirm your email');
+  if(email){
+    auth.signInWithEmailLink(email,window.location.href)
+        .then(()=>{localStorage.removeItem('emailForSignIn');
+                   window.history.replaceState(null,null,window.location.pathname);})
+        .catch(err=>showError(err.message));
+  }
+}
 
-    // Setup reCAPTCHA
-    function setupRecaptcha() {
-      if (!window.recaptchaVerifier || window.recaptchaVerifier.container.innerHTML === '') {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, {
-          'size': 'invisible',
-          'callback': (response) => {},
-          'expired-callback': () => {
-            showError("reCAPTCHA check expired. Please try submitting again.");
-            resetRecaptcha();
-          }
-        });
-        window.recaptchaVerifier.render().catch(err => {
-          console.error("Recaptcha render error:", err);
-          showError("Could not initialize security check. Please refresh the page.");
-        });
-      }
-    }
+/* ---------------- Google sign‑in ---------------- */
+document.getElementById('google-signin-btn').onclick=()=>{
+  clearError();
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .catch(err=>showError(err.message));
+};
 
-    function resetRecaptcha() {
-      if (window.recaptchaVerifier) {
-        recaptchaContainer.innerHTML = '';
-        window.recaptchaVerifier = null;
-        setupRecaptcha();
-      } else {
-        setupRecaptcha();
-      }
-    }
+/* ---------------- Logout ---------------- */
+function logout(){ auth.signOut(); }
 
-    // Email Authentication (Magic Link)
-    emailForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      clearError();
-      
-      const email = document.getElementById('email').value.trim();
-      
-      if (!email) {
-        showError("Please enter your email address.");
-        return;
-      }
-      
-      const actionCodeSettings = {
-        url: window.location.href,
-        handleCodeInApp: true,
-      };
-      
-      auth.sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-          // Save the email to confirm it when user clicks the link in email
-          window.localStorage.setItem('emailForSignIn', email);
-          showError("Magic link sent! Check your email inbox.");
-        })
-        .catch((error) => {
-          showError(`Failed to send magic link: ${error.message}`);
-        });
-    });
+/* ---------------- IZZY demo handlers ---------------- */
+function startDictation(){
+  if(!('webkitSpeechRecognition'in window)){alert('Speech recognition not supported');return;}
+  const rec=new webkitSpeechRecognition();
+  rec.lang='en-US'; rec.start();
+  rec.onresult=e=>{document.getElementById('userInput').value=e.results[0][0].transcript; rec.stop();};
+  rec.onerror = ()=>rec.stop();
+}
+function handlePrompt(){
+  const val=document.getElementById('userInput').value.trim();
+  if(!val){alert('Type or speak first');return;}
+  console.log('Sending to IZZY:',val);
+  document.getElementById('restartBtn').classList.remove('hidden');
+  document.getElementById('userInput').value='';
+}
+function restartConversation(){
+  document.getElementById('restartBtn').classList.add('hidden');
+  document.getElementById('userInput').value='';
+}
 
-    // Check if user is returning from email link
-    if (auth.isSignInWithEmailLink(window.location.href)) {
-      let email = window.localStorage.getItem('emailForSignIn');
-      
-      if (!email) {
-        email = window.prompt('Please provide your email for confirmation');
-      }
-      
-      if (email) {
-        auth.signInWithEmailLink(email, window.location.href)
-          .then((result) => {
-            window.localStorage.removeItem('emailForSignIn');
-            // Clear the URL to remove the sign-in link
-            window.history.replaceState(null, null, window.location.pathname);
-          })
-          .catch((error) => {
-            showError(`Error signing in with email link: ${error.message}`);
-          });
-      }
-    }
-
-    // Google Sign-in
-    document.getElementById('google-signin-btn').addEventListener('click', () => {
-      clearError();
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          closeAuthModal();
-        })
-        .catch((error) => {
-          showError(`Google Sign-in failed: ${error.message}`);
-        });
-    });
-
-    // Logout
-    function logout() {
-      auth.signOut().then(() => {
-        // No need to reload the page, the auth state listener will handle UI changes
-      }).catch((error) => {
-        alert(`Error signing out: ${error.message}`);
-      });
-    }
-
-    // IZZY Avatar Functionality
-    function startDictation() {
-      if (window.hasOwnProperty('webkitSpeechRecognition')) {
-        const recognition = new webkitSpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = "en-US";
-        recognition.start();
-        
-        recognition.onresult = function(e) {
-          document.getElementById('userInput').value = e.results[0][0].transcript;
-          recognition.stop();
-        };
-        
-        recognition.onerror = function(e) {
-          recognition.stop();
-          alert("Speech recognition error. Please try again or type your message.");
-        };
-      } else {
-        alert("Your browser doesn't support speech recognition. Please type your message instead.");
-      }
-    }
-
-    function handlePrompt() {
-      const userInput = document.getElementById('userInput').value.trim();
-      if (!userInput) {
-        alert("Please type or speak something to IZZY first.");
-        return;
-      }
-      
-      // Here you would typically send the input to your backend or API
-      // For now, we'll just show the restart button as if a conversation started
-      document.getElementById('restartBtn').classList.remove('hidden');
-      
-      // Clear the input field
-      document.getElementById('userInput').value = "";
-      
-      // In a real implementation, you would process the response and update the avatar
-      console.log("Sending to IZZY:", userInput);
-    }
-
-    function restartConversation() {
-      // Reset conversation state
-      document.getElementById('restartBtn').classList.add('hidden');
-      document.getElementById('userInput').value = "";
-      
-      // In a real implementation, you would reset the conversation with the avatar
-      console.log("Conversation restarted");
-    }
-  </script>
-  <script>
-    window.onload = () => {
-      firebase.auth().onAuthStateChanged(user => {
-        if (!user) {
-          openAuthModal();
-        }
-      });
-    };
-
-    // Prevent ESC and outside click from closing the modal
-    document.addEventListener('keydown', function(e) {
-      if (e.key === "Escape") {
-        e.preventDefault(); // Stop ESC from closing modal
-      }
-    });
-
-    document.getElementById('authModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        // Prevent clicking outside the modal content
-        e.stopPropagation();
-      }
-    });
-  </script>  
+/* ---------------- UX tweaks ---------------- */
+window.onload=()=>{ if(!auth.currentUser) openAuthModal(); };
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') e.preventDefault(); });
+authModal.addEventListener('click',e=>{ if(e.target===authModal) e.stopPropagation(); });
+</script>
 </body>
 </html>

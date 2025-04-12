@@ -3,151 +3,260 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subscribe to IZZY</title>
+  <title>Share IZZY – Earn Free Prompts</title>
+
+  <!-- Tailwind + Fonts + Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module">
-    // Firebase Initialization
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
-      authDomain: "izzy-auth.firebaseapp.com",
-      projectId: "izzy-auth",
-      storageBucket: "izzy-auth.appspot.com",
-      messagingSenderId: "573135779043",
-      appId: "1:573135779043:web:f6c59473f9956c917041d6"
-    };
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const database = getDatabase(app);
-
-    let shareCount = 0;
-
-    // Firebase Authentication State Management
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        getShareCount(user.uid); // Get user-specific share count
-      }
-    });
-
-    // Fetch share count from Firebase
-    function getShareCount(userId) {
-      const shareRef = ref(database, 'shares/' + userId);
-      get(shareRef).then((snapshot) => {
-        if (snapshot.exists()) {
-          shareCount = snapshot.val();
-        } else {
-          set(ref(database, 'shares/' + userId), 0); // Initialize share count
-        }
-        updateRewards();
-      });
-    }
-
-    // Handle share count and rewards update
-    window.shareCount = function(link) {
-      if (shareCount < 3) {
-        shareCount += 1;
-        updateRewards();
-        const userId = auth.currentUser.uid;
-        set(ref(database, 'shares/' + userId), shareCount);
-        window.open(link, '_blank');
-      } else {
-        alert("You've reached the maximum share limit of 3!");
-      }
-    }
-
-    window.updateRewards = function() {
-      const rewardsText = document.getElementById("rewardsText");
-      if (rewardsText) {
-        if (shareCount >= 3) {
-          rewardsText.textContent = "You've shared 3 times! Enjoy 20 free prompts!";
-        } else if (shareCount >= 2) {
-          rewardsText.textContent = "You've shared 2 times! Enjoy 15 free prompts!";
-        } else if (shareCount >= 1) {
-          rewardsText.textContent = "You've shared 1 time! Enjoy 5 free prompts!";
-        } else {
-          rewardsText.textContent = "Start sharing to earn free prompts!";
-        }
-      }
-    }
-
-    window.openShareModal = function() {
-      document.getElementById("shareModal").classList.remove("hidden");
-    }
-
-    window.closeShareModal = function() {
-      document.getElementById("shareModal").classList.add("hidden");
-    }
-  </script>
-  <script>
-    function shareCount(link) {
-      if (typeof window.shareCount === "function") {
-        window.shareCount(link);
-      }
-    }
-  </script>
   <style>
-    @keyframes borderFlow {
-      0% {
-        box-shadow: inset 0 -4px 0 0 #0047AB;
-      }
-      25% {
-        box-shadow: inset 4px 0 0 0 #0047AB;
-      }
-      50% {
-        box-shadow: inset 0 4px 0 0 #0047AB;
-      }
-      75% {
-        box-shadow: inset -4px 0 0 0 #0047AB;
-      }
-      100% {
-        box-shadow: inset 0 -4px 0 0 #0047AB;
-      }
-    }
-
-    .animate-borderFlow {
-      animation: borderFlow 2s linear infinite;
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:white;color:#333;min-height:100vh}
+    @keyframes fadeIn{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn .6s ease-out forwards}
+    .share-button{transition:all .3s ease}
+    .share-button:hover{transform:translateY(-3px)}
+    .gradient-card{background:linear-gradient(white,white) padding-box,
+                   linear-gradient(to right,#9333ea,#ec4899) border-box;border:2px solid transparent;border-radius:1rem}
+    .gradient-bg{background:linear-gradient(135deg,rgba(147,51,234,.08),rgba(236,72,153,.08))}
+    .disabled{opacity:.5;cursor:not-allowed !important;transform:none !important}
   </style>
 </head>
-<body class="bg-white text-gray-800 font-sans">
-  <!-- Share Modal -->
-  <div id="shareModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white p-6 rounded-xl max-w-sm w-full text-center">
-      <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Share IZZY</h2>
-      <button onclick="shareCount('https://api.whatsapp.com/send?text=Check out IZZY – the first AI Avatar for Real Men! https://izzy-auth.web.app')" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">WhatsApp</button>
-      <button onclick="shareCount('mailto:?subject=Try IZZY&body=Check out this AI Avatar for Real Men: https://izzy-auth.web.app')" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Email</button>
-      <button onclick="shareCount('https://www.facebook.com/sharer/sharer.php?u=https://izzy-auth.web.app')" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Facebook</button>
-      <button onclick="shareCount('https://twitter.com/intent/tweet?text=Try IZZY: https://izzy-auth.web.app')" class="bg-blue-400 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Twitter</button>
-      <button onclick="shareCount('https://www.reddit.com/submit?url=https://izzy-auth.web.app')" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-lg shadow mb-4">Reddit</button>
-      <button onclick="closeShareModal()" class="mt-4 text-red-500">Close</button>
-    </div>
-  </div>
+<body>
 
-  <!-- Content -->
-  <div class="min-h-screen flex flex-col items-center justify-center p-6">
-    <h1 class="text-4xl md:text-6xl font-bold text-[#0047AB] mb-8 text-center">Help IZZY Grow</h1>
-    <p id="rewardsText" class="mb-6 text-lg text-center text-gray-600"></p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
-      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
-        <h2 class="text-2xl font-semibold mb-2">Share with 1 friend</h2>
-        <p class="text-3xl font-bold text-[#0047AB] mb-4">5 free prompts</p>
-        <a href="#" onclick="openShareModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Share Now</a>
-      </div>
-      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center relative animate-borderFlow overflow-hidden">
-        <h2 class="text-2xl font-semibold mb-2">Share with 2 friends</h2>
-        <p class="text-3xl font-bold text-[#0047AB] mb-4">10 free prompts</p>
-        <a href="#" onclick="openShareModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Share & Resume Practise</a>
-      </div>
-      <div class="border border-gray-200 rounded-xl p-6 shadow-md text-center">
-        <h2 class="text-2xl font-semibold mb-2">Share with 3 friends</h2>
-        <p class="text-3xl font-bold text-[#0047AB] mb-4">20 free prompts</p>
-        <a href="#" onclick="openShareModal()" class="inline-block bg-[#0047AB] text-white font-medium py-3 px-6 rounded-lg hover:bg-blue-800">Unlock 20 free prompts!</a>
+<!-- --------------- NAV --------------- -->
+<nav class="w-full flex justify-center items-center space-x-10 px-6 py-4 bg-white shadow-md fixed top-0 left-0 z-50">
+  <a href="index.html#about"    class="text-[#0047AB] font-semibold hover:underline">About</a>
+  <a href="index.html#practice" class="text-[#0047AB] font-semibold hover:underline">Practice</a>
+  <a href="subscribe.html"      class="text-[#0047AB] font-semibold hover:underline">Subscribe</a>
+  <button id="authButton"  class="ml-auto text-[#0047AB] font-semibold hover:underline">Login</button>
+  <button id="logoutButton" class="ml-auto text-red-500 font-semibold hover:underline hidden">Logout</button>
+  <a href="share.html" class="text-purple-600 font-semibold hover:underline">Share</a>
+</nav>
+
+<!-- --------------- HEADER --------------- -->
+<header class="pt-32 text-center fade-in">
+  <div class="flex justify-center mb-6">
+    <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+      <span class="text-white text-2xl font-bold">IZZY</span>
+    </div>
+  </div>
+  <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Share IZZY</h1>
+  <p class="text-lg text-gray-600 mt-4">Help friends discover real confidence with women</p>
+  <p id="rewardsText" class="text-md text-purple-700 mt-2 font-semibold">Start sharing to earn free prompts!</p>
+</header>
+
+<!-- --------------- WHY SHARE --------------- -->
+<section class="max-w-4xl w-full gradient-bg rounded-3xl p-8 mx-auto mt-12 fade-in" style="animation-delay:.2s;">
+  <div class="flex flex-col md:flex-row items-center">
+    <div class="w-full md:w-1/2 mb-8 md:mb-0 md:pr-8">
+      <img src="https://placehold.co/600x400" alt="IZZY demo" class="rounded-2xl shadow-lg w-full">
+    </div>
+    <div class="w-full md:w-1/2">
+      <h2 class="text-2xl font-bold text-purple-700 mb-4">Why Share IZZY?</h2>
+      <p class="text-gray-700 mb-6">
+        IZZY lets men practice genuine conversations without fear. If you know someone who could use extra confidence, share your link and both of you benefit!
+      </p>
+      <div class="gradient-card p-4">
+        <p class="text-gray-800 font-medium">
+          “IZZY helped me overcome my anxiety when talking to women. Now I approach conversations with confidence!”
+        </p>
+        <p class="text-right text-sm text-gray-500 mt-2">– Michael T.</p>
       </div>
     </div>
   </div>
+</section>
+
+<!-- --------------- SHARE TIERS --------------- -->
+<main class="max-w-4xl w-full mx-auto mt-16 fade-in" style="animation-delay:.4s;">
+  <h2 class="text-2xl font-bold text-center text-purple-700 mb-8">Your Progress</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Tier 1 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+      <h3 class="text-lg font-semibold mb-2">Share with 1 friend</h3>
+      <p class="text-2xl font-bold text-[#0047AB] mb-4">5 free prompts</p>
+      <button id="btnTier1" onclick="openShareModal()"
+        class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+        Share Now
+      </button>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+      <h3 class="text-lg font-semibold mb-2">Share with 2 friends</h3>
+      <p class="text-2xl font-bold text-[#0047AB] mb-4">10 free prompts</p>
+      <button id="btnTier2" onclick="openShareModal()"
+        class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+        Share & Continue
+      </button>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+      <h3 class="text-lg font-semibold mb-2">Share with 3 friends</h3>
+      <p class="text-2xl font-bold text-[#0047AB] mb-4">20 free prompts</p>
+      <button id="btnTier3" onclick="openShareModal()"
+        class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+        Unlock 20 Prompts
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- --------------- SHARE MODAL --------------- -->
+<div id="shareModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-center">
+    <h2 class="text-2xl font-bold text-[#0047AB] mb-4">Your Personal Link</h2>
+    <input id="personalLink" readonly class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4 text-gray-700 select-all">
+    <p class="text-sm text-gray-500 mb-4">Tap to copy or share via:</p>
+
+    <div class="space-y-3">
+      <button onclick="shareVia('whatsapp')"  class="share-button w-full py-2 rounded-lg bg-green-500  text-white font-semibold">
+        <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+      </button>
+      <button onclick="shareVia('email')"     class="share-button w-full py-2 rounded-lg bg-blue-500   text-white font-semibold">
+        <i class="fas fa-envelope mr-2"></i>Email
+      </button>
+      <button onclick="shareVia('facebook')"  class="share-button w-full py-2 rounded-lg bg-blue-700   text-white font-semibold">
+        <i class="fab fa-facebook-f mr-2"></i>Facebook
+      </button>
+      <button onclick="shareVia('twitter')"   class="share-button w-full py-2 rounded-lg bg-sky-500    text-white font-semibold">
+        <i class="fab fa-twitter mr-2"></i>X / Twitter
+      </button>
+      <button onclick="shareVia('reddit')"    class="share-button w-full py-2 rounded-lg bg-orange-600 text-white font-semibold">
+        <i class="fab fa-reddit-alien mr-2"></i>Reddit
+      </button>
+    </div>
+
+    <button onclick="closeShareModal()" class="mt-6 text-red-500 font-semibold">Close</button>
+  </div>
+</div>
+
+<!-- --------------- FOOTER --------------- -->
+<footer class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-6 px-6 mt-20 fade-in" style="animation-delay:.6s;">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+    <div class="text-center md:text-left mb-4 md:mb-0">
+      <div class="text-2xl font-bold mb-1">IZZY</div>
+      <p class="text-sm opacity-80">AI Avatar for Real Conversations</p>
+    </div>
+    <div class="flex space-x-4">
+      <a href="#" class="hover:text-white opacity-80 hover:opacity-100">Terms</a>
+      <a href="#" class="hover:text-white opacity-80 hover:opacity-100">Privacy</a>
+      <a href="#" class="hover:text-white opacity-80 hover:opacity-100">Support</a>
+    </div>
+  </div>
+</footer>
+
+<!-- --------------- Firebase SDK (compat) --------------- -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<script>
+/* -------- Firebase Init -------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+  authDomain: "izzy-auth.firebaseapp.com",
+  projectId: "izzy-auth",
+  storageBucket: "izzy-auth.appspot.com",
+  messagingSenderId: "573135779043",
+  appId: "1:573135779043:web:f6c59473f9956c917041d6",
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.database();
+
+/* -------- Globals -------- */
+let shareCount   = 0;
+let personalLink = "";
+
+/* -------- Auth State -------- */
+auth.onAuthStateChanged(user=>{
+  if(user){
+    personalLink = `https://izzy-auth.web.app/?ref=${user.uid}`;
+    document.getElementById('personalLink').value = personalLink;
+    fetchShareCount(user.uid);
+  }else{
+    // not logged in
+    document.getElementById('authButton').onclick=()=>window.location.href="index.html";
+  }
+});
+function logout(){auth.signOut().then(()=>window.location.href="index.html");}
+
+/* -------- DB Helpers -------- */
+function fetchShareCount(uid){
+  db.ref('shares/'+uid).once('value').then(snap=>{
+    shareCount = snap.exists()? snap.val():0;
+    updateUI();
+  });
+}
+function incrementShare(uid){
+  if(shareCount>=3) return;
+  shareCount+=1;
+  db.ref('shares/'+uid).set(shareCount);
+  updateUI();
+}
+
+/* -------- UI -------- */
+function updateUI(){
+  const txt=document.getElementById('rewardsText');
+  txt.textContent = shareCount>=3 ? "You've shared 3 times! Enjoy 20 free prompts 🎉"
+    : shareCount==2 ? "Shared 2 times – one more to unlock 20 prompts!"
+    : shareCount==1 ? "Great! Share with 2 more friends for more prompts."
+                    : "Start sharing to earn free prompts!";
+
+  if(shareCount>=3){
+    ['btnTier1','btnTier2','btnTier3'].forEach(id=>{
+      const b=document.getElementById(id); b.classList.add('disabled'); b.disabled=true;
+    });
+  }
+}
+
+/* -------- Modal -------- */
+function openShareModal(){document.getElementById('shareModal').classList.remove('hidden');}
+function closeShareModal(){document.getElementById('shareModal').classList.add('hidden');}
+
+/* -------- Share Channels -------- */
+function shareVia(channel){
+  if(!auth.currentUser){alert("Please log in first");return;}
+  if(shareCount>=3){alert("Share limit reached!");return;}
+
+  const url = encodeURIComponent(personalLink);
+  const text= encodeURIComponent("Check out IZZY – the first AI‑avatar coach for men!");
+  let shareURL="#";
+  switch(channel){
+    case 'whatsapp': shareURL=`https://api.whatsapp.com/send?text=${text}%20${url}`;break;
+    case 'email'   : shareURL=`mailto:?subject=Try%20IZZY&body=${text}%20${url}`;break;
+    case 'facebook': shareURL=`https://www.facebook.com/sharer/sharer.php?u=${url}`;break;
+    case 'twitter' : shareURL=`https://twitter.com/intent/tweet?text=${text}%20${url}`;break;
+    case 'reddit'  : shareURL=`https://www.reddit.com/submit?url=${url}&title=${text}`;break;
+  }
+  window.open(shareURL,'_blank');
+  incrementShare(auth.currentUser.uid);
+}
+
+/* -------- Copy link on click -------- */
+document.getElementById('personalLink').addEventListener('click',e=>{
+  e.target.select(); document.execCommand('copy'); alert("Link copied!");
+});
+</script>
+
+<!-- ================================================================
+  ADD THIS SNIPPET in index.html (after login) to credit inviter
+--------------------------------------------------------------------
+if (window.location.search.includes('ref=')) {
+  const inviter = new URLSearchParams(window.location.search).get('ref');
+  auth.onAuthStateChanged(user=>{
+    if(inviter && user && inviter!==user.uid){
+      const refPath = firebase.database().ref('shares/'+inviter);
+      refPath.transaction(c => (c||0) < 3 ? (c||0)+1 : c);
+      window.history.replaceState(null,null,window.location.pathname);
+    }
+  });
+}
+================================================================ -->
 </body>
 </html>

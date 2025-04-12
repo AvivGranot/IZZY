@@ -593,54 +593,82 @@ function refreshUI(){
   }
 }
 
-/* ---------------- HANDLE PROMPT ---------------- */
-async function handlePrompt(){
-  const userInputEl = document.getElementById('userInput');
-  const input = userInputEl.value.trim();
-  if(!input) return alert('Please type or speak something first');
-  if(!currentUser) return openAuthModal();
+/* --------------------------------------------------
+   HANDLE PROMPT  – counts BEFORE sending anything
+-------------------------------------------------- */
+async function handlePrompt () {
+  const inputEl   = document.getElementById('userInput');
+  const userInput = inputEl.value.trim();
 
-  /* Guard BEFORE accepting */
-  if(!isSubscribed && promptsLeft<=0){
-    openSubscribeModal(); return;
+  if (!userInput) {
+    alert('Please type or speak something first');
+    return;
   }
 
-  /* Atomic decrement in Firebase */
-  if(!isSubscribed){
-    const ref = db.ref(`users/${currentUser.uid}/promptsLeft`);
-    await ref.transaction(curr=>{
-      if (curr===null) curr = FREE_PROMPT_LIMIT;
-      return curr>0 ? curr-1 : curr;   // decrement or keep 0
-    }).then(res=>{
-      promptsLeft = res.snapshot.val();
-      localStorage.setItem(LS_KEY, promptsLeft);   // persist across refresh
-    });
+  /* --- 1) require login --- */
+  if (!currentUser) { openAuthModal(); return; }
+
+  /* --- 2) enforce prompt limit BEFORE send --- */
+  if (!isSubscribed && promptsLeft <= 0) {
+    openSubscribeModal();        // paywall
+    return;                      // hard stop
   }
 
-  /* Now count is updated – proceed */
-  addMessageToHistory(input,'user');
-  userInputEl.value = '';
+  /* --- 3) show history box and add user message --- */
+  conversationHistory.classList.remove('hidden');
+  addMessageToHistory(userInput, 'user');
+  inputEl.value = '';
   document.getElementById('restartBtn').classList.remove('hidden');
-  document.getElementById('conversation-history').classList.remove('hidden');
 
-  refreshUI();
+  /* --- 4) increment counters FIRST --- */
+  promptsUsed  += 1;
+  promptsLeft   = Math.max(0, FREE_PROMPT_LIMIT - promptsUsed);
 
-  if(!isSubscribed && promptsLeft<=0){
-    setTimeout(()=>openSubscribeModal(), 600);
+  /* --- 5) push user message & stats to Firebase --- */
+  const uid = currentUser.uid;
+  const userMsgRef = db.ref(`users/${uid}/chatHistory`).push();
+  await userMsgRef.set({ text: userInput, sender: 'user', timestamp: Date.now() });
+
+  await updateUserData(uid, {
+    promptsUsed,
+    promptsLeft,
+    conversations: promptsUsed
+  });
+
+  refreshUI();                   // update numbers / disable button if needed
+
+  /* --- 6) If out of prompts now, stop & show paywall --- */
+  if (!isSubscribed && promptsLeft === 0) {
+    setTimeout(openSubscribeModal, 500);
+    return;                      // no bot reply
   }
 
-  /* ---- Simulate IZZY response (keep your existing code) ---- */
-  const responseIndex = Math.floor(Math.random()*botResponses.length);
-  const botResponse   = botResponses[responseIndex];
-  setTimeout(async ()=>{
-    addMessageToHistory(botResponse,'assistant');
-    const botMsgRef = db.ref(`users/${currentUser.uid}/chatHistory`).push();
-    await botMsgRef.set({text:botResponse,sender:'assistant',timestamp:Date.now()});
+  /* --- 7) simulate IZZY reply (demo) --- */
+  const reply = botResponses[Math.floor(Math.random() * botResponses.length)];
+  setTimeout(async () => {
+    addMessageToHistory(reply, 'assistant');
+    const botMsgRef = db.ref(`users/${uid}/chatHistory`).push();
+    await botMsgRef.set({ text: reply, sender: 'assistant', timestamp: Date.now() });
   }, 1200);
 }
 
-/* ---------------- USE PROMPT BUTTONS ---------------- */
-function usePrompt(text){
-  document.getElementById('userInput').value = text;
+/* ---------------- refresh numbers & button state ---------------- */
+function refreshUI () {
+  document.getElementById('prompts-left').textContent = isSubscribed ? '∞' : promptsLeft;
+  document.getElementById('conversation-count').textContent = promptsUsed;
+
+  // warning banner (last prompt)
+  if (!isSubscribed && promptsLeft <= 1) {
+    promptsWarning.classList.remove('hidden');
+    promptsWarningCount.textContent = promptsLeft;
+  } else {
+    promptsWarning.classList.add('hidden');
+  }
+
+  // enable / disable Send
+  if (!isSubscribed && promptsLeft <= 0) {
+    disableSendButton();
+  } else {
+    enableSendButton();
+  }
 }
-</script>

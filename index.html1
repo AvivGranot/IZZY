@@ -422,11 +422,11 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
   authDomain: "izzy-auth.firebaseapp.com",
-  projectId: "izzy-auth", 
-  storageBucket: "izzy-auth.appspot.com", 
-  messagingSenderId: "573135779043", 
+  projectId: "izzy-auth",
+  storageBucket: "izzy-auth.appspot.com",
+  messagingSenderId: "573135779043",
   appId: "1:573135779043:web:f6c59473f9956c917041d6",
-  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com/" 
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com/"
 };
 
 // Constants
@@ -457,34 +457,43 @@ let isMobileMenuOpen = false;
 
 function sendMagicLink(event) {
     event.preventDefault();
-    const email = domElements.emailInput.value.trim();
+    const email = document.getElementById('email-input').value.trim();
+    
     if (!email) {
-        showStatusMessage("Please enter your email address.", true);
+        showToast("Please enter your email address.", true);
         return;
     }
     
-    showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showToast("Please enter a valid email address.", true);
+        return;
+    }
     
-    // Use the current URL for the magic link, but ensure it's a full URL
-    const currentUrl = window.location.href;
-    const baseUrl = currentUrl.split('?')[0]; // Remove any query parameters
+    showButtonLoading(document.getElementById('email-submit-btn'), 
+                     document.getElementById('email-button-text'), 
+                     document.getElementById('email-button-spinner'), 
+                     true);
     
+    // Store email for later use
+    localStorage.setItem('emailForSignIn', email);
+    
+    // Use the current URL for the magic link
     const actionCodeSettings = {
-        url: baseUrl,
+        url: window.location.origin + window.location.pathname,
         handleCodeInApp: true
     };
 
     auth.sendSignInLinkToEmail(email, actionCodeSettings)
         .then(() => {
-            window.localStorage.setItem('emailForSignIn', email);
-            showStatusMessage(`Check your email (${email}) for a sign-in link!`, false);
-            domElements.emailInput.value = '';
+            showToast(`Check your email (${email}) for a sign-in link!`, false);
+            document.getElementById('email-input').value = '';
         })
         .catch((error) => {
             console.error("Error sending magic link:", error);
             let errorMessage = "Error sending sign-in link. Please try again.";
             
-            // Provide more specific error messages
             if (error.code === 'auth/invalid-email') {
                 errorMessage = "Please enter a valid email address.";
             } else if (error.code === 'auth/operation-not-allowed') {
@@ -493,10 +502,13 @@ function sendMagicLink(event) {
                 errorMessage = "Too many attempts. Please try again later.";
             }
             
-            showStatusMessage(errorMessage, true);
+            showToast(errorMessage, true);
         })
         .finally(() => {
-            showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
+            showButtonLoading(document.getElementById('email-submit-btn'), 
+                            document.getElementById('email-button-text'), 
+                            document.getElementById('email-button-spinner'), 
+                            false);
         });
 }
 
@@ -506,21 +518,21 @@ function signInWithGoogle() {
         prompt: 'select_account'
     });
     
-    if (domElements.googleSigninBtn) {
-        domElements.googleSigninBtn.disabled = true;
-        domElements.googleSigninBtn.classList.add('opacity-75');
+    const googleSigninBtn = document.getElementById('google-signin-btn');
+    if (googleSigninBtn) {
+        googleSigninBtn.disabled = true;
+        googleSigninBtn.classList.add('opacity-75');
     }
     
     auth.signInWithPopup(provider)
         .then((result) => {
             console.log("Google sign-in successful");
-            // The onAuthStateChanged listener will handle the UI updates
+            showToast("Successfully signed in with Google!", false);
         })
         .catch((error) => {
             console.error("Google sign-in error:", error);
             let errorMessage = "Google sign-in failed. Please try again.";
             
-            // Provide more specific error messages
             if (error.code === 'auth/popup-blocked') {
                 errorMessage = "Sign-in popup was blocked. Please allow popups and try again.";
             } else if (error.code === 'auth/popup-closed-by-user') {
@@ -531,12 +543,12 @@ function signInWithGoogle() {
                 errorMessage = "An account already exists with this email. Please sign in with the original method.";
             }
             
-            showStatusMessage(errorMessage, true);
+            showToast(errorMessage, true);
         })
         .finally(() => {
-            if (domElements.googleSigninBtn) {
-                domElements.googleSigninBtn.disabled = false;
-                domElements.googleSigninBtn.classList.remove('opacity-75');
+            if (googleSigninBtn) {
+                googleSigninBtn.disabled = false;
+                googleSigninBtn.classList.remove('opacity-75');
             }
         });
 }
@@ -1277,6 +1289,28 @@ document.addEventListener('DOMContentLoaded', () => {
         handleReferralVisit(referrerId);
     }
 });
+
+// Handle magic link sign-in
+function handleMagicLinkSignIn() {
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+        let email = localStorage.getItem('emailForSignIn');
+        if (!email) {
+            email = window.prompt('Please provide your email for confirmation');
+        }
+        
+        if (email) {
+            auth.signInWithEmailLink(email, window.location.href)
+                .then((result) => {
+                    localStorage.removeItem('emailForSignIn');
+                    showToast('Successfully signed in!', false);
+                })
+                .catch((error) => {
+                    console.error('Error signing in with email link:', error);
+                    showToast('Error signing in. Please try again.', true);
+                });
+        }
+    }
+}
 </script>
 
 </body>

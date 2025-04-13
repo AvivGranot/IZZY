@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+  <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
+  <meta property="og:image" content="/img/og.png">
+  <meta property="og:title"       content="IZZY – AI Avatar for Real Conversations">
+  <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
+  <meta property="og:url"         content="https://your‑domain.com">
+  <meta property="og:type"        content="website">
+  <meta property="og:image"       content="https://your‑domain.com/img/og.png">
+  <meta property="og:image:alt"   content="Screenshot of IZZY AI avatar app">
+
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IZZY – AI Avatar for Real Conversations</title>
@@ -34,7 +45,7 @@
     .fade-in { animation: fadeIn 0.6s ease-out forwards; }
 
     /* Hidden helper class */
-    .hidden { display:none; }
+    .visually-hidden { display:none; }
 
     /* Chat bubble styling */
     .chat-bubble {
@@ -189,7 +200,7 @@
   </script>
 </head>
 
-<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in">
+<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4"> <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in">
     <div class="flex justify-center mb-6">
       <div class="bg-gradient-to-r from-izzy-pink-500 to-izzy-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
         <span class="text-white text-2xl font-bold">IZZY</span>
@@ -271,8 +282,17 @@
 
     <h2 class="text-2xl font-bold text-izzy-blue mb-4">Your Personal Link</h2>
     <p class="text-sm text-gray-500 mb-2">Tap link to copy</p>
-    <input id="personalLink" readonly class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4 text-gray-700 select-all cursor-pointer bg-gray-50" title="Click to copy link">
-    <p class="text-sm text-gray-500 mb-4">Or share via:</p>
+
+<input  id="personalLink"
+        type="text"
+        readonly
+        onclick="copyReferralLink()"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4
+               text-gray-700 select-all cursor-pointer bg-gray-50"
+        title="Click to copy link">
+
+<p class="text-sm text-gray-500 mb-4">Or share via:</p>
+
 
     <div class="space-y-3">
       <button onclick="shareVia('whatsapp')"  class="share-button w-full py-2 rounded-lg bg-green-500  text-white font-semibold flex items-center justify-center gap-2">
@@ -311,8 +331,9 @@
   </nav>
 </div>
 
-<nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 px-6 py-4 desktop-nav items-center"> <a href="#" class="text-2xl font-bold text-izzy-blue mr-8">IZZY</a>
-
+<nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 px-6 py-4 desktop-nav items-center"> 
+  <a href="#" onclick="copyReferralLink()"
+  class="text-2xl font-bold text-izzy-blue mr-8">IZZY</a>
   <div class="flex items-center space-x-6">
     <a href="#about" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">About</a>
     <a href="#practice" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Practice</a>
@@ -347,17 +368,21 @@
               class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-2 resize-none focus:ring-2 focus:ring-izzy-purple-500 focus:border-transparent pr-10" ></textarea> <button id="micButton" onclick="startDictation()" class="absolute right-3 top-3 text-gray-500 hover:text-izzy-purple-600" aria-label="Use voice input">
             <i class="fas fa-microphone text-xl"></i>
         </button>
-    </div>
+        <div class="mt-3 mb-4 text-sm text-gray-600">
+    Try an example:
+    <button id="promptCoffee"
+            class="text-izzy-purple-600 hover:underline mx-1">Coffee shop ☕</button>•
+    <button id="promptIntro"
+            class="text-izzy-purple-600 hover:underline mx-1">Introduce 👋</button>•
+    <button id="promptCompliment"
+            class="text-izzy-purple-600 hover:underline mx-1">Compliment ✨</button>
+  </div>
 
-    <div class="mt-3 mb-4 text-sm text-gray-600">
-        Try an example:
-        <button onclick="usePrompt('Hi, I noticed you at the coffee shop')"
-                class="ml-2 text-izzy-purple-700 hover:underline">Coffee Shop</button> |
-        <button onclick="usePrompt('Excuse me, I just wanted to introduce myself')"
-                class="ml-1 text-izzy-purple-700 hover:underline">Simple Intro</button> |
-        <button onclick="usePrompt('I like your style, where did you get that?')"
-                class="ml-1 text-izzy-purple-700 hover:underline">Compliment</button>
-    </div>
+  <!-- ▲  NEW BLOCK ENDS HERE ▲ -->
+
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+    <!-- send / restart buttons -->
+  </div>
 
     <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
         <button id="sendButton"
@@ -371,10 +396,33 @@
         </button>
     </div>
 
-    <div id="prompts-warning" class="text-sm text-orange-600 mt-3 hidden">
-      <strong>Note:</strong> You have <span id="prompts-warning-count">0</span> free prompts left. <a href="#subscribe" class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
-    </div>
-  </section>
+    <!-- …existing textarea + buttons … -->
+
+<div id="prompts-warning"
+class="text-sm text-orange-600 mt-3 hidden">
+<strong>Note:</strong> You have
+<span id="prompts-warning-count">0</span> free prompts left.
+<a href="#subscribe"
+class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
+</div>
+
+<!-- 🔹  Magic‑prompt buttons  🔹 -->
+<div class="mt-4 text-sm text-gray-600">
+Try an example:&nbsp;
+<button id="promptCoffee"
+     class="underline text-izzy-purple-600 hover:text-izzy-pink-500 mr-2">
+Coffee‑shop opener
+</button>
+<button id="promptIntro"
+     class="underline text-izzy-purple-600 hover:text-izzy-pink-500 mr-2">
+Introduction
+</button>
+<button id="promptCompliment"
+     class="underline text-izzy-purple-600 hover:text-izzy-pink-500">
+Compliment
+</button>
+</div>
+</section>
 
   <section id="conversation-history" class="glass max-w-xl w-full mt-6 hidden fade-in" style="animation-delay:.3s">
     <h3 class="font-semibold text-lg mb-3 text-center">Conversation History</h3>
@@ -525,7 +573,7 @@
     <div class="mt-12 text-center max-w-2xl mx-auto">
       <h3 class="text-xl font-semibold text-gray-700 mb-4">Why Subscribe to IZZY?</h3>
       <p class="text-gray-600 mb-6">
-        IZZY helps you develop real confidence by providing a safe space to practice approaching and conversing with women. No more anxiety, no more awkward silences - just genuine communication skills you can use in real life.
+        IZZY is not a dating app or a flirting asistant. Izzy helps you develop real confidence by providing a safe space to practice conversing with women. No more anxiety, no more awkward silences - just genuine communication skills you can use in real life.
       </p>
       <div class="flex flex-wrap justify-center gap-4 mt-8">
         <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
@@ -561,12 +609,11 @@
         <div class="w-full md:w-1/2">
           <h2 class="text-2xl font-bold text-purple-700 mb-4">Why Share IZZY?</h2>
           <p class="text-gray-700 mb-6">
-            IZZY lets men practice genuine conversations without fear. If you know someone who could use extra confidence, share your link and both of you benefit!
+            IZZY lets you practice genuine conversations without fear. If you know a friend who could use it, and it may be valuable to him, share your link and both of you benefit free prompts!
           </p>
           <div class="gradient-card p-4">
             <p class="text-gray-800 font-medium">
-              “IZZY helped me overcome my anxiety when talking to women. Now I approach conversations with confidence!”
-            </p>
+              “I always get streesed out before talking to a woman. I never even thought about to approach them. But IZZY helped me practise, to be prepare for any ackward silents or moments, and now I'm much more confident! Thank you!</p>
             <p class="text-right text-sm text-gray-500 mt-2">– Michael T.</p>
           </div>
         </div>
@@ -910,7 +957,6 @@ function getOrdinal(n) {
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-
 /* ---------------- Authentication State Listener ---------------- */
 auth.onAuthStateChanged(user => {
     // Ensure DOM elements are cached before proceeding
@@ -959,6 +1005,8 @@ auth.onAuthStateChanged(user => {
         // ** Force Auth Modal Open and Blur Background **
         openAuthModal(); // This now handles showing modal and blurring
     }
+// Force auth modal visible until Firebase finishes auth check
+if (!firebase.auth().currentUser) openAuthModal();
 });
 
 /* ---------------- UI Update Functions ---------------- */
@@ -986,10 +1034,10 @@ function resetAppState() {
     if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
     domElements.conversationHistorySection?.classList.add('hidden');
     domElements.restartBtn?.classList.add('hidden');
-    domElements.promptsWarning?.classList.add('hidden');
-    enableSendButton();
-    localStorage.removeItem(LS_KEY_CHAT);
-    localStorage.removeItem(LS_KEY_PROMPTS);
+    if (!domElements.promptsWarning) {
+  console.error('promptsWarning element missing in DOM');
+} else {
+  domElements.promptsWarning.classList.add('hidden');
 }
 
 // Shows/hides loading indicators on buttons
@@ -1125,62 +1173,68 @@ function checkSubscriptionStatus() {
     if (!isSubscribed && promptsLeft <= 0) { disableSendButton(); }
     else { enableSendButton(); }
 }
+
 // Updates the Share section UI based on login status and referral count
+// ------------------------------------------------------------------
 function updateShareSectionUI() {
-    if (!domElements.rewardsTextEl || !domElements.referralStatusEl || !domElements.shareTierButtons[1]) return; // Ensure elements exist
+  if (!domElements.rewardsTextEl ||
+      !domElements.referralStatusEl ||
+      !domElements.shareTierButtons[1]) return;   // Safety‑check
 
-    if (!currentUser) {
-        // Logged out state
-        domElements.rewardsTextEl.textContent = "Log in to start sharing & earn free prompts!";
-        domElements.referralStatusEl.textContent = "";
-        // Disable all share buttons
-        Object.values(domElements.shareTierButtons).forEach(button => {
-            if(button) { button.classList.add('disabled'); button.disabled = true; }
-        });
-        if(domElements.personalLinkInput) domElements.personalLinkInput.value = "Log in to get your link";
+  // ---------- Logged‑OUT state ----------
+  if (!currentUser) {
+    domElements.rewardsTextEl.textContent =
+      "Log in to start sharing & earn free prompts!";
+    domElements.referralStatusEl.textContent = "";
 
+    // Disable ALL tier buttons
+    Object.values(domElements.shareTierButtons).forEach(btn => {
+      if (!btn) return;
+      btn.classList.add('disabled');
+      btn.disabled = true;
+    });
+
+    if (domElements.personalLinkInput)
+      domElements.personalLinkInput.value = "Log in to get your link";
+    return;                    // ← exit early; nothing more to do
+  }
+
+  // ---------- Logged‑IN state ----------
+  const count = successfulReferralCount;
+  let rewardText = "";
+  let statusText =
+      `You have successfully referred ${count} friend${count === 1 ? '' : 's'}.`;
+
+  if (count >= MAX_REFERRALS_REWARDED) {
+    rewardText = "You've earned the maximum referral reward! 🎉";
+    statusText += " Thanks for sharing!";
+  } else if (count === 2) {
+    rewardText = `Refer one more friend to unlock +${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
+  } else if (count === 1) {
+    rewardText = `Refer ${MAX_REFERRALS_REWARDED - count} more friends for more rewards!`;
+  } else { // count === 0
+    rewardText = "Share with friends and earn free prompts!";
+    statusText = "Start sharing to track your progress.";
+  }
+
+  domElements.rewardsTextEl.textContent   = rewardText;
+  domElements.referralStatusEl.textContent = statusText;
+
+  // Disable buttons only if user already hit the max tier
+  Object.values(domElements.shareTierButtons).forEach(btn => {
+    if (!btn) return;
+    if (count >= MAX_REFERRALS_REWARDED) {
+      btn.classList.add('disabled');
+      btn.disabled = true;
     } else {
-        // Logged in state
-        const count = successfulReferralCount; // Use the loaded count
-        let rewardText = "";
-        let statusText = `You have successfully referred ${count} friend${count === 1 ? '' : 's'}.`;
-
-        if (count >= MAX_REFERRALS_REWARDED) {
-            // User has reached the maximum reward tier
-            rewardText = `You've earned the maximum referral reward! 🎉`; // Simplified message
-            statusText += " Thanks for sharing!";
-        } else if (count === 2) {
-            rewardText = `Refer one more friend to unlock +${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
-        } else if (count === 1) {
-            rewardText = `Refer ${MAX_REFERRALS_REWARDED - count} more friends for more rewards!`;
-        } else {
-            // count is 0
-            rewardText = "Share with friends and earn free prompts!";
-            statusText = "Start sharing to track your progress.";
-        }
-
-        domElements.rewardsTextEl.textContent = rewardText;
-        domElements.referralStatusEl.textContent = statusText;
-
-        // Enable/disable tier buttons based on *potential* to reach that tier
-        Object.entries(domElements.shareTierButtons).forEach(([tier, button]) => {
-             if(!button) return;
-            if (count >= MAX_REFERRALS_REWARDED) {
-                // Disable all if max rewards reached
-                 button.classList.add('disabled');
-                 button.disabled = true;
-                 // Optionally change text to "Max Rewards Reached" or similar
-                 // button.textContent = "Max Reached";
-            } else {
-                // Enable all buttons if not maxed out, as user can always share more
-                button.classList.remove('disabled');
-                button.disabled = false;
-            }
-        });
-         if(domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
+      btn.classList.remove('disabled');
+      btn.disabled = false;
     }
-}
+  });
 
+  if (domElements.personalLinkInput)
+    domElements.personalLinkInput.value = personalReferralLink;
+}
 
 /* ---------------- Modal Management ---------------- */
 function openAuthModal() {
@@ -1420,6 +1474,19 @@ function addEventListeners() {
     domElements.personalLinkInput?.addEventListener('click', copyReferralLink);
     Object.values(domElements.shareTierButtons).forEach(button => { if(button) button.addEventListener('click', openShareModal); });
 
+    Object.entries(domElements).forEach(([key, el]) => {
+  if (!el) console.warn(`Missing DOM element for ${key}`);
+});
+
+// --- magic‑prompt buttons ---
+document.getElementById('promptCoffee')
+  ?.addEventListener('click', () => usePrompt('Hi, I noticed you at the coffee shop'));
+document.getElementById('promptIntro')
+  ?.addEventListener('click', () => usePrompt('Excuse me, I just wanted to introduce myself'));
+document.getElementById('promptCompliment')
+  ?.addEventListener('click', () => usePrompt('I like your style, where did you get that?'));
+
+
     // Subscription buttons listener
     const mainSubButtons = document.querySelectorAll('#subscribe .plan-card a[target="_blank"]');
     mainSubButtons.forEach(button => {
@@ -1469,6 +1536,20 @@ document.addEventListener('DOMContentLoaded', () => {
      }
 });
 
+/* ---------- Ask for microphone permission on load ---------- */
+function requestMicPermission() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      // Immediately stop tracks – we just needed the permission
+      stream.getTracks().forEach(t => t.stop());
+      console.log("Microphone permission granted");
+    })
+    .catch(err => {
+      console.warn("Mic permission denied:", err);
+    });
+}
+document.addEventListener('DOMContentLoaded', requestMicPermission);
 </script>
 
 </body>

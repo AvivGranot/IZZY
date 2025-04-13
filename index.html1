@@ -422,11 +422,12 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
   authDomain: "izzy-auth.firebaseapp.com",
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com",
   projectId: "izzy-auth",
-  storageBucket: "izzy-auth.appspot.com",
+  storageBucket: "izzy-auth.firebaseapp.com",
   messagingSenderId: "573135779043",
   appId: "1:573135779043:web:f6c59473f9956c917041d6",
-  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com/"
+  measurementId: "G-8JLKB2MMKS"
 };
 
 // Constants
@@ -457,7 +458,7 @@ let isMobileMenuOpen = false;
 
 function sendMagicLink(event) {
     event.preventDefault();
-    const email = document.getElementById('email-input').value.trim();
+    const email = document.getElementById('email').value.trim();
     
     if (!email) {
         showToast("Please enter your email address.", true);
@@ -471,24 +472,26 @@ function sendMagicLink(event) {
         return;
     }
     
-    showButtonLoading(document.getElementById('email-submit-btn'), 
-                     document.getElementById('email-button-text'), 
-                     document.getElementById('email-button-spinner'), 
-                     true);
+    showButtonLoading(
+        document.getElementById('email-submit-btn'),
+        document.querySelector('#email-submit-btn .email-btn-text'),
+        document.querySelector('#email-submit-btn .spinner'),
+        true
+    );
     
     // Store email for later use
     localStorage.setItem('emailForSignIn', email);
     
     // Use the current URL for the magic link
     const actionCodeSettings = {
-        url: window.location.origin + window.location.pathname,
+        url: window.location.href,
         handleCodeInApp: true
     };
 
     auth.sendSignInLinkToEmail(email, actionCodeSettings)
         .then(() => {
             showToast(`Check your email (${email}) for a sign-in link!`, false);
-            document.getElementById('email-input').value = '';
+            document.getElementById('email').value = '';
         })
         .catch((error) => {
             console.error("Error sending magic link:", error);
@@ -505,10 +508,12 @@ function sendMagicLink(event) {
             showToast(errorMessage, true);
         })
         .finally(() => {
-            showButtonLoading(document.getElementById('email-submit-btn'), 
-                            document.getElementById('email-button-text'), 
-                            document.getElementById('email-button-spinner'), 
-                            false);
+            showButtonLoading(
+                document.getElementById('email-submit-btn'),
+                document.querySelector('#email-submit-btn .email-btn-text'),
+                document.querySelector('#email-submit-btn .spinner'),
+                false
+            );
         });
 }
 
@@ -1220,9 +1225,18 @@ function updateShareSectionUI() {
 }
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
+try {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log("Firebase Initialized");
+    } else {
+        firebase.app();
+        console.log("Firebase Already Initialized");
+    }
+} catch (e) {
+    console.error("Firebase initialization failed:", e);
+    showToast("Application could not load. Please check console or refresh.", true);
+}
 
 // Initialize state variables
 let currentUser = null;

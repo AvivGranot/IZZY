@@ -686,15 +686,13 @@ Compliment
 
 <script>
 /* ---------------- Firebase Initialization ---------------- */
-// IMPORTANT: Replace with your actual Firebase config. Use environment variables for production.
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // Replace
-  authDomain: "YOUR_AUTH_DOMAIN", // Replace
-  projectId: "YOUR_PROJECT_ID", // Replace
-  storageBucket: "YOUR_STORAGE_BUCKET", // Replace
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace
-  appId: "YOUR_APP_ID", // Replace
-  databaseURL: "YOUR_DATABASE_URL" // Replace (Optional but good practice)
+  apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+  projectId: "izzy-auth", 
+  storageBucket: "izzy-auth.firebasestorage.app", 
+  messagingSenderId: "573135779043", 
+  appId: "1:573135779043:web:f6c59473f9956c917041d6",
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com/" 
 };
 
 // Initialize Firebase (only once)
@@ -1023,22 +1021,29 @@ function updateAuthUI(isSignedIn) {
 
 // Resets UI elements and state
 function resetAppState() {
-    promptsUsed = 0;
-    promptsLeft = FREE_PROMPT_LIMIT;
-    isSubscribed = false;
-    currentConversationId = null;
+  promptsUsed               = 0;
+  promptsLeft               = FREE_PROMPT_LIMIT;
+  isSubscribed              = false;
+  currentConversationId     = null;
 
-    if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = '0';
-    if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = 'Beginner';
-    if (domElements.promptsLeftEl) domElements.promptsLeftEl.textContent = FREE_PROMPT_LIMIT;
-    if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
-    domElements.conversationHistorySection?.classList.add('hidden');
-    domElements.restartBtn?.classList.add('hidden');
-    if (!domElements.promptsWarning) {
-  console.error('promptsWarning element missing in DOM');
-} else {
-  domElements.promptsWarning.classList.add('hidden');
-}
+  if (domElements.conversationCountEl)
+    domElements.conversationCountEl.textContent = '0';
+  if (domElements.skillLevelEl)
+    domElements.skillLevelEl.textContent       = 'Beginner';
+  if (domElements.promptsLeftEl)
+    domElements.promptsLeftEl.textContent      = FREE_PROMPT_LIMIT;
+  if (domElements.chatContainer)
+    domElements.chatContainer.innerHTML        = '';
+
+  domElements.conversationHistorySection?.classList.add('hidden');
+  domElements.restartBtn?.classList.add('hidden');
+
+  if (!domElements.promptsWarning) {
+    console.error('promptsWarning element missing in DOM');
+  } else {
+    domElements.promptsWarning.classList.add('hidden');
+  }
+}   // ← exactly one brace closes the function
 
 // Shows/hides loading indicators on buttons
 function showButtonLoading(button, textElement, spinnerElement, isLoading) {
@@ -1282,11 +1287,10 @@ function signInWithGoogle() {
 }
 function sendMagicLink(event) {
     event.preventDefault();
-    const email = domElements.emailInput.value.trim();
-    if (!email) { showStatusMessage("Please enter your email address.", true); return; }
-    showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
-    clearStatusMessage();
-    const actionCodeSettings = { url: window.location.href.split('?')[0], handleCodeInApp: true, };
+    const actionCodeSettings = {
+  url: "https://izzy-auth.web.app", // ← Your Firebase Hosting URL (must match exactly what’s whitelisted)
+  handleCodeInApp: true,
+};
     auth.sendSignInLinkToEmail(email, actionCodeSettings)
         .then(() => { window.localStorage.setItem('emailForSignIn', email); showStatusMessage(`Check your email (${email}) for a sign-in link!`, false); domElements.emailInput.value = ''; })
         .catch((error) => { console.error("Error sending magic link:", error); showStatusMessage(`Error: ${error.message}`, true); })

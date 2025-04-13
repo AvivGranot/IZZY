@@ -183,24 +183,13 @@
               600: '#DB2777'
             }
           },
-          // Add aspect ratio plugin if needed for iframe
-          // aspectRatio: {
-          //   '16/9': '56.25%',
-          //   '4/3': '75%',
-          // },
         }
       },
-      // plugins: [
-      //   require('@tailwindcss/aspect-ratio'), // Uncomment if you install the plugin
-      // ],
     }
   </script>
 </head>
 
-<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in relative"> <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" aria-label="Close authentication modal">
-        <i class="fas fa-times text-xl"></i>
-    </button>
-
+<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in">
     <div class="flex justify-center mb-6">
       <div class="bg-gradient-to-r from-izzy-pink-500 to-izzy-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
         <span class="text-white text-2xl font-bold">IZZY</span>
@@ -208,7 +197,7 @@
     </div>
     <div class="text-center mb-8">
       <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Real Conversations.</h1> <h2 class="text-2xl sm:text-3xl font-semibold text-gray-900 mb-4">Real Confidence.</h2>
-    </div>
+      <p class="text-gray-600">Please log in or sign up to continue.</p> </div>
 
     <button id="google-signin-btn"
       class="w-full flex items-center justify-center border border-gray-300 rounded-full py-3 mb-4 hover:bg-gray-50 transition-colors duration-200">
@@ -302,8 +291,7 @@
         <i class="fab fa-reddit-alien"></i>Reddit
       </button>
     </div>
-
-    </div>
+  </div>
 </div>
 
 
@@ -319,8 +307,7 @@
   </div>
   <nav class="flex flex-col space-y-6 text-center"> <a href="#about" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">About</a>
     <a href="#practice" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Practice</a>
-    <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a> <hr class="border-gray-200 my-4"> <button id="mobile-authButton" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Login</button>
-    <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
+    <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a> <hr class="border-gray-200 my-4"> <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
   </nav>
 </div>
 
@@ -331,7 +318,6 @@
     <a href="#practice" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Practice</a>
     <a href="#subscribe" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Share</a> </div>
   <div class="ml-auto flex items-center space-x-4">
-    <button id="authButton" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Login</button>
     <button id="logoutButton" class="text-red-500 font-semibold hover:text-red-700 hidden transition-colors">Logout</button>
   </div>
 </nav>
@@ -341,7 +327,7 @@
   <section id="hero" class="text-center max-w-4xl mb-12 fade-in"> <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-600 bg-clip-text text-transparent leading-tight mb-4">
       The World's First <br/> AI-Avatar for Real Life
     </h1>
-    <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto"> Practice conversations, build confidence, and never be afraid to approach someone again.<br/>Try it for free.
+    <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto"> Practice conversations, build confidence, and never be afraid to approach someone again.<br/>Try it for free (after login).
     </p>
 
     <div class="w-full max-w-xl mx-auto relative mb-10" style="padding-bottom: 75%;"> <iframe id="avatarFrame"
@@ -462,7 +448,7 @@
               <span>Basic Conversational Training</span>
             </li>
           </ul>
-          <a href="#" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
+          <a href="https://buy.stripe.com/test_PLACEHOLDER_1" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
             Subscribe
           </a>
         </div>
@@ -532,6 +518,24 @@
            <a href="https://buy.stripe.com/test_6oE3cO9PM2h66qU4gg" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
             Subscribe
           </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center max-w-2xl mx-auto">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4">Why Subscribe to IZZY?</h3>
+      <p class="text-gray-600 mb-6">
+        IZZY helps you develop real confidence by providing a safe space to practice approaching and conversing with women. No more anxiety, no more awkward silences - just genuine communication skills you can use in real life.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
+          <i class="fas fa-shield-alt w-5 h-5 mr-2 text-purple-500"></i> 100% Safe Practice
+        </div>
+        <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
+          <i class="fas fa-comments w-5 h-5 mr-2 text-purple-500"></i> Realistic Interactions
+        </div>
+        <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
+          <i class="fas fa-clock w-5 h-5 mr-2 text-purple-500"></i> 24/7 Availability
         </div>
       </div>
     </div>
@@ -657,7 +661,8 @@ try {
     }
 } catch (e) {
     console.error("Firebase initialization failed:", e);
-    showToast("Application could not load.", true); // Show error to user
+    // Can't use showToast here as it might not be defined yet
+    alert("Application could not load. Please check console or refresh.");
 }
 
 const auth = firebase.auth();
@@ -666,7 +671,8 @@ const db = firebase.database();
 // Constants
 const FREE_PROMPT_LIMIT = 3;
 const MAX_REFERRALS_REWARDED = 3; // Max referrals that grant rewards
-const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 }; // Prompts awarded per successful referral count
+// Defines the *additional* prompts awarded when reaching *each* tier
+const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 };
 
 // Local Storage Keys
 const LS_KEY_PROMPTS = 'izzy_prompts_left_backup';
@@ -685,166 +691,239 @@ let personalReferralLink = ""; // User's own referral link
 let successfulReferralCount = 0; // How many users successfully signed up via this user's link
 
 /* ---------------- DOM Element References ---------------- */
-// Cache frequently accessed DOM elements
-const domElements = {
-    authModal: document.getElementById('authModal'),
-    subscribeModal: document.getElementById('subscribeModal'),
-    shareModal: document.getElementById('shareModal'), // Added
-    mainContent: document.getElementById('mainContent'),
-    authStatusMessage: document.getElementById('auth-status-message'),
-    authButton: document.getElementById('authButton'),
-    logoutButton: document.getElementById('logoutButton'),
-    mobileAuthButton: document.getElementById('mobile-authButton'),
-    mobileLogoutButton: document.getElementById('mobile-logoutButton'),
-    recaptchaContainer: document.getElementById('recaptcha-container'),
-    emailForm: document.getElementById('email-form'),
-    emailInput: document.getElementById('email'),
-    emailSubmitBtn: document.getElementById('email-submit-btn'),
-    googleSigninBtn: document.getElementById('google-signin-btn'),
-    chatContainer: document.getElementById('chat-container'),
-    conversationHistorySection: document.getElementById('conversation-history'),
-    promptsWarning: document.getElementById('prompts-warning'),
-    promptsWarningCount: document.getElementById('prompts-warning-count'),
-    userInput: document.getElementById('userInput'),
-    sendButton: document.getElementById('sendButton'),
-    sendButtonText: document.querySelector('#sendButton .send-btn-text'),
-    sendButtonSpinner: document.querySelector('#sendButton .spinner'),
-    emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
-    emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
-    restartBtn: document.getElementById('restartBtn'),
-    toast: document.getElementById('toast'),
-    mobileMenuButton: document.getElementById('mobile-menu-button'),
-    mobileMenu: document.getElementById('mobile-menu'),
-    closeMobileMenuButton: document.getElementById('close-mobile-menu'),
-    mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
-    conversationCountEl: document.getElementById('conversation-count'),
-    skillLevelEl: document.getElementById('skill-level'),
-    promptsLeftEl: document.getElementById('prompts-left'),
-    avatarFrame: document.getElementById('avatarFrame'),
-    micButtonIcon: document.querySelector('#micButton i'), // Added Mic icon
-    // Share Section Elements
-    personalLinkInput: document.getElementById('personalLink'), // Added
-    rewardsTextEl: document.getElementById('rewardsText'), // Added
-    referralStatusEl: document.getElementById('referralStatus'), // Added
-    shareTierButtons: { // Added
-        1: document.getElementById('btnTier1'),
-        2: document.getElementById('btnTier2'),
-        3: document.getElementById('btnTier3')
-    }
-};
+// Cache frequently accessed DOM elements (ensure this runs after DOM is ready or elements exist)
+let domElements = {};
+function cacheDomElements() {
+    domElements = {
+        authModal: document.getElementById('authModal'),
+        subscribeModal: document.getElementById('subscribeModal'),
+        shareModal: document.getElementById('shareModal'), // Added
+        mainContent: document.getElementById('mainContent'),
+        authStatusMessage: document.getElementById('auth-status-message'),
+        // authButton: document.getElementById('authButton'), // Removed as login is forced
+        logoutButton: document.getElementById('logoutButton'),
+        // mobileAuthButton: document.getElementById('mobile-authButton'), // Removed
+        mobileLogoutButton: document.getElementById('mobile-logoutButton'),
+        recaptchaContainer: document.getElementById('recaptcha-container'),
+        emailForm: document.getElementById('email-form'),
+        emailInput: document.getElementById('email'),
+        emailSubmitBtn: document.getElementById('email-submit-btn'),
+        googleSigninBtn: document.getElementById('google-signin-btn'),
+        chatContainer: document.getElementById('chat-container'),
+        conversationHistorySection: document.getElementById('conversation-history'),
+        promptsWarning: document.getElementById('prompts-warning'),
+        promptsWarningCount: document.getElementById('prompts-warning-count'),
+        userInput: document.getElementById('userInput'),
+        sendButton: document.getElementById('sendButton'),
+        sendButtonText: document.querySelector('#sendButton .send-btn-text'),
+        sendButtonSpinner: document.querySelector('#sendButton .spinner'),
+        emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
+        emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
+        restartBtn: document.getElementById('restartBtn'),
+        toast: document.getElementById('toast'),
+        mobileMenuButton: document.getElementById('mobile-menu-button'),
+        mobileMenu: document.getElementById('mobile-menu'),
+        closeMobileMenuButton: document.getElementById('close-mobile-menu'),
+        mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
+        conversationCountEl: document.getElementById('conversation-count'),
+        skillLevelEl: document.getElementById('skill-level'),
+        promptsLeftEl: document.getElementById('prompts-left'),
+        avatarFrame: document.getElementById('avatarFrame'),
+        micButtonIcon: document.querySelector('#micButton i'), // Added Mic icon
+        // Share Section Elements
+        personalLinkInput: document.getElementById('personalLink'), // Added
+        rewardsTextEl: document.getElementById('rewardsText'), // Added
+        referralStatusEl: document.getElementById('referralStatus'), // Added
+        shareTierButtons: { // Added
+            1: document.getElementById('btnTier1'),
+            2: document.getElementById('btnTier2'),
+            3: document.getElementById('btnTier3')
+        }
+    };
+}
+
 
 let recaptchaVerifier = null; // For phone auth or email link reCAPTCHA
 
 /* ---------------- Referral Logic ---------------- */
-// Handles tracking visits from referral links
+
+/**
+ * Checks if the current URL contains a referral code ('ref')
+ * and stores the potential referrer's UID in localStorage.
+ * Also tracks the first visit via a specific link to prevent multiple
+ * increments of the 'referralsReceived' counter (analytics).
+ */
 function handleReferralVisit() {
     const urlParams = new URLSearchParams(window.location.search);
     const inviterUid = urlParams.get('ref');
 
-    if (inviterUid && inviterUid !== 'undefined' && inviterUid.length > 5) {
+    if (inviterUid && inviterUid !== 'undefined' && inviterUid.length > 5) { // Basic validation
         console.log("Referral code detected:", inviterUid);
-        // Store inviter UID locally to potentially credit them upon signup
+        // Store inviter UID locally to credit them upon signup
         localStorage.setItem(LS_KEY_REFERRER, inviterUid);
 
         const visitedKey = LS_KEY_REFERRAL_VISITED_PREFIX + inviterUid;
         // If this is the first time visiting via this specific referral link
         if (!localStorage.getItem(visitedKey)) {
-            console.log("First visit via this referral. Incrementing received count for", inviterUid);
-            const refPath = `referralsReceived/${inviterUid}`; // Track how many unique visits a link gets
-            db.ref(refPath).transaction(currentCount => (currentCount || 0) + 1)
+            console.log("First visit via this referral link for inviter:", inviterUid);
+            // Increment a counter for analytics (how many clicks the link got)
+            const refReceivedPath = `referralsReceived/${inviterUid}`;
+            db.ref(refReceivedPath).transaction(currentCount => (currentCount || 0) + 1)
                 .then(() => {
                     console.log("Referral received count updated for", inviterUid);
-                    localStorage.setItem(visitedKey, 'true'); // Mark as visited
+                    // Mark this specific referral link as visited in localStorage for this browser
+                    localStorage.setItem(visitedKey, 'true');
                 })
                 .catch(error => console.error("Failed to update referral received count:", error));
         } else {
-             console.log("Already visited via this referral link.");
+             console.log("Already visited via this referral link for inviter:", inviterUid);
         }
-        // Clean the URL (optional, keeps URL tidy after processing)
+        // Optional: Clean the referral code from the URL after processing
         // if (window.history && window.history.replaceState) {
-        //     window.history.replaceState({}, document.title, window.location.pathname);
+        //     const cleanUrl = window.location.pathname + window.location.hash; // Keep hash for SPA navigation
+        //     window.history.replaceState({}, document.title, cleanUrl);
         // }
     }
 }
 
-// Handles crediting the referrer when a new user signs up
+/**
+ * Called when a new user signs up. Checks if they were referred via a link
+ * (by looking for inviterUid in localStorage). If so, records the successful
+ * referral and grants bonus prompts to the inviter.
+ * @param {string} newUserId - The UID of the newly signed-up user.
+ */
 function creditReferrerOnSignUp(newUserId) {
     const inviterUid = localStorage.getItem(LS_KEY_REFERRER);
-    if (inviterUid && inviterUid !== newUserId) {
-        console.log(`Crediting inviter ${inviterUid} for new user ${newUserId}`);
+
+    // Check if an inviter UID exists, is valid, and is not the new user themselves
+    if (inviterUid && inviterUid !== newUserId && inviterUid.length > 5) {
+        console.log(`Attempting to credit inviter ${inviterUid} for new user ${newUserId}`);
+
         const successRefPath = `successfulReferrals/${inviterUid}/${newUserId}`;
         const inviterUserRef = db.ref(`users/${inviterUid}`);
 
-        // 1. Mark the referral as successful (prevents double crediting this specific pair)
-        db.ref(successRefPath).set(firebase.database.ServerValue.TIMESTAMP)
-            .then(() => {
-                console.log("Successful referral pair recorded.");
-                // 2. Increment the inviter's successful referral count
-                return inviterUserRef.child('successfulReferralCount').transaction(count => (count || 0) + 1);
-            })
-            .then((result) => {
-                 if (result.committed) {
-                    const newRefCount = result.snapshot.val();
-                    console.log(`Inviter ${inviterUid} now has ${newRefCount} successful referrals.`);
-                    // 3. Grant bonus prompts to the inviter based on tiers (if applicable)
-                    grantReferralBonusPrompts(inviterUid, newRefCount);
-                 } else {
-                     console.log("Inviter referral count transaction aborted.");
-                 }
-                 // 4. Remove the stored key to prevent accidental re-crediting on subsequent logins
-                 localStorage.removeItem(LS_KEY_REFERRER);
-            })
-            .catch(error => console.error("Failed to record successful referral or grant bonus:", error));
+        // Use a transaction on the *successful referral path* to ensure this specific referral
+        // is only credited once, even if the function somehow runs multiple times.
+        db.ref(successRefPath).transaction(currentData => {
+            if (currentData === null) { // Only proceed if this referral hasn't been marked successful yet
+                return firebase.database.ServerValue.TIMESTAMP; // Mark as successful with timestamp
+            } else {
+                console.log(`Referral from ${inviterUid} to ${newUserId} already credited.`);
+                return; // Abort transaction - already credited
+            }
+        })
+        .then(result => {
+            if (!result.committed) {
+                // Transaction aborted (likely already credited)
+                localStorage.removeItem(LS_KEY_REFERRER); // Clean up local storage anyway
+                return Promise.reject("Referral already credited."); // Stop further processing
+            }
+
+            // If transaction committed, it means this referral was successfully marked.
+            console.log("Successful referral pair recorded in DB.");
+
+            // Now, increment the inviter's overall successful referral count
+            return inviterUserRef.child('successfulReferralCount').transaction(count => (count || 0) + 1);
+        })
+        .then((result) => {
+             if (!result.committed) {
+                 console.log("Inviter referral count transaction aborted (maybe concurrent update?).");
+                 return Promise.reject("Failed to update inviter count.");
+             }
+             // If count updated successfully
+             const newRefCount = result.snapshot.val();
+             console.log(`Inviter ${inviterUid} now has ${newRefCount} successful referrals.`);
+
+             // Grant bonus prompts based on the new count
+             grantReferralBonusPrompts(inviterUid, newRefCount);
+
+             // Clean up the stored inviter UID from localStorage after successful processing
+             localStorage.removeItem(LS_KEY_REFERRER);
+        })
+        .catch(error => {
+            if (error !== "Referral already credited." && error !== "Failed to update inviter count.") {
+                 console.error("Error during referral crediting process:", error);
+            }
+            // Clean up local storage even if there was an error to prevent retries on next login
+            localStorage.removeItem(LS_KEY_REFERRER);
+        });
+    } else if (inviterUid) {
+         // Clear invalid or self-referral inviter keys
+         localStorage.removeItem(LS_KEY_REFERRER);
     }
 }
 
-// Grants bonus prompts to the inviter based on their successful referral count
+/**
+ * Grants bonus prompts to the inviter based on their new successful referral count.
+ * Uses the REFERRAL_PROMPTS_TIERS constant.
+ * @param {string} inviterUid - The UID of the user who referred someone.
+ * @param {number} newRefCount - The new total number of successful referrals for the inviter.
+ */
 function grantReferralBonusPrompts(inviterUid, newRefCount) {
+    // Check if the user has already reached the maximum reward tier
     if (newRefCount > MAX_REFERRALS_REWARDED) {
-        console.log("Inviter has already reached max referral rewards.");
-        return; // Already got max rewards
+        console.log(`Inviter ${inviterUid} has already reached max referral rewards.`);
+        return; // No more rewards beyond the max tier
     }
 
+    // Get the specific bonus amount for reaching this tier
     const promptsToAdd = REFERRAL_PROMPTS_TIERS[newRefCount];
+
     if (!promptsToAdd) {
-        console.log(`No specific prompt reward for ${newRefCount} referrals.`);
-        return; // No reward tier for this count
+        console.log(`No specific prompt reward defined for reaching ${newRefCount} referrals.`);
+        return; // No reward defined for this specific count
     }
+
+    console.log(`Attempting to grant ${promptsToAdd} bonus prompts to inviter ${inviterUid} for reaching ${newRefCount} referrals.`);
 
     const inviterUserRef = db.ref(`users/${inviterUid}`);
-    // Use transaction to safely add prompts, especially if user might be using prompts concurrently
+
+    // Use a transaction to safely add prompts to the inviter's count
     inviterUserRef.child('promptsLeft').transaction(currentPrompts => {
-        // Only add prompts if they are not subscribed (or handle differently if subs get bonuses too)
-        // Assuming currentPrompts could be undefined if user data is minimal
+        // Ensure we handle null/undefined cases for promptsLeft
         const currentVal = (typeof currentPrompts === 'number') ? currentPrompts : 0;
+        // Add the bonus prompts for reaching this tier
         return currentVal + promptsToAdd;
     }).then((result) => {
         if (result.committed) {
-             console.log(`Granted ${promptsToAdd} bonus prompts to inviter ${inviterUid}. New total: ${result.snapshot.val()}`);
-             // Optionally, notify the inviter via an in-app message or DB flag
+             const finalPromptCount = result.snapshot.val();
+             console.log(`Granted ${promptsToAdd} bonus prompts to inviter ${inviterUid}. New total: ${finalPromptCount}`);
+             // Optionally, push a notification to the inviter in the database
              db.ref(`notifications/${inviterUid}`).push({
                  type: 'referral_bonus',
-                 message: `You earned ${promptsToAdd} free prompts for referring a new user!`,
+                 message: `You earned ${promptsToAdd} free prompts for referring your ${getOrdinal(newRefCount)} friend!`,
                  timestamp: firebase.database.ServerValue.TIMESTAMP,
                  read: false
              });
         } else {
-            console.log("Transaction to add bonus prompts aborted.");
+            console.log(`Transaction to add bonus prompts for inviter ${inviterUid} aborted (maybe concurrent update?).`);
         }
     }).catch(error => {
         console.error(`Error granting bonus prompts to inviter ${inviterUid}:`, error);
     });
 }
 
-// Call referral visit handling logic on page load
-handleReferralVisit();
+// Helper function for ordinal numbers (1st, 2nd, 3rd)
+function getOrdinal(n) {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
 
 /* ---------------- Authentication State Listener ---------------- */
 auth.onAuthStateChanged(user => {
+    // Ensure DOM elements are cached before proceeding
+    if (Object.keys(domElements).length === 0) {
+        console.warn("DOM elements not cached yet in onAuthStateChanged");
+        cacheDomElements(); // Attempt to cache if not already done
+        if (Object.keys(domElements).length === 0) return; // Still failed, exit
+    }
+
     if (user) {
-        // User is signed in
-        const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime; // Check if first sign-in
+        // --- User is SIGNED IN ---
+        // Check if this is the first time the user is signing in with this account
+        const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
         currentUser = user;
         currentUserId = user.uid;
         console.log("User signed in:", currentUserId, "Is new user:", isNewUser);
@@ -853,65 +932,69 @@ auth.onAuthStateChanged(user => {
         personalReferralLink = `${window.location.origin}${window.location.pathname}?ref=${currentUserId}`;
         if(domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
 
-        updateAuthUI(true); // Update UI to reflect signed-in state
-        closeAuthModal(); // Close auth modal if open
-        loadUserData(currentUserId); // Load user-specific data (includes fetching referral count)
+        updateAuthUI(true); // Update nav buttons (show logout)
+
+        // ** Hide Auth Modal and Unblur Background **
+        domElements.authModal?.classList.add('hidden');
+        domElements.mainContent?.classList.remove('blur-background');
+
+        loadUserData(currentUserId); // Load user data (includes fetching referral count)
 
         // If it's the very first sign-in for this user, check if they were referred
         if (isNewUser) {
             creditReferrerOnSignUp(currentUserId);
         }
     } else {
-        // User is signed out
+        // --- User is SIGNED OUT ---
         console.log("User signed out.");
         currentUser = null;
         currentUserId = null;
-        personalReferralLink = ""; // Clear referral link
-        successfulReferralCount = 0; // Reset count
-        updateAuthUI(false); // Update UI to reflect signed-out state
-        resetAppState(); // Reset prompts, chat history etc.
-        updateShareSectionUI(); // Update share section for logged-out state
+        personalReferralLink = "";
+        successfulReferralCount = 0;
+
+        updateAuthUI(false); // Update nav buttons (hide logout)
+        resetAppState(); // Reset prompts, chat, etc.
+        updateShareSectionUI(); // Update share section
+
+        // ** Force Auth Modal Open and Blur Background **
+        openAuthModal(); // This now handles showing modal and blurring
     }
 });
 
 /* ---------------- UI Update Functions ---------------- */
 
-// Updates buttons and links based on auth state
+// Updates nav buttons based on auth state
 function updateAuthUI(isSignedIn) {
     const showIfSignedIn = [domElements.logoutButton, domElements.mobileLogoutButton];
-    const showIfSignedOut = [domElements.authButton, domElements.mobileAuthButton];
-
     if (isSignedIn) {
         showIfSignedIn.forEach(el => el?.classList.remove('hidden'));
-        showIfSignedOut.forEach(el => el?.classList.add('hidden'));
     } else {
         showIfSignedIn.forEach(el => el?.classList.add('hidden'));
-        showIfSignedOut.forEach(el => el?.classList.remove('hidden'));
     }
 }
 
-// Resets UI elements and state when user logs out or data fails to load
+// Resets UI elements and state
 function resetAppState() {
     promptsUsed = 0;
     promptsLeft = FREE_PROMPT_LIMIT;
     isSubscribed = false;
     currentConversationId = null;
 
-    domElements.conversationCountEl.textContent = '0';
-    domElements.skillLevelEl.textContent = 'Beginner';
-    domElements.promptsLeftEl.textContent = FREE_PROMPT_LIMIT;
-    domElements.chatContainer.innerHTML = ''; // Clear chat history display
-    domElements.conversationHistorySection.classList.add('hidden');
-    domElements.restartBtn.classList.add('hidden');
-    domElements.promptsWarning.classList.add('hidden');
-    enableSendButton(); // Ensure send button is enabled
-    localStorage.removeItem(LS_KEY_CHAT); // Clear local chat backup
-    localStorage.removeItem(LS_KEY_PROMPTS); // Clear local prompt backup
+    if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = '0';
+    if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = 'Beginner';
+    if (domElements.promptsLeftEl) domElements.promptsLeftEl.textContent = FREE_PROMPT_LIMIT;
+    if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+    domElements.conversationHistorySection?.classList.add('hidden');
+    domElements.restartBtn?.classList.add('hidden');
+    domElements.promptsWarning?.classList.add('hidden');
+    enableSendButton();
+    localStorage.removeItem(LS_KEY_CHAT);
+    localStorage.removeItem(LS_KEY_PROMPTS);
 }
 
 // Shows/hides loading indicators on buttons
 function showButtonLoading(button, textElement, spinnerElement, isLoading) {
-    if (!button || !textElement || !spinnerElement) return; // Guard against missing elements
+     if (!button || !textElement || !spinnerElement) return;
     if (isLoading) {
         button.disabled = true;
         textElement.classList.add('hidden');
@@ -924,12 +1007,9 @@ function showButtonLoading(button, textElement, spinnerElement, isLoading) {
 }
 
 /* ---------------- User Data Management (Firebase RTDB) ---------------- */
-
-// Loads user data from Firebase or initializes defaults
 function loadUserData(userId) {
-    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true); // Indicate loading
+    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
     const userRef = db.ref(`users/${userId}`);
-
     userRef.once('value')
         .then(snapshot => {
             const userData = snapshot.val();
@@ -937,14 +1017,16 @@ function loadUserData(userId) {
                 // User exists, load their data
                 console.log("Loaded user data:", userData);
                 promptsUsed = userData.promptsUsed || 0;
-                promptsLeft = Math.max(0, userData.promptsLeft !== undefined ? userData.promptsLeft : FREE_PROMPT_LIMIT);
+                // Load promptsLeft, ensure it's a number, default to FREE_LIMIT if missing/invalid
+                promptsLeft = (typeof userData.promptsLeft === 'number') ? Math.max(0, userData.promptsLeft) : FREE_PROMPT_LIMIT;
                 isSubscribed = userData.subscribed || false;
                 currentConversationId = userData.currentConversationId || null;
-                successfulReferralCount = userData.successfulReferralCount || 0; // Load referral count
+                // Load successful referral count
+                successfulReferralCount = userData.successfulReferralCount || 0;
 
                 // Update UI Stats
-                domElements.conversationCountEl.textContent = userData.conversations || 0;
-                domElements.skillLevelEl.textContent = userData.level || 'Beginner';
+                if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = userData.conversations || 0;
+                if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = userData.level || 'Beginner';
 
                 // Load chat history
                 loadChatHistory(userId, currentConversationId);
@@ -955,22 +1037,28 @@ function loadUserData(userId) {
                 const initialData = {
                     email: currentUser.email || 'Not Provided',
                     createdAt: firebase.database.ServerValue.TIMESTAMP,
-                    conversations: 0,
-                    promptsUsed: 0,
-                    promptsLeft: FREE_PROMPT_LIMIT,
-                    level: 'Beginner',
-                    subscribed: false,
-                    currentConversationId: null,
+                    conversations: 0, promptsUsed: 0, promptsLeft: FREE_PROMPT_LIMIT,
+                    level: 'Beginner', subscribed: false, currentConversationId: null,
                     successfulReferralCount: 0 // Initialize referral count
                 };
                 userRef.set(initialData)
                     .then(() => {
                         console.log("Initial user data saved.");
-                        resetAppState(); // Start with default state
-                        promptsLeft = FREE_PROMPT_LIMIT; // Ensure state reflects initial data
+                        // Set initial state variables after saving defaults
+                        promptsLeft = FREE_PROMPT_LIMIT;
                         successfulReferralCount = 0;
+                        isSubscribed = false;
+                        currentConversationId = null;
+                        promptsUsed = 0;
+                        // Update UI based on these initial values
+                        updatePromptsUI();
+                        checkSubscriptionStatus();
+                        updateShareSectionUI();
+                        resetAppState(); // Reset UI elements like chat
                     })
                     .catch(error => console.error("Error saving initial user data:", error));
+                 // Don't proceed with UI updates until data is potentially saved
+                 return; // Exit early, UI will update after save or on error
             }
 
             // Update UI based on loaded/initialized data
@@ -986,94 +1074,57 @@ function loadUserData(userId) {
             updateShareSectionUI(); // Update share section for error state
         })
         .finally(() => {
-            showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false); // Hide loading indicator
+            // Ensure loading indicator is hidden even if new user init happened
+            showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
         });
 }
-
-// Updates user data in Firebase
 function updateUserData(userId, data) {
     if (!userId) return Promise.reject("No user ID provided for update.");
     console.log("Updating user data:", userId, data);
     return db.ref(`users/${userId}`).update(data);
 }
-
-// Loads chat history for a specific conversation
 function loadChatHistory(userId, conversationId) {
-    // (Function remains largely the same as before)
     if (!userId || !conversationId) {
-        console.log("No active conversation history to load.");
-        domElements.conversationHistorySection.classList.add('hidden');
-        domElements.chatContainer.innerHTML = '';
-        domElements.restartBtn.classList.add('hidden');
-        return;
+        domElements.conversationHistorySection?.classList.add('hidden');
+        if(domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+        domElements.restartBtn?.classList.add('hidden'); return;
     }
-
     const chatRef = db.ref(`chats/${userId}/${conversationId}`);
     chatRef.orderByChild('timestamp').once('value')
         .then(snapshot => {
-            domElements.chatContainer.innerHTML = ''; // Clear previous messages
+            if(domElements.chatContainer) domElements.chatContainer.innerHTML = '';
             if (snapshot.exists()) {
-                console.log("Loading chat history for conversation:", conversationId);
-                domElements.conversationHistorySection.classList.remove('hidden');
-                domElements.restartBtn.classList.remove('hidden'); // Show restart button if history exists
-
+                domElements.conversationHistorySection?.classList.remove('hidden');
+                domElements.restartBtn?.classList.remove('hidden');
                 let messages = [];
-                snapshot.forEach(childSnapshot => {
-                    messages.push(childSnapshot.val());
-                });
-
-                // Add messages to UI
+                snapshot.forEach(childSnapshot => messages.push(childSnapshot.val()));
                 messages.forEach(msg => addMessageToHistory(msg.text, msg.sender));
-
-                // Restore from local storage if DB is empty but local exists (offline scenario backup)
-                if (messages.length === 0) {
-                    const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-                    if (localChat.length > 0) {
-                        console.log("Restoring chat from localStorage backup.");
-                        localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
-                        domElements.conversationHistorySection.classList.remove('hidden');
-                        domElements.restartBtn.classList.remove('hidden');
-                    }
+                if (messages.length > 0) {
+                    localStorage.setItem(LS_KEY_CHAT, JSON.stringify(messages.map(m => ({text: m.text, sender: m.sender}))));
                 } else {
-                     // Backup loaded chat to local storage
-                     localStorage.setItem(LS_KEY_CHAT, JSON.stringify(messages.map(m => ({text: m.text, sender: m.sender}))));
+                     localStorage.removeItem(LS_KEY_CHAT); // Clear if DB empty
                 }
-
             } else {
-                console.log("No chat history found in DB for conversation:", conversationId);
-                domElements.conversationHistorySection.classList.add('hidden');
-                domElements.restartBtn.classList.add('hidden');
-                localStorage.removeItem(LS_KEY_CHAT); // Clear local backup if DB is empty
+                domElements.conversationHistorySection?.classList.add('hidden');
+                domElements.restartBtn?.classList.add('hidden');
+                localStorage.removeItem(LS_KEY_CHAT);
             }
-        })
-        .catch(error => {
-            console.error("Error loading chat history:", error);
-            showToast("Could not load conversation history.", true);
-        });
+        }).catch(error => { console.error("Error loading chat history:", error); showToast("Could not load conversation history.", true); });
 }
-
-// Updates the UI related to prompt counts and warnings
 function updatePromptsUI() {
+    if (!domElements.promptsLeftEl || !domElements.promptsWarning || !domElements.promptsWarningCount) return;
     domElements.promptsLeftEl.textContent = isSubscribed ? '∞' : promptsLeft;
-    if (!isSubscribed && promptsLeft <= 1 && promptsLeft >= 0) { // Show warning only if 1 or 0 left
+    if (!isSubscribed && promptsLeft <= 1 && promptsLeft >= 0) {
         domElements.promptsWarning.classList.remove('hidden');
         domElements.promptsWarningCount.textContent = promptsLeft;
     } else {
         domElements.promptsWarning.classList.add('hidden');
     }
 }
-
-// Checks if the user needs to subscribe and updates UI accordingly
 function checkSubscriptionStatus() {
-    if (!isSubscribed && promptsLeft <= 0) {
-        disableSendButton();
-        console.log("User out of prompts and not subscribed.");
-        // Modal is opened when they *try* to send (in sendMessage function)
-    } else {
-        enableSendButton();
-    }
+    if (!isSubscribed && promptsLeft <= 0) { disableSendButton(); }
+    else { enableSendButton(); }
 }
-
 // Updates the Share section UI based on login status and referral count
 function updateShareSectionUI() {
     if (!domElements.rewardsTextEl || !domElements.referralStatusEl || !domElements.shareTierButtons[1]) return; // Ensure elements exist
@@ -1084,25 +1135,26 @@ function updateShareSectionUI() {
         domElements.referralStatusEl.textContent = "";
         // Disable all share buttons
         Object.values(domElements.shareTierButtons).forEach(button => {
-            button.classList.add('disabled');
-            button.disabled = true;
+            if(button) { button.classList.add('disabled'); button.disabled = true; }
         });
         if(domElements.personalLinkInput) domElements.personalLinkInput.value = "Log in to get your link";
 
     } else {
         // Logged in state
-        const count = successfulReferralCount;
+        const count = successfulReferralCount; // Use the loaded count
         let rewardText = "";
         let statusText = `You have successfully referred ${count} friend${count === 1 ? '' : 's'}.`;
 
         if (count >= MAX_REFERRALS_REWARDED) {
-            rewardText = `You've earned the maximum referral reward (${REFERRAL_PROMPTS_TIERS[MAX_REFERRALS_REWARDED]} prompts)! 🎉`;
+            // User has reached the maximum reward tier
+            rewardText = `You've earned the maximum referral reward! 🎉`; // Simplified message
             statusText += " Thanks for sharing!";
         } else if (count === 2) {
-            rewardText = `Shared ${count} times! Refer one more to unlock ${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
+            rewardText = `Refer one more friend to unlock +${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
         } else if (count === 1) {
-            rewardText = `Great start! Refer ${MAX_REFERRALS_REWARDED - count} more friends for more prompts.`;
+            rewardText = `Refer ${MAX_REFERRALS_REWARDED - count} more friends for more rewards!`;
         } else {
+            // count is 0
             rewardText = "Share with friends and earn free prompts!";
             statusText = "Start sharing to track your progress.";
         }
@@ -1110,14 +1162,17 @@ function updateShareSectionUI() {
         domElements.rewardsTextEl.textContent = rewardText;
         domElements.referralStatusEl.textContent = statusText;
 
-        // Enable/disable tier buttons
+        // Enable/disable tier buttons based on *potential* to reach that tier
         Object.entries(domElements.shareTierButtons).forEach(([tier, button]) => {
-            if (count >= MAX_REFERRALS_REWARDED || count >= parseInt(tier, 10)) {
-                // Disable if max reached or tier already achieved (or handle differently, e.g., show checkmark)
-                 button.classList.add('disabled'); // Keep disabled for now
+             if(!button) return;
+            if (count >= MAX_REFERRALS_REWARDED) {
+                // Disable all if max rewards reached
+                 button.classList.add('disabled');
                  button.disabled = true;
-                 // button.innerHTML = `<i class="fas fa-check mr-2"></i> Reward Claimed`; // Example alternative
+                 // Optionally change text to "Max Rewards Reached" or similar
+                 // button.textContent = "Max Reached";
             } else {
+                // Enable all buttons if not maxed out, as user can always share more
                 button.classList.remove('disabled');
                 button.disabled = false;
             }
@@ -1129,605 +1184,265 @@ function updateShareSectionUI() {
 
 /* ---------------- Modal Management ---------------- */
 function openAuthModal() {
-    if (!currentUser) { // Only open if not logged in
-        domElements.authModal.classList.remove('hidden');
-        domElements.mainContent.classList.add('blur-background');
-        clearStatusMessage();
-        // setupRecaptcha(); // Uncomment if using reCAPTCHA
-    }
+    domElements.authModal?.classList.remove('hidden');
+    domElements.mainContent?.classList.add('blur-background');
+    clearStatusMessage();
 }
-
-function closeAuthModal() {
-    domElements.authModal.classList.add('hidden');
-    domElements.mainContent.classList.remove('blur-background');
-}
-
 function openSubscribeModal() {
-    domElements.subscribeModal.classList.remove('hidden');
-    domElements.mainContent.classList.add('blur-background');
+    domElements.subscribeModal?.classList.remove('hidden');
+    domElements.mainContent?.classList.add('blur-background');
 }
-
 function closeSubscribeModal() {
-    domElements.subscribeModal.classList.add('hidden');
-    domElements.mainContent.classList.remove('blur-background');
+    domElements.subscribeModal?.classList.add('hidden');
+    domElements.mainContent?.classList.remove('blur-background');
 }
-
 function openShareModal() {
-    if (!currentUser) {
-        showToast("Please log in to share.", true);
-        openAuthModal();
-        return;
-    }
-    if (successfulReferralCount >= MAX_REFERRALS_REWARDED) {
-        showToast("You've already earned the maximum referral rewards!", false);
-        // Optionally still open modal but disable share buttons inside?
-        // return;
-    }
-    domElements.shareModal.classList.remove('hidden');
-    // No blur needed for share modal? Or add if desired:
-    // domElements.mainContent.classList.add('blur-background');
+    if (!currentUser) { showToast("Please log in to share.", true); return; }
+    domElements.shareModal?.classList.remove('hidden');
 }
-
 function closeShareModal() {
-    domElements.shareModal.classList.add('hidden');
-    // domElements.mainContent.classList.remove('blur-background'); // Remove blur if added
+    domElements.shareModal?.classList.add('hidden');
 }
-
-
-// Displays status messages within the auth modal
 function showStatusMessage(msg, isError = false) {
-    // (Function remains the same as before)
-    const el = domElements.authStatusMessage;
-    if (!el) return;
+    const el = domElements.authStatusMessage; if (!el) return;
     el.textContent = msg;
     el.className = `text-center text-sm mt-3 min-h-[1.2em] ${isError ? 'text-red-600' : 'text-green-600'}`;
 }
-
 function clearStatusMessage() {
-    // (Function remains the same as before)
-    const el = domElements.authStatusMessage;
-     if (!el) return;
+     const el = domElements.authStatusMessage; if (!el) return;
     el.textContent = '';
-    el.className = 'text-center text-sm mt-3 min-h-[1.2em]'; // Reset class
+    el.className = 'text-center text-sm mt-3 min-h-[1.2em]';
 }
 
 /* ---------------- Authentication Actions ---------------- */
-// setupRecaptcha, signInWithGoogle, sendMagicLink, handleMagicLinkSignIn, logout
-// (Functions remain largely the same as before - ensure reCAPTCHA is setup if needed)
-
-// Sign in with Google
 function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    // Basic loading indicator (no spinner on this specific button in HTML)
-    domElements.googleSigninBtn.disabled = true;
-    domElements.googleSigninBtn.classList.add('opacity-75');
-
+    if (domElements.googleSigninBtn) {
+        domElements.googleSigninBtn.disabled = true;
+        domElements.googleSigninBtn.classList.add('opacity-75');
+    }
     auth.signInWithPopup(provider)
-        .then((result) => {
-            console.log("Google sign-in successful");
-            // Handled by onAuthStateChanged
-        })
-        .catch((error) => {
-            console.error("Google sign-in error:", error);
-            showStatusMessage(`Google sign-in failed: ${error.message}`, true);
-        })
-        .finally(() => {
-             domElements.googleSigninBtn.disabled = false;
-             domElements.googleSigninBtn.classList.remove('opacity-75');
-        });
+        .then((result) => { console.log("Google sign-in successful"); }) // onAuthStateChanged handles UI
+        .catch((error) => { console.error("Google sign-in error:", error); showStatusMessage(`Google sign-in failed: ${error.message}`, true); })
+        .finally(() => { if (domElements.googleSigninBtn) { domElements.googleSigninBtn.disabled = false; domElements.googleSigninBtn.classList.remove('opacity-75'); }});
 }
-
-// Send Magic Link for Email Sign-in
 function sendMagicLink(event) {
     event.preventDefault();
     const email = domElements.emailInput.value.trim();
-    if (!email) {
-        showStatusMessage("Please enter your email address.", true);
-        return;
-    }
-
+    if (!email) { showStatusMessage("Please enter your email address.", true); return; }
     showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
     clearStatusMessage();
-
-    const actionCodeSettings = {
-        url: window.location.href.split('?')[0], // Redirect back to base URL without params
-        handleCodeInApp: true,
-    };
-
+    const actionCodeSettings = { url: window.location.href.split('?')[0], handleCodeInApp: true, };
     auth.sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-            window.localStorage.setItem('emailForSignIn', email);
-            showStatusMessage(`Check your email (${email}) for a sign-in link!`, false);
-            domElements.emailInput.value = '';
-        })
-        .catch((error) => {
-            console.error("Error sending magic link:", error);
-            showStatusMessage(`Error: ${error.message}`, true);
-        })
-        .finally(() => {
-            showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
-        });
+        .then(() => { window.localStorage.setItem('emailForSignIn', email); showStatusMessage(`Check your email (${email}) for a sign-in link!`, false); domElements.emailInput.value = ''; })
+        .catch((error) => { console.error("Error sending magic link:", error); showStatusMessage(`Error: ${error.message}`, true); })
+        .finally(() => { showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false); });
 }
-
-// Handle Sign-in when returning from Magic Link
 function handleMagicLinkSignIn() {
     if (auth.isSignInWithEmailLink(window.location.href)) {
         let email = window.localStorage.getItem('emailForSignIn');
-        if (!email) {
-             email = window.prompt('Please provide your email for confirmation');
-             if (!email) {
-                 console.error("Email confirmation required.");
-                 showToast("Sign-in link requires email confirmation.", true);
-                 return;
-             }
-        }
-        openAuthModal();
-        showStatusMessage("Verifying sign-in link...", false);
-
+        if (!email) { email = window.prompt('Please provide your email for confirmation'); if (!email) { showToast("Sign-in link requires email confirmation.", true); return; } }
+        showStatusMessage("Verifying sign-in link...", false); // Show status in the already open modal
         auth.signInWithEmailLink(email, window.location.href)
             .then((result) => {
                 console.log("Signed in with email link successfully.");
                 window.localStorage.removeItem('emailForSignIn');
-                if (window.history && window.history.replaceState) {
-                    window.history.replaceState({}, document.title, window.location.pathname); // Clean URL
-                }
-                // onAuthStateChanged handles the rest
-            })
-            .catch((error) => {
-                console.error("Error signing in with email link:", error);
-                showStatusMessage(`Error signing in: ${error.message}`, true);
-            });
+                if (window.history && window.history.replaceState) { window.history.replaceState({}, document.title, window.location.pathname); }
+            }) // onAuthStateChanged handles hiding modal
+            .catch((error) => { console.error("Error signing in with email link:", error); showStatusMessage(`Error signing in: ${error.message}`, true); });
     }
 }
-
-// Sign out
 function logout() {
     auth.signOut()
-        .then(() => {
-            console.log("User signed out successfully.");
-            showToast("You have been logged out.");
-            // onAuthStateChanged handles UI updates and state reset
-        })
-        .catch((error) => {
-            console.error("Sign out error:", error);
-            showToast("Error logging out. Please try again.", true);
-        });
+        .then(() => { console.log("User signed out successfully."); showToast("You have been logged out."); }) // onAuthStateChanged handles UI reset
+        .catch((error) => { console.error("Sign out error:", error); showToast("Error logging out. Please try again.", true); });
 }
 
 
 /* ---------------- Chat Functionality ---------------- */
-
-// Adds a message bubble to the chat history UI
 function addMessageToHistory(text, sender = 'user') {
-    // (Function remains the same as before)
+     if (!domElements.chatContainer) return;
      const bubble = document.createElement('div');
     bubble.classList.add('chat-bubble');
     bubble.classList.add(sender === 'user' ? 'user-bubble' : 'assistant-bubble');
     bubble.textContent = text;
-
     domElements.chatContainer.appendChild(bubble);
     domElements.chatContainer.scrollTop = domElements.chatContainer.scrollHeight;
-
-    if (domElements.conversationHistorySection.classList.contains('hidden')) {
-        domElements.conversationHistorySection.classList.remove('hidden');
-        domElements.restartBtn.classList.remove('hidden');
-    }
+    domElements.conversationHistorySection?.classList.remove('hidden');
+    domElements.restartBtn?.classList.remove('hidden');
 }
-
-// Saves a message to Firebase RTDB and updates local backup
 function saveMessage(userId, conversationId, text, sender) {
-    // (Function remains largely the same as before)
      if (!userId || !conversationId) return Promise.reject("Missing user or conversation ID for saving message.");
-
     const chatRef = db.ref(`chats/${userId}/${conversationId}`);
-    const newMessageRef = chatRef.push(); // Generate unique key for message
-    const messageData = {
-        text: text,
-        sender: sender,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    };
-
+    const newMessageRef = chatRef.push();
+    const messageData = { text: text, sender: sender, timestamp: firebase.database.ServerValue.TIMESTAMP };
     return newMessageRef.set(messageData).then(() => {
-        // Update local storage backup
         const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-        localChat.push({ text, sender }); // Add new message
-        localStorage.setItem(LS_KEY_CHAT, JSON.stringify(localChat)); // Save back
+        localChat.push({ text, sender });
+        localStorage.setItem(LS_KEY_CHAT, JSON.stringify(localChat));
     });
 }
-
-
-// Starts a new conversation or continues the existing one
 function sendMessage() {
     const messageText = domElements.userInput.value.trim();
     if (!messageText) return;
-
-    if (!currentUser || !currentUserId) {
-        showToast("Please log in to start chatting.", true);
-        openAuthModal();
-        return;
-    }
-
-    // Check prompt limit - ** Trigger Modal Here **
-    if (!isSubscribed && promptsLeft <= 0) {
-        openSubscribeModal(); // <<<--- Open modal when limit reached and user tries to send
-        showToast("Please subscribe to continue chatting.", true);
-        disableSendButton();
-        return; // Stop sending
-    }
-
+    if (!currentUser || !currentUserId) { return; } // Should not happen with forced login
+    if (!isSubscribed && promptsLeft <= 0) { openSubscribeModal(); showToast("Please subscribe to continue chatting.", true); disableSendButton(); return; }
     showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
     addMessageToHistory(messageText, 'user');
-
-    // Ensure a conversation ID exists
     if (!currentConversationId) {
         currentConversationId = db.ref(`chats/${currentUserId}`).push().key;
         updateUserData(currentUserId, { currentConversationId: currentConversationId, conversations: firebase.database.ServerValue.increment(1) })
             .catch(err => console.error("Failed to update conversation ID/count:", err));
     }
-
-    // Save user message
     saveMessage(currentUserId, currentConversationId, messageText, 'user')
-        .catch(error => {
-            console.error("Failed to save user message:", error);
-            showToast("Error sending message. Please try again.", true);
-        });
-
-    // --- Simulate AI Response (Replace with actual API call) ---
-    // TODO: Replace this timeout with your actual call
-    const simulateApiCall = new Promise((resolve) => {
-        setTimeout(() => {
-            const responses = [
-                "That's interesting! Tell me more.", "Okay, I see. What happened next?",
-                "How did that make you feel?", "Hmm, let's think about that.",
-                "Got it. What's on your mind now?", "Can you elaborate on that point?",
-                "What are your thoughts on trying this approach...?"
-            ];
-            resolve(responses[Math.floor(Math.random() * responses.length)]);
-        }, 1500);
-    });
-
-    simulateApiCall.then(aiResponse => {
-        addMessageToHistory(aiResponse, 'assistant');
-        return saveMessage(currentUserId, currentConversationId, aiResponse, 'assistant'); // Save AI response
-    })
-    .then(() => {
-        // Decrement prompts if not subscribed
-        if (!isSubscribed) {
-            promptsLeft--;
-            promptsUsed++;
-            // Update DB (using transaction for safety)
-            return db.ref(`users/${currentUserId}`).transaction(userData => {
-                 if (userData) {
-                    userData.promptsLeft = (userData.promptsLeft || 0) - 1;
-                    userData.promptsUsed = (userData.promptsUsed || 0) + 1;
-                 }
-                 return userData;
-            });
-        }
-        return Promise.resolve(); // Return resolved promise if subscribed
-    })
-     .then(() => {
-         if (!isSubscribed) {
-            updatePromptsUI(); // Update UI display after DB update
-            checkSubscriptionStatus(); // Check if they ran out now
-            localStorage.setItem(LS_KEY_PROMPTS, promptsLeft); // Update local backup
-         }
-     })
-    .catch(error => {
-        console.error("Error processing/saving AI response or updating prompts:", error);
-        showToast("Error getting response. Please try again.", true);
-        addMessageToHistory("Sorry, I encountered an error.", 'assistant');
-    })
-    .finally(() => {
-        showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
-        domElements.userInput.value = '';
-        domElements.userInput.focus();
-    });
-
-     // --- Trigger D-ID Avatar ---
-     // TODO: Call D-ID API here
+        .catch(error => { console.error("Failed to save user message:", error); showToast("Error sending message. Please try again.", true); });
+    // --- Simulate AI Response ---
+    const simulateApiCall = new Promise((resolve) => { setTimeout(() => { const responses = ["That's interesting! Tell me more.", "Okay, I see. What happened next?", "How did that make you feel?", "Hmm, let's think about that.", "Got it. What's on your mind now?", "Can you elaborate on that point?", "What are your thoughts on trying this approach...?"]; resolve(responses[Math.floor(Math.random() * responses.length)]); }, 1500); });
+    simulateApiCall.then(aiResponse => { addMessageToHistory(aiResponse, 'assistant'); return saveMessage(currentUserId, currentConversationId, aiResponse, 'assistant'); })
+    .then(() => { if (!isSubscribed) { return db.ref(`users/${currentUserId}`).transaction(userData => { if (userData) { userData.promptsLeft = Math.max(0, (userData.promptsLeft || 0) - 1); userData.promptsUsed = (userData.promptsUsed || 0) + 1; } return userData; }); } return Promise.resolve(); }) // Use transaction for prompt decrement
+     .then((result) => { if (!isSubscribed && result.committed) { promptsLeft = result.snapshot.val().promptsLeft; promptsUsed = result.snapshot.val().promptsUsed; updatePromptsUI(); checkSubscriptionStatus(); localStorage.setItem(LS_KEY_PROMPTS, promptsLeft); } })
+    .catch(error => { console.error("Error processing/saving AI response or updating prompts:", error); showToast("Error getting response. Please try again.", true); addMessageToHistory("Sorry, I encountered an error.", 'assistant'); })
+    .finally(() => { showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false); domElements.userInput.value = ''; domElements.userInput.focus(); });
      console.log("TODO: Trigger D-ID avatar to speak:", "...");
 }
-
-// Restarts the conversation
 function restartConversation() {
-    // (Function remains largely the same as before)
      if (!currentUser || !currentUserId) return;
-
     console.log("Restarting conversation for user:", currentUserId);
     const newConversationId = db.ref(`chats/${currentUserId}`).push().key;
-
-    updateUserData(currentUserId, {
-        currentConversationId: newConversationId,
-        conversations: firebase.database.ServerValue.increment(1)
-     })
+    updateUserData(currentUserId, { currentConversationId: newConversationId, conversations: firebase.database.ServerValue.increment(1) })
         .then(() => {
             currentConversationId = newConversationId;
-            domElements.chatContainer.innerHTML = '';
-            domElements.conversationHistorySection.classList.add('hidden');
-            domElements.restartBtn.classList.add('hidden');
+            if(domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+            domElements.conversationHistorySection?.classList.add('hidden');
+            domElements.restartBtn?.classList.add('hidden');
             localStorage.removeItem(LS_KEY_CHAT);
             showToast("New conversation started.");
-            domElements.userInput.value = '';
-            domElements.userInput.focus();
+            domElements.userInput.value = ''; domElements.userInput.focus();
         })
-        .catch(error => {
-            console.error("Error restarting conversation:", error);
-            showToast("Could not restart conversation. Please try again.", true);
-        });
+        .catch(error => { console.error("Error restarting conversation:", error); showToast("Could not restart conversation. Please try again.", true); });
 }
 
 /* ---------------- Voice Input (Web Speech API) ---------------- */
-// (Function remains largely the same as before, ensure micButtonIcon is updated)
 let recognition = null;
 function startDictation() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        showToast("Sorry, your browser doesn't support voice input.", true);
-        return;
-    }
-
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { showToast("Sorry, your browser doesn't support voice input.", true); return; }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!recognition) { // Initialize only once
+    if (!recognition) {
          recognition = new SpeechRecognition();
-         recognition.lang = 'en-US';
-         recognition.interimResults = false;
-         recognition.maxAlternatives = 1;
-
-         recognition.onstart = () => {
-             recognition.isListening = true;
-             console.log("Voice recognition started.");
-             domElements.micButtonIcon?.classList.add('text-red-500', 'fa-beat');
-             showToast("Listening...", false, 2000);
-         };
-
-         recognition.onresult = (event) => {
-             const speechResult = event.results[0][0].transcript;
-             console.log('Speech result:', speechResult);
-             domElements.userInput.value = speechResult;
-         };
-
-         recognition.onspeechend = () => {
-             recognition.stop(); // Will trigger onend
-         };
-
-          recognition.onend = () => {
-              recognition.isListening = false;
-              console.log("Voice recognition stopped.");
-              domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
-          };
-
-         recognition.onerror = (event) => {
-             console.error('Speech recognition error:', event.error);
-             let errorMsg = "Voice recognition error.";
-             if (event.error === 'no-speech') errorMsg = "No speech detected.";
-             else if (event.error === 'audio-capture') errorMsg = "Microphone error.";
-             else if (event.error === 'not-allowed') errorMsg = "Permission denied.";
-             showToast(errorMsg, true);
-              recognition.isListening = false;
-              domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
-         };
+         recognition.lang = 'en-US'; recognition.interimResults = false; recognition.maxAlternatives = 1;
+         recognition.onstart = () => { recognition.isListening = true; domElements.micButtonIcon?.classList.add('text-red-500', 'fa-beat'); showToast("Listening...", false, 2000); };
+         recognition.onresult = (event) => { if(domElements.userInput) domElements.userInput.value = event.results[0][0].transcript; };
+         recognition.onspeechend = () => { recognition.stop(); };
+         recognition.onend = () => { recognition.isListening = false; domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat'); };
+         recognition.onerror = (event) => { let errorMsg = "Voice recognition error."; if (event.error === 'no-speech') errorMsg = "No speech detected."; else if (event.error === 'audio-capture') errorMsg = "Microphone error."; else if (event.error === 'not-allowed') errorMsg = "Permission denied."; showToast(errorMsg, true); recognition.isListening = false; domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat'); };
     }
-
-
-    if (recognition.isListening) {
-         recognition.stop();
-    } else {
-         try {
-            recognition.start();
-         } catch (error) {
-             console.error("Failed to start SpeechRecognition:", error);
-             showToast("Could not start voice input.", true);
-             recognition.isListening = false; // Ensure state is correct
-             domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
-         }
-    }
+    if (recognition.isListening) { recognition.stop(); }
+    else { try { recognition.start(); } catch (error) { console.error("Failed to start SpeechRecognition:", error); showToast("Could not start voice input.", true); recognition.isListening = false; domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat'); } }
 }
 
 
 /* ---------------- Share Functionality ---------------- */
-// Shares link via specified channel and potentially increments count
 function shareVia(channel) {
-    if (!currentUser) {
-        showToast("Please log in first to share.", true);
-        openAuthModal();
-        return;
-    }
-     if (!personalReferralLink) {
-         showToast("Could not generate your referral link.", true);
-         return;
-     }
-    // Check if max rewards already earned - maybe still allow sharing?
-    // if (successfulReferralCount >= MAX_REFERRALS_REWARDED) {
-    //     showToast("You've already earned max rewards, but feel free to share!", false);
-    // }
-
+    if (!currentUser) { showToast("Please log in first to share.", true); return; }
+    if (!personalReferralLink) { showToast("Could not generate your referral link.", true); return; }
     const url = encodeURIComponent(personalReferralLink);
-    const text = encodeURIComponent("Check out IZZY – the AI conversation coach that helps build real confidence!"); // Slightly improved text
+    const text = encodeURIComponent("Check out IZZY – the AI conversation coach that helps build real confidence!");
     let shareURL = "#";
-
     switch (channel) {
         case 'whatsapp': shareURL = `https://api.whatsapp.com/send?text=${text}%20${url}`; break;
-        case 'email': shareURL = `mailto:?subject=Try%20IZZY%20-%20AI%20Conversation%20Coach&body=${text}%0A%0A${url}`; break; // Added line breaks
-        case 'facebook': shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`; break; // Added quote
-        case 'twitter': shareURL = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; break; // Use text and url params
+        case 'email': shareURL = `mailto:?subject=Try%20IZZY%20-%20AI%20Conversation%20Coach&body=${text}%0A%0A${url}`; break;
+        case 'facebook': shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`; break;
+        case 'twitter': shareURL = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; break;
         case 'reddit': shareURL = `https://www.reddit.com/submit?url=${url}&title=${encodeURIComponent("Try IZZY - AI Conversation Coach")}`; break;
         default: console.warn("Unknown share channel:", channel); return;
     }
-
     window.open(shareURL, '_blank');
-
-    // Optional: Track the share action itself (not just successful signups)
-    // This doesn't grant rewards, just logs the attempt.
-    db.ref(`shareAttempts/${currentUserId}`).push({
-        channel: channel,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    });
-
-    // Note: We grant rewards based on successful signups (creditReferrerOnSignUp),
-    // not just clicking the share button.
+    db.ref(`shareAttempts/${currentUserId}`).push({ channel: channel, timestamp: firebase.database.ServerValue.TIMESTAMP });
     showToast("Sharing link opened!", false);
-    // closeShareModal(); // Optionally close modal after clicking share
 }
-
-// Copies referral link to clipboard
 function copyReferralLink() {
     if (!domElements.personalLinkInput) return;
     try {
-        domElements.personalLinkInput.select(); // Select the text
-        // Use Clipboard API for modern browsers
+        domElements.personalLinkInput.select();
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(domElements.personalLinkInput.value)
                 .then(() => showToast("Link copied to clipboard!", false))
-                .catch(err => {
-                    console.error('Failed to copy with Clipboard API:', err);
-                    // Fallback for older browsers
-                    document.execCommand('copy');
-                    showToast("Link copied (fallback method)!", false);
-                });
-        } else {
-            // Fallback for very old browsers
-            document.execCommand('copy');
-            showToast("Link copied (fallback method)!", false);
-        }
-    } catch (err) {
-        console.error('Failed to copy link:', err);
-        showToast("Could not copy link.", true);
-    }
-     // Deselect text after copying
-     window.getSelection()?.removeAllRanges();
+                .catch(err => { document.execCommand('copy'); showToast("Link copied (fallback method)!", false); });
+        } else { document.execCommand('copy'); showToast("Link copied (fallback method)!", false); }
+    } catch (err) { console.error('Failed to copy link:', err); showToast("Could not copy link.", true); }
+    window.getSelection()?.removeAllRanges();
 }
 
 
 /* ---------------- Utility Functions ---------------- */
-
-// Shows a temporary notification toast
 let toastTimeout;
 function showToast(message, isError = false, duration = 3000) {
-    // (Function remains the same as before)
     clearTimeout(toastTimeout);
     if (!domElements.toast) return;
     domElements.toast.textContent = message;
     domElements.toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 z-[120] ${isError ? 'bg-red-600 text-white' : 'bg-gray-800 text-white'}`;
-
-    requestAnimationFrame(() => {
-        domElements.toast.classList.remove('translate-y-full', 'opacity-0');
-        domElements.toast.classList.add('translate-y-0', 'opacity-100');
-    });
-
-    toastTimeout = setTimeout(() => {
-        domElements.toast.classList.remove('translate-y-0', 'opacity-100');
-        domElements.toast.classList.add('translate-y-full', 'opacity-0');
-    }, duration);
+    requestAnimationFrame(() => { domElements.toast.classList.remove('translate-y-full', 'opacity-0'); domElements.toast.classList.add('translate-y-0', 'opacity-100'); });
+    toastTimeout = setTimeout(() => { domElements.toast.classList.remove('translate-y-0', 'opacity-100'); domElements.toast.classList.add('translate-y-full', 'opacity-0'); }, duration);
 }
-
-// Sets the input field value when an example prompt is clicked
-function usePrompt(promptText) {
-    domElements.userInput.value = promptText;
-    domElements.userInput.focus();
-}
-
-// Disables the send button
-function disableSendButton() {
-    if (!domElements.sendButton) return;
-    domElements.sendButton.disabled = true;
-    domElements.sendButton.classList.add('opacity-50', 'cursor-not-allowed');
-}
-
-// Enables the send button
-function enableSendButton() {
-     if (!domElements.sendButton) return;
-    domElements.sendButton.disabled = false;
-    domElements.sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
-}
+function usePrompt(promptText) { if(domElements.userInput) { domElements.userInput.value = promptText; domElements.userInput.focus(); } }
+function disableSendButton() { if (!domElements.sendButton) return; domElements.sendButton.disabled = true; domElements.sendButton.classList.add('opacity-50', 'cursor-not-allowed'); }
+function enableSendButton() { if (!domElements.sendButton) return; domElements.sendButton.disabled = false; domElements.sendButton.classList.remove('opacity-50', 'cursor-not-allowed'); }
 
 
 /* ---------------- Event Listeners ---------------- */
 function addEventListeners() {
-    // Auth buttons
-    domElements.authButton?.addEventListener('click', openAuthModal);
-    domElements.mobileAuthButton?.addEventListener('click', () => {
-        openAuthModal();
-        closeMobileMenu();
-    });
-    domElements.logoutButton?.addEventListener('click', logout);
-    domElements.mobileLogoutButton?.addEventListener('click', () => {
-        logout();
-        closeMobileMenu();
-    });
+    // Auth buttons (inside modal)
     domElements.googleSigninBtn?.addEventListener('click', signInWithGoogle);
     domElements.emailForm?.addEventListener('submit', sendMagicLink);
+
+    // Logout buttons
+    domElements.logoutButton?.addEventListener('click', logout);
+    domElements.mobileLogoutButton?.addEventListener('click', () => { logout(); closeMobileMenu(); });
 
     // Chat buttons & Input
     domElements.sendButton?.addEventListener('click', sendMessage);
     domElements.restartBtn?.addEventListener('click', restartConversation);
-    domElements.userInput?.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-    domElements.micButtonIcon?.parentElement.addEventListener('click', startDictation); // Listen on button containing icon
+    domElements.userInput?.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); } });
+    domElements.micButtonIcon?.parentElement.addEventListener('click', startDictation);
 
     // Mobile Menu
     domElements.mobileMenuButton?.addEventListener('click', toggleMobileMenu);
     domElements.closeMobileMenuButton?.addEventListener('click', closeMobileMenu);
     domElements.mobileMenuLinks?.forEach(link => {
-        // Close menu when a hash link is clicked
-        link.addEventListener('click', (e) => {
-            if (link.getAttribute('href')?.startsWith('#') || link.tagName === 'BUTTON') {
-                 closeMobileMenu();
-            }
-             // Allow default behavior for external links like subscribe.html if kept separate
-        });
+        link.addEventListener('click', (e) => { if (link.getAttribute('href')?.startsWith('#') || link.tagName === 'BUTTON') { closeMobileMenu(); } });
     });
 
-    // Close modals on backdrop click
-    domElements.authModal?.addEventListener('click', (e) => { if (e.target === domElements.authModal) closeAuthModal(); });
+    // Close OTHER modals on backdrop click (Auth modal backdrop click is disabled)
     domElements.subscribeModal?.addEventListener('click', (e) => { if (e.target === domElements.subscribeModal) closeSubscribeModal(); });
     domElements.shareModal?.addEventListener('click', (e) => { if (e.target === domElements.shareModal) closeShareModal(); });
 
     // Share section listeners
-    domElements.personalLinkInput?.addEventListener('click', copyReferralLink); // Copy on click
-    Object.values(domElements.shareTierButtons).forEach(button => {
-         if(button) button.addEventListener('click', openShareModal); // Open share modal from tier buttons
-    });
+    domElements.personalLinkInput?.addEventListener('click', copyReferralLink);
+    Object.values(domElements.shareTierButtons).forEach(button => { if(button) button.addEventListener('click', openShareModal); });
 
-    // Add listeners for subscription plan selection in the main section (if needed)
+    // Subscription buttons listener
     const mainSubButtons = document.querySelectorAll('#subscribe .plan-card a[target="_blank"]');
     mainSubButtons.forEach(button => {
         button.addEventListener('click', (e) => {
-            // Check if user is logged in before allowing subscription click?
-            if (!currentUser) {
-                e.preventDefault(); // Prevent navigation to Stripe
-                showToast("Please log in before subscribing.", true);
-                openAuthModal();
-            } else {
-                 console.log("Proceeding to subscription:", button.href);
-                 // Add tracking here if desired
-            }
+            if (!currentUser) { e.preventDefault(); showToast("Please log in before subscribing.", true); }
+            else { console.log("Proceeding to subscription:", button.href); }
         });
     });
 }
 
 
 /* ---------------- Mobile Menu Logic ---------------- */
-function toggleMobileMenu() {
-    const isOpen = domElements.mobileMenu.classList.contains('open');
-    if (isOpen) closeMobileMenu(); else openMobileMenu();
-}
-function openMobileMenu() {
-    domElements.mobileMenu.classList.add('open');
-    domElements.mobileMenuButton.setAttribute('aria-expanded', 'true');
-}
-function closeMobileMenu() {
-    domElements.mobileMenu.classList.remove('open');
-    domElements.mobileMenuButton.setAttribute('aria-expanded', 'false');
-}
+function toggleMobileMenu() { const isOpen = domElements.mobileMenu.classList.contains('open'); if (isOpen) closeMobileMenu(); else openMobileMenu(); }
+function openMobileMenu() { if(domElements.mobileMenu) domElements.mobileMenu.classList.add('open'); domElements.mobileMenuButton?.setAttribute('aria-expanded', 'true'); }
+function closeMobileMenu() { if(domElements.mobileMenu) domElements.mobileMenu.classList.remove('open'); domElements.mobileMenuButton?.setAttribute('aria-expanded', 'false'); }
 
 
 /* ---------------- Initialization ---------------- */
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM fully loaded and parsed");
+
+    // Cache DOM elements needed by scripts
+    cacheDomElements();
 
     // Check for magic link sign-in attempt immediately
     handleMagicLinkSignIn();
@@ -1735,13 +1450,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add all event listeners
     addEventListeners();
 
-    // Initial UI updates based on potential cached auth state (before listener fires)
-    if (auth.currentUser) {
-        updateAuthUI(true);
-    } else {
-        updateAuthUI(false);
-        updateShareSectionUI(); // Ensure share section reflects logged-out state initially
-    }
+    // Call referral visit handler
+    handleReferralVisit();
+
+    // Initial UI updates are handled by onAuthStateChanged listener
 
     // Load data from localStorage backups if available (useful for offline/refresh before DB loads)
     const localPrompts = localStorage.getItem(LS_KEY_PROMPTS);
@@ -1751,7 +1463,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePromptsUI();
     }
     const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-     if (localChat.length > 0 && domElements.chatContainer.children.length === 0) {
+     if (localChat.length > 0 && domElements.chatContainer && domElements.chatContainer.children.length === 0) {
         console.log("Restoring chat from localStorage backup.");
         localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
      }

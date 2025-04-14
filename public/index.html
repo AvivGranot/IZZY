@@ -77,8 +77,99 @@
 
   <style>
     /* Basic Reset & Font */
-    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; } /* Added smooth scroll */
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: #fff; color:#333; }
+
+    /* Auth Modal specific styles */
+    #authModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .auth-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    /* Clear any backdrop filters that might cause blur */
+    .glass {
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 1rem;
+      border: 1px solid rgba(139, 92, 246, 0.1);
+    }
+
+    /* Ensure text is sharp */
+    .auth-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .auth-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    /* Button styles */
+    .google-btn {
+      background: white;
+      color: #333;
+      border: 1px solid #ddd;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 1rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .google-btn:hover {
+      background: #f8f8f8;
+      border-color: #ccc;
+    }
+
+    .email-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .email-submit {
+      background: linear-gradient(to right, #8B5CF6, #EC4899);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .email-submit:hover {
+      opacity: 0.9;
+    }
 
     /* Backdrop-blur card effect */
     .glass {
@@ -232,57 +323,37 @@
   </style>
 </head>
 
-<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4">
-  <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full fade-in">
-    <!-- IZZY Logo -->
-    <div class="flex justify-center mb-8">
-      <div class="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-        <span class="text-white text-3xl font-bold">IZZY</span>
-      </div>
-    </div>
+<body class="text-gray-900 antialiased">
 
-    <!-- Headings -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Real Conversations.</h1>
-      <h2 class="text-3xl font-bold text-gray-900 mb-2">Real Confidence.</h2>
-      <p class="text-gray-600">Please log in or sign up to continue.</p>
-    </div>
-
-    <!-- Google Sign In -->
-    <button id="google-signin-btn" class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-xl py-3 px-4 mb-4 hover:bg-gray-50 transition-all">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-6 h-6 mr-3" alt="Google">
-      <span class="text-gray-700 font-medium">Continue with Google</span>
+<!-- Auth Modal -->
+<div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="auth-container">
+    <img src="path/to/izzy-logo.png" alt="IZZY" class="w-20 h-20 mx-auto mb-4 rounded-full">
+    <h2 class="auth-title">Real Conversations.<br>Real Confidence.</h2>
+    <p class="auth-subtitle">Please log in or sign up to continue.</p>
+    
+    <button id="google-signin-btn" onclick="signInWithGoogle()" class="google-btn">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-6 h-6 mr-2">
+      Continue with Google
     </button>
-
-    <!-- Divider -->
-    <div class="flex items-center my-6">
-      <div class="flex-1 border-t border-gray-300"></div>
-      <span class="px-4 text-gray-500 text-sm">OR</span>
-      <div class="flex-1 border-t border-gray-300"></div>
+    
+    <div class="relative my-6">
+      <hr class="border-t border-gray-300">
+      <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-gray-500">OR</span>
     </div>
-
-    <!-- Email Form -->
-    <form id="email-form" class="space-y-4">
-      <input type="email" 
-             id="email"
-             placeholder="Enter your email"
-             class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-             required>
-      <button type="submit" 
-              class="w-full py-3 rounded-xl text-white font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 transition-all flex items-center justify-center">
+    
+    <form id="email-form" onsubmit="sendMagicLink(event)" class="space-y-4">
+      <input type="email" id="email" placeholder="Enter your email" class="email-input" required>
+      <button type="submit" class="email-submit">
+        <span class="spinner hidden"></span>
         <span class="email-btn-text">Send Magic Link</span>
-        <span class="spinner hidden ml-2"></span>
       </button>
     </form>
-
-    <!-- Status Message -->
-    <div id="auth-status-message" class="text-center text-sm mt-4 min-h-[20px]"></div>
-
-    <!-- Terms -->
-    <p class="text-center text-xs text-gray-500 mt-6">
-      By continuing, you agree to our 
-      <a href="#" class="text-purple-600 hover:underline">Terms</a> & 
-      <a href="#" class="text-purple-600 hover:underline">Privacy</a>.
+    
+    <p id="auth-status-message" class="mt-4 text-sm"></p>
+    
+    <p class="mt-6 text-xs text-gray-500">
+      By continuing, you agree to our <a href="#terms" class="text-purple-600">Terms</a> & <a href="#privacy" class="text-purple-600">Privacy</a>
     </p>
   </div>
 </div>
@@ -768,6 +839,7 @@ try {
 
 // Google Sign-in Function
 function signInWithGoogle() {
+  console.log("Starting Google sign-in process");
   if (!auth) {
     console.error("Firebase Auth not initialized");
     showToast("Authentication service not ready. Please try again.", true);
@@ -780,22 +852,28 @@ function signInWithGoogle() {
   });
   
   const googleBtn = document.getElementById('google-signin-btn');
+  const statusMessage = document.getElementById('auth-status-message');
+  
   if (googleBtn) {
     googleBtn.disabled = true;
     googleBtn.classList.add('opacity-75');
   }
+  
+  if (statusMessage) {
+    statusMessage.textContent = "Connecting to Google...";
+    statusMessage.className = "mt-4 text-sm text-purple-600";
+  }
 
   auth.signInWithPopup(provider)
     .then((result) => {
-      console.log("Google sign-in successful");
+      console.log("Google sign-in successful", result);
       showToast("Successfully signed in with Google!", false);
-      // Hide auth modal after successful sign-in
-      const authModal = document.getElementById('authModal');
-      if (authModal) {
-        authModal.classList.add('hidden');
+      if (statusMessage) {
+        statusMessage.textContent = "Sign in successful!";
+        statusMessage.className = "mt-4 text-sm text-green-600";
       }
       // Initialize user data if new user
-      if (result.additionalUserInfo.isNewUser) {
+      if (result.additionalUserInfo?.isNewUser) {
         return initializeNewUser(result.user);
       }
     })
@@ -808,14 +886,13 @@ function signInWithGoogle() {
       } else if (error.code === 'auth/popup-closed-by-user') {
         errorMessage = "Sign-in was cancelled. Please try again.";
       } else if (error.code === 'auth/auth-domain-config-required') {
-        errorMessage = "Please make sure you're using the correct domain for authentication.";
+        errorMessage = "Authentication domain not configured. Please contact support.";
       }
       
       showToast(errorMessage, true);
-      const statusMessage = document.getElementById('auth-status-message');
       if (statusMessage) {
         statusMessage.textContent = errorMessage;
-        statusMessage.classList.add('text-red-500');
+        statusMessage.className = "mt-4 text-sm text-red-600";
       }
     })
     .finally(() => {
@@ -829,43 +906,62 @@ function signInWithGoogle() {
 // Magic Link Sign-in Function
 function sendMagicLink(event) {
   event.preventDefault();
+  console.log("Starting magic link process");
   
   const emailInput = document.getElementById('email');
-  const email = emailInput.value.trim();
+  const email = emailInput?.value?.trim();
+  const statusMessage = document.getElementById('auth-status-message');
   
   if (!email) {
     showToast("Please enter your email address.", true);
+    if (statusMessage) {
+      statusMessage.textContent = "Please enter your email address.";
+      statusMessage.className = "mt-4 text-sm text-red-600";
+    }
     return;
   }
   
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     showToast("Please enter a valid email address.", true);
+    if (statusMessage) {
+      statusMessage.textContent = "Please enter a valid email address.";
+      statusMessage.className = "mt-4 text-sm text-red-600";
+    }
     return;
   }
   
   const submitBtn = document.querySelector('#email-form button[type="submit"]');
-  const btnText = submitBtn.querySelector('.email-btn-text');
-  const spinner = submitBtn.querySelector('.spinner');
+  const btnText = submitBtn?.querySelector('.email-btn-text');
+  const spinner = submitBtn?.querySelector('.spinner');
   
-  showButtonLoading(submitBtn, btnText, spinner, true);
+  if (submitBtn && btnText && spinner) {
+    submitBtn.disabled = true;
+    btnText.classList.add('hidden');
+    spinner.classList.remove('hidden');
+  }
   
+  if (statusMessage) {
+    statusMessage.textContent = "Sending magic link...";
+    statusMessage.className = "mt-4 text-sm text-purple-600";
+  }
+  
+  // Store email for later
   localStorage.setItem('emailForSignIn', email);
   
   const actionCodeSettings = {
-    url: window.location.href,
+    url: window.location.origin + window.location.pathname,
     handleCodeInApp: true
   };
   
   auth.sendSignInLinkToEmail(email, actionCodeSettings)
     .then(() => {
+      console.log("Magic link sent successfully");
       showToast(`Magic link sent to ${email}! Check your inbox.`, false);
       emailInput.value = '';
-      const statusMessage = document.getElementById('auth-status-message');
       if (statusMessage) {
         statusMessage.textContent = "Check your email for the magic link!";
-        statusMessage.classList.add('text-purple-500');
-        statusMessage.classList.remove('text-red-500');
+        statusMessage.className = "mt-4 text-sm text-green-600";
       }
     })
     .catch((error) => {
@@ -875,15 +971,17 @@ function sendMagicLink(event) {
         errorMessage = "Please enter a valid email address.";
       }
       showToast(errorMessage, true);
-      const statusMessage = document.getElementById('auth-status-message');
       if (statusMessage) {
         statusMessage.textContent = errorMessage;
-        statusMessage.classList.remove('text-purple-500');
-        statusMessage.classList.add('text-red-500');
+        statusMessage.className = "mt-4 text-sm text-red-600";
       }
     })
     .finally(() => {
-      showButtonLoading(submitBtn, btnText, spinner, false);
+      if (submitBtn && btnText && spinner) {
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        spinner.classList.add('hidden');
+      }
     });
 }
 

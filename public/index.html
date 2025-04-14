@@ -83,6 +83,31 @@
       box-sizing: border-box;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* Remove ALL blur effects */
+    .glass {
+      background: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 1rem;
+      border: 1px solid rgba(139, 92, 246, 0.1);
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    /* Clear background blur */
+    .blur-background {
+      filter: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
 
     /* Hero section styles */
@@ -122,7 +147,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.75);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -133,28 +158,58 @@
       background: #ffffff;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 400px;
       text-align: center;
     }
 
-    /* Button styles */
-    .button {
-      display: inline-block;
-      padding: 12px 24px;
-      background: #4A90E2;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
+    /* Button styles with better contrast */
+    .google-btn {
+      background: white;
+      color: #333;
+      border: 1px solid #ddd;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 1rem;
       font-weight: 600;
+      transition: all 0.2s;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
 
-    .button:hover {
-      background: #357ABD;
+    .google-btn:hover {
+      background: #f8f8f8;
+      border-color: #ccc;
+    }
+
+    .email-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .email-submit {
+      background: linear-gradient(to right, #8B5CF6, #EC4899);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      font-weight: 600;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .email-submit:hover {
+      opacity: 0.95;
     }
 
     /* Input styles */
@@ -194,12 +249,14 @@
       font-weight: 700;
       margin-bottom: 1rem;
       color: #333;
+      text-rendering: optimizeLegibility;
     }
 
     .auth-subtitle {
       font-size: 1.1rem;
       color: #666;
       margin-bottom: 2rem;
+      text-rendering: optimizeLegibility;
     }
 
     /* Button styles */
@@ -890,42 +947,24 @@ const firebaseConfig = {
   measurementId: "G-8JLKB2MMKS"
 };
 
-// Initialize Firebase and get service instances
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
-
-// Constants
-const FREE_PROMPT_LIMIT = 3;
-const MAX_REFERRALS_REWARDED = 3; // Max referrals that grant rewards
-// Defines the *additional* prompts awarded when reaching *each* tier
-const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 };
-
-// Local Storage Keys
-const LS_KEY_PROMPTS = 'izzy_prompts_left_backup';
-const LS_KEY_CHAT = 'izzy_chat_history_backup';
-const LS_KEY_REFERRER = 'izzy_referrer_id';
-const LS_KEY_REFERRAL_VISITED_PREFIX = 'visitedAsReferral_'; // Tracks visits per referrer link
-
+// Initialize Firebase with error handling
 try {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const auth = firebase.auth();
+  const db = firebase.database();
   console.log("Firebase initialized successfully");
 } catch (error) {
   console.error("Error initializing Firebase:", error);
+  showToast("Error initializing app. Please refresh the page.", true);
 }
 
-// Google Sign-in Function
+// Google Sign-in Function with improved error handling
 function signInWithGoogle() {
   console.log("Starting Google sign-in process");
-  if (!auth) {
-    console.error("Firebase Auth not initialized");
-    showToast("Authentication service not ready. Please try again.", true);
-    return;
-  }
-
   const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({
-    prompt: 'select_account'
-  });
+  provider.setCustomParameters({ prompt: 'select_account' });
   
   const googleBtn = document.getElementById('google-signin-btn');
   const statusMessage = document.getElementById('auth-status-message');
@@ -940,15 +979,10 @@ function signInWithGoogle() {
     statusMessage.className = "mt-4 text-sm text-purple-600";
   }
 
-  auth.signInWithPopup(provider)
+  firebase.auth().signInWithPopup(provider)
     .then((result) => {
-      console.log("Google sign-in successful", result);
+      console.log("Google sign-in successful");
       showToast("Successfully signed in with Google!", false);
-      if (statusMessage) {
-        statusMessage.textContent = "Sign in successful!";
-        statusMessage.className = "mt-4 text-sm text-green-600";
-      }
-      // Initialize user data if new user
       if (result.additionalUserInfo?.isNewUser) {
         return initializeNewUser(result.user);
       }
@@ -957,12 +991,18 @@ function signInWithGoogle() {
       console.error("Google sign-in error:", error);
       let errorMessage = "Google sign-in failed. Please try again.";
       
-      if (error.code === 'auth/popup-blocked') {
-        errorMessage = "Sign-in popup was blocked. Please allow popups and try again.";
-      } else if (error.code === 'auth/popup-closed-by-user') {
-        errorMessage = "Sign-in was cancelled. Please try again.";
-      } else if (error.code === 'auth/auth-domain-config-required') {
-        errorMessage = "Authentication domain not configured. Please contact support.";
+      switch (error.code) {
+        case 'auth/popup-blocked':
+          errorMessage = "Sign-in popup was blocked. Please allow popups and try again.";
+          break;
+        case 'auth/popup-closed-by-user':
+          errorMessage = "Sign-in was cancelled. Please try again.";
+          break;
+        case 'auth/auth-domain-config-required':
+          errorMessage = "Please try again in a few moments.";
+          break;
+        default:
+          errorMessage = error.message;
       }
       
       showToast(errorMessage, true);
@@ -979,7 +1019,7 @@ function signInWithGoogle() {
     });
 }
 
-// Magic Link Sign-in Function
+// Magic Link Sign-in Function with improved validation
 function sendMagicLink(event) {
   event.preventDefault();
   console.log("Starting magic link process");
@@ -1007,13 +1047,17 @@ function sendMagicLink(event) {
     return;
   }
   
-  const submitBtn = document.querySelector('#email-form button[type="submit"]');
+  const submitBtn = document.querySelector('.email-submit');
   const btnText = submitBtn?.querySelector('.email-btn-text');
   const spinner = submitBtn?.querySelector('.spinner');
   
-  if (submitBtn && btnText && spinner) {
+  if (submitBtn) {
     submitBtn.disabled = true;
+  }
+  if (btnText) {
     btnText.classList.add('hidden');
+  }
+  if (spinner) {
     spinner.classList.remove('hidden');
   }
   
@@ -1026,15 +1070,15 @@ function sendMagicLink(event) {
   localStorage.setItem('emailForSignIn', email);
   
   const actionCodeSettings = {
-    url: window.location.origin + window.location.pathname,
+    url: window.location.href,
     handleCodeInApp: true
   };
   
-  auth.sendSignInLinkToEmail(email, actionCodeSettings)
+  firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
     .then(() => {
       console.log("Magic link sent successfully");
       showToast(`Magic link sent to ${email}! Check your inbox.`, false);
-      emailInput.value = '';
+      if (emailInput) emailInput.value = '';
       if (statusMessage) {
         statusMessage.textContent = "Check your email for the magic link!";
         statusMessage.className = "mt-4 text-sm text-green-600";
@@ -1053,9 +1097,13 @@ function sendMagicLink(event) {
       }
     })
     .finally(() => {
-      if (submitBtn && btnText && spinner) {
+      if (submitBtn) {
         submitBtn.disabled = false;
+      }
+      if (btnText) {
         btnText.classList.remove('hidden');
+      }
+      if (spinner) {
         spinner.classList.add('hidden');
       }
     });

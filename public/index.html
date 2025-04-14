@@ -76,18 +76,53 @@
   </script>
 
   <style>
-    /* Basic Reset & Font */
-    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: #fff; color:#333; }
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-    /* Auth Modal specific styles */
+    /* Hero section styles */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #fff;
+      padding: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      text-rendering: optimizeLegibility;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      color: #666;
+      margin-bottom: 2rem;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Auth modal styles */
     #authModal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -95,14 +130,55 @@
     }
 
     .auth-container {
-      background: white;
+      background: #ffffff;
       padding: 2rem;
-      border-radius: 1rem;
+      border-radius: 12px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 90%;
+      width: 100%;
       max-width: 400px;
       text-align: center;
     }
+
+    /* Button styles */
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .button:hover {
+      background: #357ABD;
+    }
+
+    /* Input styles */
+    .input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    /* Remove any backdrop filters */
+    .glass {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    /* Basic Reset & Font */
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color:#333; }
 
     /* Clear any backdrop filters that might cause blur */
     .glass {

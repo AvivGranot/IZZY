@@ -1,25 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:image" content="/img/og.png">
-  <meta property="og:title"       content="IZZY – AI Avatar for Real Conversations">
-  <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:url"         content="https://your‑domain.com">
-  <meta property="og:type"        content="website">
-  <meta property="og:image"       content="https://your‑domain.com/img/og.png">
-  <meta property="og:image:alt"   content="Screenshot of IZZY AI avatar app">
-
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IZZY – AI Avatar for Real Conversations</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
+  <meta property="og:image" content="/img/og.png">
+  <meta property="og:title" content="IZZY – AI Avatar for Real Conversations">
+  <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
+  <meta property="og:url" content="https://your‑domain.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://your‑domain.com/img/og.png">
+  <meta property="og:image:alt" content="Screenshot of IZZY AI avatar app">
+
+  <!-- Tailwind Configuration -->
+  <script>
+    // Extend Tailwind theme with custom colors
+    window.tailwindConfig = {
+      theme: {
+        extend: {
+          colors: {
+            'izzy-blue': '#0047AB',
+            'izzy-purple': {
+              500: '#8B5CF6',
+              600: '#7C3AED',
+              700: '#6D28D9'
+            },
+            'izzy-pink': {
+              500: '#EC4899',
+              600: '#DB2777'
+            }
+          },
+        }
+      },
+    }
+  </script>
+
+  <!-- External Resources -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 
+  <script>
+    // Initialize Tailwind with our config after it loads
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.tailwind) {
+        window.tailwind.config = window.tailwindConfig;
+      }
+    });
+
+    // Add resource load error handling
+    function handleResourceError(e) {
+      console.error('Failed to load resource:', e.target.src || e.target.href);
+      const element = document.createElement('div');
+      element.style.position = 'fixed';
+      element.style.top = '0';
+      element.style.left = '0';
+      element.style.right = '0';
+      element.style.backgroundColor = '#ef4444';
+      element.style.color = 'white';
+      element.style.padding = '1rem';
+      element.style.textAlign = 'center';
+      element.style.zIndex = '9999';
+      element.textContent = 'Failed to load some resources. Please refresh the page.';
+      document.body.prepend(element);
+    }
+
+    // Add error handlers to all external resources
+    window.addEventListener('load', () => {
+      document.querySelectorAll('link[rel="stylesheet"], script[src]').forEach(el => {
+        el.addEventListener('error', handleResourceError);
+      });
+    });
+  </script>
 
   <style>
     /* Basic Reset & Font */
@@ -176,28 +230,6 @@
     .disabled{opacity:.5;cursor:not-allowed !important;transform:none !important}
 
   </style>
-
-  <script>
-    // Extend Tailwind theme with custom colors
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'izzy-blue': '#0047AB', // Custom blue
-            'izzy-purple': { // Custom purple shades
-              500: '#8B5CF6',
-              600: '#7C3AED',
-              700: '#6D28D9'
-            },
-            'izzy-pink': { // Custom pink shades
-              500: '#EC4899',
-              600: '#DB2777'
-            }
-          },
-        }
-      },
-    }
-  </script>
 </head>
 
 <body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4">
@@ -1734,32 +1766,47 @@ function closeMobileMenu() { if(domElements.mobileMenu) domElements.mobileMenu.c
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM fully loaded and parsed");
 
-    // Cache DOM elements needed by scripts
-    cacheDomElements();
-
-    // Check for magic link sign-in attempt immediately
-    handleMagicLinkSignIn();
-
-    // Add all event listeners
-    addEventListeners();
-
-    // Call referral visit handler
-    handleReferralVisit();
-
-    // Initial UI updates are handled by onAuthStateChanged listener
-
-    // Load data from localStorage backups if available (useful for offline/refresh before DB loads)
-    const localPrompts = localStorage.getItem(LS_KEY_PROMPTS);
-    if (localPrompts !== null && !isSubscribed) {
-        promptsLeft = parseInt(localPrompts, 10);
-        console.log("Restored prompts left from localStorage:", promptsLeft);
-        updatePromptsUI();
+    // Hide auth modal initially to prevent flash of unstyled content
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.style.visibility = 'hidden';
     }
-    const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-     if (localChat.length > 0 && domElements.chatContainer && domElements.chatContainer.children.length === 0) {
-        console.log("Restoring chat from localStorage backup.");
-        localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
-     }
+
+    // Wait for Tailwind and other resources to load
+    window.addEventListener('load', () => {
+        // Cache DOM elements needed by scripts
+        cacheDomElements();
+
+        // Check for magic link sign-in attempt immediately
+        handleMagicLinkSignIn();
+
+        // Add all event listeners
+        addEventListeners();
+
+        // Call referral visit handler
+        handleReferralVisit();
+
+        // Show auth modal if needed (after styles are loaded)
+        if (authModal) {
+            authModal.style.visibility = 'visible';
+            if (!firebase.auth().currentUser) {
+                openAuthModal();
+            }
+        }
+
+        // Load data from localStorage backups
+        const localPrompts = localStorage.getItem(LS_KEY_PROMPTS);
+        if (localPrompts !== null && !isSubscribed) {
+            promptsLeft = parseInt(localPrompts, 10);
+            console.log("Restored prompts left from localStorage:", promptsLeft);
+            updatePromptsUI();
+        }
+        const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
+        if (localChat.length > 0 && domElements.chatContainer && domElements.chatContainer.children.length === 0) {
+            console.log("Restoring chat from localStorage backup.");
+            localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
+        }
+    });
 });
 
 /* ---------- Ask for microphone permission on load ---------- */

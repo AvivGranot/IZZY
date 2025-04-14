@@ -459,34 +459,45 @@
 <body class="text-gray-900 antialiased">
 
 <!-- Auth Modal -->
-<div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="auth-container">
-    <img src="path/to/izzy-logo.png" alt="IZZY" class="w-20 h-20 mx-auto mb-4 rounded-full">
-    <h2 class="auth-title">Real Conversations.<br>Real Confidence.</h2>
-    <p class="auth-subtitle">Please log in or sign up to continue.</p>
-    
-    <button id="google-signin-btn" onclick="signInWithGoogle()" class="google-btn">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-6 h-6 mr-2">
-      Continue with Google
+<div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center">
+  <div class="auth-container bg-white rounded-xl p-8 max-w-md w-full mx-4">
+    <div class="text-center mb-8">
+      <img src="assets/izzy-logo.png" alt="IZZY" class="h-8 mx-auto mb-6">
+      <h2 class="text-2xl font-bold mb-2">Real Conversations.</h2>
+      <h2 class="text-2xl font-bold mb-4">Real Confidence.</h2>
+      <p class="text-gray-600">Please log in or sign up to continue.</p>
+    </div>
+
+    <!-- Google Sign In -->
+    <button id="google-signin-btn" onclick="signInWithGoogle()" class="google-btn w-full mb-4">
+      <img src="assets/google.svg" alt="Google" class="w-5 h-5 mr-3">
+      <span>Continue with Google</span>
     </button>
-    
+
     <div class="relative my-6">
-      <hr class="border-t border-gray-300">
+      <hr class="border-gray-300">
       <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-gray-500">OR</span>
     </div>
-    
+
+    <!-- Email Sign In -->
     <form id="email-form" onsubmit="sendMagicLink(event)" class="space-y-4">
-      <input type="email" id="email" placeholder="Enter your email" class="email-input" required>
-      <button type="submit" class="email-submit">
-        <span class="spinner hidden"></span>
+      <input type="email" id="email" placeholder="Enter your email" required
+        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+      
+      <button type="submit" class="email-submit w-full relative">
         <span class="email-btn-text">Send Magic Link</span>
+        <div class="spinner hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
       </button>
     </form>
-    
-    <p id="auth-status-message" class="mt-4 text-sm"></p>
-    
-    <p class="mt-6 text-xs text-gray-500">
-      By continuing, you agree to our <a href="#terms" class="text-purple-600">Terms</a> & <a href="#privacy" class="text-purple-600">Privacy</a>
+
+    <div id="auth-status-message" class="mt-4 text-sm text-center"></div>
+
+    <p class="mt-6 text-xs text-center text-gray-500">
+      By continuing, you agree to our 
+      <a href="/terms" class="text-purple-600 hover:underline">Terms</a> & 
+      <a href="/privacy" class="text-purple-600 hover:underline">Privacy</a>
     </p>
   </div>
 </div>

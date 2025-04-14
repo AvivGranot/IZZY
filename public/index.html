@@ -943,23 +943,7 @@
       <img src="assets/izzy-logo.png" alt="IZZY" class="mx-auto h-10 mb-6">
       <h2 class="text-2xl font-bold text-center mb-2">Real Conversations.</h2>
       <h2 class="text-2xl font-bold text-center mb-4">Real Confidence.</h2>
-      <p class="text-gray-600 text-center mb-6">Please log in or sign up to continue.</p>
-      
-      <!-- Google Sign In -->
-      <button id="google-signin-btn" class="google-btn w-full flex items-center justify-center gap-3 py-3 px-4 bg-white border border-gray-300 rounded-lg text-gray-800 font-medium mb-4 relative">
-        <img src="assets/google.svg" alt="Google" class="w-5 h-5">
-        <span class="btn-text">Continue with Google</span>
-        <div class="spinner"></div>
-      </button>
-      
-      <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-          <span class="px-3 bg-white text-gray-500">OR</span>
-        </div>
-      </div>
+      <p class="text-gray-600 text-center mb-6">Please sign in to continue.</p>
       
       <!-- Email Sign In -->
       <form id="email-form" class="space-y-4">
@@ -983,331 +967,125 @@
   </div>
 
   <!-- Authentication Scripts -->
-  <script>
-    // Use the existing Firebase configuration
-    // Don't redeclare firebaseConfig
-    
-    // Toast notification system
-    function showToast(message, isError = false) {
-      const toastContainer = document.getElementById('toast-container');
-      if (!toastContainer) return;
-      
-      const toast = document.createElement('div');
-      toast.className = `toast ${isError ? 'error' : 'success'}`;
-      
-      const icon = document.createElement('span');
-      icon.className = 'toast-icon';
-      icon.innerHTML = isError ? '<i class="fas fa-exclamation-circle"></i>' : '<i class="fas fa-check-circle"></i>';
-      
-      const text = document.createElement('span');
-      text.textContent = message;
-      
-      toast.appendChild(icon);
-      toast.appendChild(text);
-      toastContainer.appendChild(toast);
-      
-      // Trigger reflow for animation
-      setTimeout(() => {
-        toast.classList.add('show');
-      }, 10);
-      
-      // Auto remove after 4 seconds
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          toast.remove();
-        }, 300);
-      }, 4000);
-    }
-    
-    // Google Sign In
-    function signInWithGoogle() {
-      console.log('Starting Google sign-in');
-      
-      const button = document.getElementById('google-signin-btn');
-      const btnText = button.querySelector('.btn-text');
-      const spinner = button.querySelector('.spinner');
-      const statusMsg = document.getElementById('auth-status-message');
-      
-      // Disable button and show loading state
-      button.disabled = true;
-      button.classList.add('is-loading');
-      btnText.style.opacity = '0';
-      spinner.style.display = 'block';
-      
-      if (statusMsg) {
-        statusMsg.textContent = 'Connecting to Google...';
-        statusMsg.className = 'mt-4 text-sm text-purple-600';
-      }
-      
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      
-      firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-          console.log('Google sign-in successful');
-          
-          // If new user, initialize their data
-          if (result.additionalUserInfo?.isNewUser) {
-            return initializeNewUser(result.user);
-          }
-          
-          showToast('Successfully signed in!', false);
-          
-          // Update UI for authenticated state
-          document.body.classList.remove('unauthenticated');
-          document.body.classList.add('authenticated');
-          
-          // Hide auth modal
-          const authModal = document.getElementById('authModal');
-          if (authModal) authModal.style.display = 'none';
-        })
-        .catch((error) => {
-          console.error('Google sign-in error:', error);
-          
-          let errorMessage = 'Sign-in failed. Please try again.';
-          
-          switch (error.code) {
-            case 'auth/popup-blocked':
-              errorMessage = 'Pop-up was blocked. Please allow pop-ups for this site.';
-              break;
-            case 'auth/popup-closed-by-user':
-              errorMessage = 'Sign-in was cancelled. Please try again.';
-              break;
-            case 'auth/auth-domain-config-required':
-              errorMessage = 'Authentication configuration error. Please try again.';
-              break;
-            default:
-              errorMessage = error.message || 'An error occurred during sign-in.';
-          }
-          
-          showToast(errorMessage, true);
-          
-          if (statusMsg) {
-            statusMsg.textContent = errorMessage;
-            statusMsg.className = 'mt-4 text-sm text-red-600';
-          }
-        })
-        .finally(() => {
-          // Reset button state
-          button.disabled = false;
-          button.classList.remove('is-loading');
-          btnText.style.opacity = '1';
-          spinner.style.display = 'none';
-        });
-    }
-    
-    // Email Magic Link
-    function sendMagicLink(event) {
-      event.preventDefault();
-      
-      const email = document.getElementById('email')?.value?.trim();
-      const button = document.querySelector('.email-submit');
-      const btnText = button.querySelector('.btn-text');
-      const spinner = button.querySelector('.spinner');
-      const statusMsg = document.getElementById('auth-status-message');
-      
-      if (!email) {
-        showToast('Please enter your email address', true);
-        if (statusMsg) {
-          statusMsg.textContent = 'Please enter your email address';
-          statusMsg.className = 'mt-4 text-sm text-red-600';
-        }
-        return;
-      }
-      
-      // Basic email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        showToast('Please enter a valid email address', true);
-        if (statusMsg) {
-          statusMsg.textContent = 'Please enter a valid email address';
-          statusMsg.className = 'mt-4 text-sm text-red-600';
-        }
-        return;
-      }
-      
-      // Disable button and show loading state
-      button.disabled = true;
-      button.classList.add('is-loading');
-      btnText.style.opacity = '0';
-      spinner.style.display = 'block';
-      
-      if (statusMsg) {
-        statusMsg.textContent = 'Sending magic link...';
-        statusMsg.className = 'mt-4 text-sm text-purple-600';
-      }
-      
-      // Store email for later (after redirect)
-      localStorage.setItem('emailForSignIn', email);
-      
-      const actionCodeSettings = {
-        url: window.location.href,
-        handleCodeInApp: true
-      };
-      
-      firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-          console.log('Magic link sent successfully');
-          showToast(`Magic link sent to ${email}! Check your inbox.`, false);
-          document.getElementById('email').value = '';
-          
-          if (statusMsg) {
-            statusMsg.textContent = 'Check your email for the magic link!';
-            statusMsg.className = 'mt-4 text-sm text-green-600';
-          }
-        })
-        .catch((error) => {
-          console.error('Error sending magic link:', error);
-          
-          let errorMessage = 'Failed to send magic link. Please try again.';
-          
-          if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Please enter a valid email address';
-          } else if (error.code === 'auth/missing-android-pkg-name') {
-            errorMessage = 'Authentication configuration error. Please try again later.';
-          }
-          
-          showToast(errorMessage, true);
-          
-          if (statusMsg) {
-            statusMsg.textContent = errorMessage;
-            statusMsg.className = 'mt-4 text-sm text-red-600';
-          }
-        })
-        .finally(() => {
-          // Reset button state
-          button.disabled = false;
-          button.classList.remove('is-loading');
-          btnText.style.opacity = '1';
-          spinner.style.display = 'none';
-        });
-    }
-    
-    // Handle Magic Link Sign-in
-    function handleMagicLinkSignIn() {
-      if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-        console.log('Magic link detected in URL');
-        
-        let email = localStorage.getItem('emailForSignIn');
-        
-        if (!email) {
-          email = window.prompt('Please provide your email for confirmation');
-        }
-        
-        if (email) {
-          const statusMsg = document.getElementById('auth-status-message');
-          if (statusMsg) {
-            statusMsg.textContent = 'Signing you in...';
-            statusMsg.className = 'mt-4 text-sm text-purple-600';
-          }
-          
-          firebase.auth().signInWithEmailLink(email, window.location.href)
-            .then((result) => {
-              console.log('Successfully signed in with email link');
-              localStorage.removeItem('emailForSignIn');
-              
-              // If new user, initialize their data
-              if (result.additionalUserInfo?.isNewUser) {
-                return initializeNewUser(result.user);
-              }
-              
-              showToast('Successfully signed in!', false);
-              
-              // Update UI for authenticated state
-              document.body.classList.remove('unauthenticated');
-              document.body.classList.add('authenticated');
-              
-              // Hide auth modal
-              const authModal = document.getElementById('authModal');
-              if (authModal) authModal.style.display = 'none';
-            })
-            .catch((error) => {
-              console.error('Error signing in with email link:', error);
-              showToast('Error signing in. Please try again.', true);
-              
-              if (statusMsg) {
-                statusMsg.textContent = 'Error signing in. Please try again.';
-                statusMsg.className = 'mt-4 text-sm text-red-600';
-              }
-            });
-        }
-      }
-    }
-    
-    // Initialize Authentication State
-    document.addEventListener('DOMContentLoaded', function() {
-      // Initialize Firebase if not already done
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      
-      // Check if Firebase is initialized properly
-      console.log('Firebase initialized:', firebase.apps.length > 0);
-      
-      // Add event listeners for auth forms
-      const emailForm = document.getElementById('email-form');
-      if (emailForm) {
-        emailForm.addEventListener('submit', sendMagicLink);
-      }
-      
-      const googleBtn = document.getElementById('google-signin-btn');
-      if (googleBtn) {
-        googleBtn.addEventListener('click', signInWithGoogle);
-      }
-      
-      // Handle magic link authentication
-      handleMagicLinkSignIn();
-      
-      // Listen for auth state changes
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          console.log('User is signed in:', user.email);
-          document.body.classList.remove('unauthenticated');
-          document.body.classList.add('authenticated');
-          
-          // Hide auth modal
-          const authModal = document.getElementById('authModal');
-          if (authModal) authModal.style.display = 'none';
-        } else {
-          console.log('No user is signed in');
-          document.body.classList.add('unauthenticated');
-          document.body.classList.remove('authenticated');
-        }
-      });
-    });
-    
-    // Initialize new user data in the database
-    function initializeNewUser(user) {
-      if (!user) return Promise.reject('No user provided');
-      
-      const userData = {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || '',
-        photoURL: user.photoURL || '',
-        createdAt: firebase.database.ServerValue.TIMESTAMP,
-        promptsLeft: 3,
+  <script type="module">
+    import { UserService, AuthService } from './js/services.js';
+    import { USER_ROLES, PROMPT_LIMITS, ANALYTICS_EVENTS, REFERRAL_SYSTEM } from './js/config.js';
+
+    // Constants from config
+    const FREE_PROMPT_LIMIT = PROMPT_LIMITS.FREE.total;
+    const MAX_REFERRALS_REWARDED = 3;
+    const REFERRAL_PROMPTS_TIERS = REFERRAL_SYSTEM.rewards;
+
+    // Local Storage Keys
+    const LS_KEY_PROMPTS = 'izzy_prompts_left';
+    const LS_KEY_CHAT = 'izzy_chat_history';
+    const LS_KEY_REFERRER = 'izzy_referrer';
+    const LS_KEY_REFERRAL_VISITED_PREFIX = 'izzy_referral_visited_';
+
+    // Application state
+    const state = {
+        currentUser: null,
+        currentUserId: null,
+        promptsUsed: 0,
+        promptsLeft: FREE_PROMPT_LIMIT,
         isSubscribed: false,
-        referralCode: generateReferralCode(),
-        referralsCount: 0
-      };
-      
-      return firebase.database().ref(`users/${user.uid}`).set(userData)
-        .then(() => {
-          console.log('New user data initialized successfully');
-          return userData;
-        })
-        .catch(error => {
-          console.error('Error initializing user data:', error);
-          throw error;
+        currentConversationId: null,
+        personalReferralLink: "",
+        successfulReferralCount: 0,
+        recaptchaVerifier: null,
+        domElements: {}
+    };
+
+    // Initialize Firebase Auth state listener
+    const auth = firebase.auth();
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            // User is signed in
+            const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
+            state.currentUser = user;
+            state.currentUserId = user.uid;
+            console.log("User signed in:", state.currentUserId, "Is new user:", isNewUser);
+
+            // Generate personal referral link
+            state.personalReferralLink = `${window.location.origin}${window.location.pathname}?ref=${state.currentUserId}`;
+            if(state.domElements.personalLinkInput) {
+                state.domElements.personalLinkInput.value = state.personalReferralLink;
+            }
+
+            updateAuthUI(true);
+            state.domElements.authModal?.classList.add('hidden');
+            state.domElements.mainContent?.classList.remove('blur-background');
+            loadUserData(state.currentUserId);
+
+            if (isNewUser) {
+                creditReferrerOnSignUp(state.currentUserId);
+            }
+        } else {
+            // User is signed out
+            console.log("User signed out.");
+            state.currentUser = null;
+            state.currentUserId = null;
+            state.personalReferralLink = "";
+            state.successfulReferralCount = 0;
+
+            updateAuthUI(false);
+            resetAppState();
+            updateShareSectionUI();
+            openAuthModal();
+        }
+
+        // Force auth modal visible until Firebase finishes auth check
+        if (!firebase.auth().currentUser) openAuthModal();
+    });
+
+    /* ---------------- DOM Element References ---------------- */
+    function cacheDomElements() {
+        Object.assign(state.domElements, {
+            authModal: document.getElementById('authModal'),
+            subscribeModal: document.getElementById('subscribeModal'),
+            shareModal: document.getElementById('shareModal'),
+            mainContent: document.getElementById('mainContent'),
+            authStatusMessage: document.getElementById('auth-status-message'),
+            logoutButton: document.getElementById('logoutButton'),
+            mobileLogoutButton: document.getElementById('mobile-logoutButton'),
+            recaptchaContainer: document.getElementById('recaptcha-container'),
+            emailForm: document.getElementById('email-form'),
+            emailInput: document.getElementById('email'),
+            emailSubmitBtn: document.getElementById('email-submit-btn'),
+            googleSigninBtn: document.getElementById('google-signin-btn'),
+            chatContainer: document.getElementById('chat-container'),
+            conversationHistorySection: document.getElementById('conversation-history'),
+            promptsWarning: document.getElementById('prompts-warning'),
+            promptsWarningCount: document.getElementById('prompts-warning-count'),
+            userInput: document.getElementById('userInput'),
+            sendButton: document.getElementById('sendButton'),
+            sendButtonText: document.querySelector('#sendButton .send-btn-text'),
+            sendButtonSpinner: document.querySelector('#sendButton .spinner'),
+            emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
+            emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
+            restartBtn: document.getElementById('restartBtn'),
+            toast: document.getElementById('toast'),
+            mobileMenuButton: document.getElementById('mobile-menu-button'),
+            mobileMenu: document.getElementById('mobile-menu'),
+            closeMobileMenuButton: document.getElementById('close-mobile-menu'),
+            mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
+            conversationCountEl: document.getElementById('conversation-count'),
+            skillLevelEl: document.getElementById('skill-level'),
+            promptsLeftEl: document.getElementById('prompts-left'),
+            avatarFrame: document.getElementById('avatarFrame'),
+            micButtonIcon: document.querySelector('#micButton i'),
+            personalLinkInput: document.getElementById('personalLink'),
+            rewardsTextEl: document.getElementById('rewardsText'),
+            referralStatusEl: document.getElementById('referralStatus'),
+            shareTierButtons: {
+                1: document.getElementById('btnTier1'),
+                2: document.getElementById('btnTier2'),
+                3: document.getElementById('btnTier3')
+            }
         });
     }
-    
-    // Generate a random referral code
-    function generateReferralCode() {
-      return Math.random().toString(36).substring(2, 10).toUpperCase();
-    }
+
+    // ... rest of your existing code ...
   </script>
 
   <!-- The rest of your scripts -->
@@ -2131,21 +1909,9 @@
   }
 
   /* ---------------- Authentication Actions ---------------- */
-  function signInWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      if (domElements.googleSigninBtn) {
-          domElements.googleSigninBtn.disabled = true;
-          domElements.googleSigninBtn.classList.add('opacity-75');
-      }
-      auth.signInWithPopup(provider)
-          .then((result) => { console.log("Google sign-in successful"); }) // onAuthStateChanged handles UI
-          .catch((error) => { console.error("Google sign-in error:", error); showStatusMessage(`Google sign-in failed: ${error.message}`, true); })
-          .finally(() => { if (domElements.googleSigninBtn) { domElements.googleSigninBtn.disabled = false; domElements.googleSigninBtn.classList.remove('opacity-75'); }});
-  }
-
   function sendMagicLink(event) {
       event.preventDefault();
-      const email = domElements.emailInput?.value?.trim(); // FIXED: Added definition
+      const email = domElements.emailInput?.value?.trim();
 
       if (!email || !email.includes('@')) {
           showStatusMessage("Please enter a valid email address.", true);
@@ -2306,8 +2072,7 @@
 
   /* ---------------- Event Listeners ---------------- */
   function addEventListeners() {
-      // Auth buttons (inside modal)
-      domElements.googleSigninBtn?.addEventListener('click', signInWithGoogle);
+      // Auth form
       domElements.emailForm?.addEventListener('submit', sendMagicLink);
 
       // Logout buttons
@@ -2367,65 +2132,58 @@
 
   /* ---------------- Initialization ---------------- */
   document.addEventListener('DOMContentLoaded', () => {
-      console.log("DOM fully loaded and parsed");
-
-      // Hide auth modal initially to prevent flash of unstyled content
+      console.log('DOM fully loaded and parsed');
+      
+      // Hide auth modal initially
       const authModal = document.getElementById('authModal');
       if (authModal) {
           authModal.style.visibility = 'hidden';
       }
 
-      // Wait for Tailwind and other resources to load
+      // Wait for resources to load
       window.addEventListener('load', () => {
-          // Cache DOM elements needed by scripts
+          // Cache DOM elements
           cacheDomElements();
 
-          // Check for magic link sign-in attempt immediately
-          handleMagicLinkSignIn();
+          // Add event listeners
+          state.domElements.emailForm?.addEventListener('submit', sendMagicLink);
+          state.domElements.logoutButton?.addEventListener('click', () => AuthService.signOut());
+          state.domElements.mobileLogoutButton?.addEventListener('click', () => {
+              AuthService.signOut();
+              closeMobileMenu();
+          });
 
-          // Add all event listeners
-          addEventListeners();
+          // Handle magic link sign-in
+          if (auth.isSignInWithEmailLink(window.location.href)) {
+              handleMagicLinkSignIn();
+          }
 
-          // Call referral visit handler
+          // Check referral
           handleReferralVisit();
 
-          // Show auth modal if needed (after styles are loaded)
+          // Show auth modal if needed
           if (authModal) {
               authModal.style.visibility = 'visible';
-              if (!firebase.auth().currentUser) {
+              if (!state.currentUser) {
                   openAuthModal();
               }
           }
 
           // Load data from localStorage backups
           const localPrompts = localStorage.getItem(LS_KEY_PROMPTS);
-          if (localPrompts !== null && !isSubscribed) {
-              promptsLeft = parseInt(localPrompts, 10);
-              console.log("Restored prompts left from localStorage:", promptsLeft);
+          if (localPrompts !== null && !state.isSubscribed) {
+              state.promptsLeft = parseInt(localPrompts, 10);
               updatePromptsUI();
           }
+
           const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-          if (localChat.length > 0 && domElements.chatContainer && domElements.chatContainer.children.length === 0) {
-              console.log("Restoring chat from localStorage backup.");
+          if (localChat.length > 0 && state.domElements.chatContainer && state.domElements.chatContainer.children.length === 0) {
               localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
           }
       });
   });
 
-  /* ---------- Ask for microphone permission on load ---------- */
-  function requestMicPermission() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        // Immediately stop tracks – we just needed the permission
-        stream.getTracks().forEach(t => t.stop());
-        console.log("Microphone permission granted");
-      })
-      .catch(err => {
-        console.warn("Mic permission denied:", err);
-      });
-  }
-  document.addEventListener('DOMContentLoaded', requestMicPermission);
+  // ... rest of your existing code ...
   </script>
 
 </body>

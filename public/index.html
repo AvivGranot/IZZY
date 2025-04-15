@@ -3,12 +3,10 @@
 <head>
 
   <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:image" content="/img/og.png">
   <meta property="og:title"       content="IZZY – AI Avatar for Real Conversations">
   <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:url"         content="https://your‑domain.com">
-  <meta property="og:type"        content="website">
-  <meta property="og:image"       content="https://your‑domain.com/img/og.png">
+  <meta property="og:url" content="https://izzy-auth.web.app">  <meta property="og:type"        content="website">
+  <meta property="og:image" content="https://izzy-auth.web.app/img/og.png">
   <meta property="og:image:alt"   content="Screenshot of IZZY AI avatar app">
 
 
@@ -324,6 +322,7 @@
     <a href="#practice" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Practice</a>
     <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a> <hr class="border-gray-200 my-4"> <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
   </nav>
+  <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>
 </div>
 
 <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 px-6 py-4 desktop-nav items-center"> 
@@ -358,20 +357,13 @@
   <section id="practice" class="glass max-w-xl w-full text-center fade-in mb-6" style="animation-delay:.2s">
     <label for="userInput" class="block text-lg font-semibold mb-3">Say something to IZZY:</label>
     <div class="relative">
+        <label for="userInput" class="sr-only">Your message to IZZY</label> <!-- Add this -->
         <textarea id="userInput" rows="3" maxlength="400" placeholder="Type or speak your message here… (max 400 chars)"
               aria-label="Your message to IZZY"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-2 resize-none focus:ring-2 focus:ring-izzy-purple-500 focus:border-transparent pr-10" ></textarea> <button id="micButton" onclick="startDictation()" class="absolute right-3 top-3 text-gray-500 hover:text-izzy-purple-600" aria-label="Use voice input">
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-2 resize-none focus:ring-2 focus:ring-izzy-purple-500 focus:border-transparent pr-10" ></textarea>
+        <button id="micButton" onclick="startDictation()" class="absolute right-3 top-3 text-gray-500 hover:text-巴巴-purple-600" aria-label="Use voice input">
             <i class="fas fa-microphone text-xl"></i>
         </button>
-        <div class="mt-3 mb-4 text-sm text-gray-600">
-    Try an example:
-    <button id="promptCoffee"
-            class="text-izzy-purple-600 hover:underline mx-1">Coffee shop ☕</button>•
-    <button id="promptIntro"
-            class="text-izzy-purple-600 hover:underline mx-1">Introduce 👋</button>•
-    <button id="promptCompliment"
-            class="text-izzy-purple-600 hover:underline mx-1">Compliment ✨</button>
-  </div>
 
   <!-- ▲  NEW BLOCK ENDS HERE ▲ -->
 
@@ -592,9 +584,10 @@ class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
           </p>
           <div class="gradient-card p-4">
             <p class="text-gray-800 font-medium">
-              "I always get streesed out before talking to a woman. I never even thought about to approach them. But IZZY helped me practise, to be prepare for any ackward silents or moments, and now I'm much more confident! Thank you!</p>
+                "I always got stressed out before talking to a woman and never even thought about approaching them. But IZZY helped me practice, preparing me for any awkward silences or moments, and now I'm much more confident! Thank you!"
+            </p>
             <p class="text-right text-sm text-gray-500 mt-2">– Michael T.</p>
-          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -631,17 +624,19 @@ class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
   </section>
 
   <section id="terms" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
-      <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Terms of Service</h2>
-      <p class="text-lg leading-relaxed">
-          [Your Terms of Service content goes here...]
-      </p>
-  </section>
-  <section id="privacy" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
-      <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Privacy Policy</h2>
-      <p class="text-lg leading-relaxed">
-          [Your Privacy Policy content goes here...]
-      </p>
-  </section>
+    <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Terms of Service</h2>
+    <p class="text-lg leading-relaxed">
+        Welcome to IZZY! By using our service, you agree to the following terms...
+        <!-- Add your full Terms of Service here -->
+    </p>
+</section>
+<section id="privacy" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
+    <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Privacy Policy</h2>
+    <p class="text-lg leading-relaxed">
+        At IZZY, we value your privacy. This Privacy Policy explains how we collect, use, and protect your data...
+        <!-- Add your full Privacy Policy here -->
+    </p>
+</section>
 
 </main>
 
@@ -659,16 +654,19 @@ class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
 
 <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-[120]"> </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-<script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
+  // At the top of your <script> section, just after ACTION_CODE_SETTINGS
+window.recaptchaLoaded = false;
+window.onRecaptchaLoad = function() {
+    console.log("reCAPTCHA script loaded");
+    window.recaptchaLoaded = true;
+    setupRecaptcha(); // Call setupRecaptcha only after the script loads
+};
+
 // Firebase Initialization
 const firebaseConfig = {
   apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
@@ -680,19 +678,6 @@ const firebaseConfig = {
   appId: "1:573135779043:web:f6c59473f9956c917041d6",
   measurementId: "G-8JLKB2MMKS"
 };
-
-try {
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-        console.log("Firebase Initialized");
-    } else {
-        firebase.app();
-        console.log("Firebase Already Initialized");
-    }
-} catch (e) {
-    console.error("Firebase initialization failed:", e);
-    showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
-}
 
 const auth = firebase.auth();
 const db = firebase.database();
@@ -1155,27 +1140,6 @@ function clearStatusMessage() {
 }
 
 // Authentication Actions
-function sendMagicLink(event) {
-    event.preventDefault();
-    const email = domElements.emailInput.value.trim();
-    if (!email) {
-        showStatusMessage("Please enter your email address.", true);
-        return;
-    }
-    if (!window.recaptchaVerifier) {
-        setupRecaptcha();
-        setTimeout(() => {
-            if (!window.recaptchaVerifier) {
-                showStatusMessage("reCAPTCHA not loaded. Please try again.", true);
-                return;
-            }
-            sendMagicLinkWithRecaptcha(email);
-        }, 1000); // Allow time for reCAPTCHA to initialize
-    } else {
-        sendMagicLinkWithRecaptcha(email);
-    }
-}
-
 function sendMagicLinkWithRecaptcha(email) {
     showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
     clearStatusMessage();
@@ -1191,11 +1155,15 @@ function sendMagicLinkWithRecaptcha(email) {
             if (error.code === 'auth/invalid-email') {
                 message = "Invalid email address.";
             } else if (error.code === 'auth/too-many-requests') {
-                message = "Too many requests. Please wait a moment.";
+                message = "We've reached our daily limit for sending magic links. Please try again tomorrow or contact support.";
             } else if (error.code === 'auth/missing-continue-uri') {
                 message = "Invalid configuration. Please contact support.";
             } else if (error.code === 'auth/unauthorized-continue-uri') {
                 message = "Domain not authorized. Please contact support.";
+            } else if (error.code === 'auth/captcha-check-failed') {
+                message = "Failed to verify reCAPTCHA. Please refresh the page.";
+            } else if (error.code === 'auth/network-request-failed') {
+                message = "Network error. Please check your connection and try again.";
             }
             showStatusMessage(message, true);
         })
@@ -1329,21 +1297,12 @@ function sendMessage() {
         return Promise.resolve();
     })
     .then((result) => {
-        if (!isSubscribed) {
-            if (result && result.committed) {
-                promptsLeft = result.snapshot.val().promptsLeft;
-                promptsUsed = result.snapshot.val().promptsUsed;
-            } else {
-                // Fallback in case transaction result is unexpected
-                promptsLeft = Math.max(0, promptsLeft - 1);
-                promptsUsed += 1;
-            }
+        if (!isSubscribed && result && result.committed) {
+            promptsLeft = result.snapshot.val().promptsLeft;
+            promptsUsed = result.snapshot.val().promptsUsed;
             updatePromptsUI();
             checkSubscriptionStatus();
             localStorage.setItem(LS_KEY_PROMPTS, promptsLeft);
-            
-            // Add this log to help debug
-            console.log("Updated prompts left:", promptsLeft, "prompts used:", promptsUsed);
         }
     })
     .catch(error => {
@@ -1530,11 +1489,17 @@ function enableSendButton() {
 }
 
 function setupRecaptcha() {
+    if (!window.recaptchaLoaded) {
+        console.error("reCAPTCHA script not loaded yet");
+        showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+        domElements.emailSubmitBtn.disabled = false;
+        domElements.emailButtonText.textContent = "Send Magic Link";
+        return;
+    }
     if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
         window.recaptchaVerifier = null;
     }
-    
     try {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
             'size': 'invisible',
@@ -1547,9 +1512,59 @@ function setupRecaptcha() {
                 setupRecaptcha();
             }
         });
+        window.recaptchaVerifier.render().then(widgetId => {
+            console.log("reCAPTCHA rendered, widget ID:", widgetId);
+            domElements.emailSubmitBtn.disabled = false;
+            domElements.emailButtonText.textContent = "Send Magic Link";
+        }).catch(error => {
+            console.error("reCAPTCHA render error:", error, "Code:", error.code, "Message:", error.message);
+            showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+            domElements.emailSubmitBtn.disabled = false;
+            domElements.emailButtonText.textContent = "Send Magic Link";
+        });
     } catch (error) {
         console.error("Error setting up reCAPTCHA:", error);
         showStatusMessage("Please try again in a moment.", true);
+        domElements.emailSubmitBtn.disabled = false;
+        domElements.emailButtonText.textContent = "Send Magic Link";
+    }
+}
+       
+function sendMagicLink(event) {
+    event.preventDefault();
+    const email = domElements.emailInput.value.trim();
+    if (!email) {
+        showStatusMessage("Please enter your email address.", true);
+        return;
+    }
+    if (!window.recaptchaVerifier) {
+        setupRecaptcha();
+    } else {
+        sendMagicLinkWithRecaptcha(email);
+    }
+}
+        window.recaptchaVerifier.render().then(widgetId => {
+    console.log("reCAPTCHA rendered, widget ID:", widgetId);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
+}).catch(error => {
+    console.error("reCAPTCHA render error:", error, "Code:", error.code, "Message:", error.message);
+    showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
+});
+
+function sendMagicLink(event) {
+    event.preventDefault();
+    const email = domElements.emailInput.value.trim();
+    if (!email) {
+        showStatusMessage("Please enter your email address.", true);
+        return;
+    }
+    if (!window.recaptchaVerifier) {
+        setupRecaptcha();
+    } else {
+        sendMagicLinkWithRecaptcha(email);
     }
 }
 
@@ -1627,29 +1642,43 @@ function closeMobileMenu() {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
-  cacheDomElements();
-  domElements.emailSubmitBtn.disabled = true; // Disable button initially
-  domElements.emailButtonText.textContent = "Loading..."; // Show loading text
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-      console.log("Firebase Initialized");
-    } else {
-      firebase.app();
-      console.log("Firebase Already Initialized");
+    cacheDomElements();
+    domElements.emailSubmitBtn.disabled = true;
+    domElements.emailButtonText.textContent = "Loading...";
+    try {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase Initialized");
+        } else {
+            firebase.app();
+            console.log("Firebase Already Initialized");
+        }
+    } catch (e) {
+        console.error("Firebase initialization failed:", e);
+        showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
+        domElements.emailSubmitBtn.disabled = false;
+        domElements.emailButtonText.textContent = "Send Magic Link";
     }
-    domElements.emailSubmitBtn.disabled = false; // Enable button after initialization
-    domElements.emailButtonText.textContent = "Send Magic Link"; // Reset button text
-  } catch (e) {
-    console.error("Firebase initialization failed:", e);
-    showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
-    domElements.emailSubmitBtn.disabled = false;
-    domElements.emailButtonText.textContent = "Send Magic Link";
-  }
-  handleMagicLinkSignIn();
-  addEventListeners();
-  handleReferralVisit();
-  setupRecaptcha();
+    handleMagicLinkSignIn();
+    addEventListeners();
+    handleReferralVisit();
+
+    // Add a timeout to handle reCAPTCHA load failure
+    const recaptchaLoadTimeout = setTimeout(() => {
+        if (!window.recaptchaLoaded) {
+            console.error("reCAPTCHA script failed to load within 10 seconds");
+            showStatusMessage("Failed to load reCAPTCHA. Please refresh the page.", true);
+            domElements.emailSubmitBtn.disabled = false;
+            domElements.emailButtonText.textContent = "Send Magic Link";
+        }
+    }, 10000); // 10 seconds timeout
+
+    // Clear the timeout if reCAPTCHA loads successfully
+    const originalOnRecaptchaLoad = window.onRecaptchaLoad;
+    window.onRecaptchaLoad = function() {
+        clearTimeout(recaptchaLoadTimeout);
+        originalOnRecaptchaLoad();
+    };
 });
 
 // Microphone Permission

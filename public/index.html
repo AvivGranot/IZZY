@@ -1,398 +1,31 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+  <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
+  <meta property="og:image" content="/img/og.png">
+  <meta property="og:title"       content="IZZY – AI Avatar for Real Conversations">
+  <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
+  <meta property="og:url"         content="https://your‑domain.com">
+  <meta property="og:type"        content="website">
+  <meta property="og:image"       content="https://your‑domain.com/img/og.png">
+  <meta property="og:image:alt"   content="Screenshot of IZZY AI avatar app">
+
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IZZY – AI Avatar for Real Conversations</title>
 
-  <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:image" content="/img/og.png">
-  <meta property="og:title" content="IZZY – AI Avatar for Real Conversations">
-  <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:url" content="https://your‑domain.com">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://your‑domain.com/img/og.png">
-  <meta property="og:image:alt" content="Screenshot of IZZY AI avatar app">
-
-  <!-- Tailwind Configuration -->
-  <script>
-    // Extend Tailwind theme with custom colors
-    window.tailwindConfig = {
-      theme: {
-        extend: {
-          colors: {
-            'izzy-blue': '#0047AB',
-            'izzy-purple': {
-              500: '#8B5CF6',
-              600: '#7C3AED',
-              700: '#6D28D9'
-            },
-            'izzy-pink': {
-              500: '#EC4899',
-              600: '#DB2777'
-            }
-          },
-        }
-      },
-    }
-  </script>
-
-  <!-- External Resources -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 
-  <script>
-    // Initialize Tailwind with our config after it loads
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.tailwind) {
-        window.tailwind.config = window.tailwindConfig;
-      }
-    });
-
-    // Add resource load error handling
-    function handleResourceError(e) {
-      console.error('Failed to load resource:', e.target.src || e.target.href);
-      const element = document.createElement('div');
-      element.style.position = 'fixed';
-      element.style.top = '0';
-      element.style.left = '0';
-      element.style.right = '0';
-      element.style.backgroundColor = '#ef4444';
-      element.style.color = 'white';
-      element.style.padding = '1rem';
-      element.style.textAlign = 'center';
-      element.style.zIndex = '9999';
-      element.textContent = 'Failed to load some resources. Please refresh the page.';
-      document.body.prepend(element);
-    }
-
-    // Add error handlers to all external resources
-    window.addEventListener('load', () => {
-      document.querySelectorAll('link[rel="stylesheet"], script[src]').forEach(el => {
-        el.addEventListener('error', handleResourceError);
-      });
-    });
-  </script>
 
   <style>
-    /* Reset and base styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #fff;
-      color: #333;
-      line-height: 1.5;
-    }
-
-    /* Remove ALL blur effects */
-    .glass {
-      background: #ffffff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 1rem;
-      border: 1px solid rgba(139, 92, 246, 0.1);
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    /* Clear background blur */
-    .blur-background {
-      filter: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      background: none !important;
-    }
-
-    /* Hero section styles */
-    .hero {
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: #fff;
-      padding: 2rem;
-    }
-
-    .hero h1 {
-      font-size: 4rem;
-      font-weight: 700;
-      color: #000;
-      margin-bottom: 1rem;
-      line-height: 1.2;
-      text-rendering: optimizeLegibility;
-    }
-
-    .hero h2 {
-      font-size: 2rem;
-      color: #666;
-      margin-bottom: 2rem;
-      text-rendering: optimizeLegibility;
-    }
-
-    /* Auth modal styles */
-    #authModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-    }
-
-    .auth-container {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      margin: 1rem;
-      z-index: 1001;
-    }
-
-    .auth-logo {
-      width: auto;
-      height: 32px;
-      margin: 0 auto 1.5rem;
-      display: block;
-    }
-
-    .auth-title {
-      font-size: 24px;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 0.5rem;
-      color: #1a1a1a;
-    }
-
-    .auth-subtitle {
-      font-size: 16px;
-      color: #666;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .google-btn {
-      width: 100%;
-      padding: 12px;
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-weight: 500;
-      color: #1a1a1a;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .google-btn:hover {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-    }
-
-    .google-btn img {
-      width: 20px;
-      height: 20px;
-    }
-
-    .divider {
-      position: relative;
-      text-align: center;
-      margin: 1.5rem 0;
-    }
-
-    .divider::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: #e2e8f0;
-    }
-
-    .divider span {
-      background: white;
-      padding: 0 1rem;
-      color: #666;
-      position: relative;
-    }
-
-    .email-input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-size: 16px;
-    }
-
-    .email-input:focus {
-      outline: none;
-      border-color: #8B5CF6;
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-    }
-
-    .email-submit {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #8B5CF6, #EC4899);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-    }
-
-    .email-submit:hover {
-      opacity: 0.95;
-    }
-
-    .email-submit:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .spinner {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .spinner.visible {
-      display: block;
-    }
-
-    .terms {
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      margin-top: 1.5rem;
-    }
-
-    .terms a {
-      color: #8B5CF6;
-      text-decoration: none;
-    }
-
-    .terms a:hover {
-      text-decoration: underline;
-    }
-
-    /* Input styles */
-    .input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-
-    /* Remove any backdrop filters */
-    .glass {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-    }
-
     /* Basic Reset & Font */
-    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; } /* Added smooth scroll */
     body { font-family: 'Inter', sans-serif; background: #fff; color:#333; }
-
-    /* Clear any backdrop filters that might cause blur */
-    .glass {
-      background: white;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 1rem;
-      border: 1px solid rgba(139, 92, 246, 0.1);
-    }
-
-    /* Ensure text is sharp */
-    .auth-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: #333;
-      text-rendering: optimizeLegibility;
-    }
-
-    .auth-subtitle {
-      font-size: 1.1rem;
-      color: #666;
-      margin-bottom: 2rem;
-      text-rendering: optimizeLegibility;
-    }
-
-    /* Button styles */
-    .google-btn {
-      background: white;
-      color: #333;
-      border: 1px solid #ddd;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      margin-bottom: 1rem;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .google-btn:hover {
-      background: #f8f8f8;
-      border-color: #ccc;
-    }
-
-    .email-input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-
-    .email-submit {
-      background: linear-gradient(to right, #8B5CF6, #EC4899);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      width: 100%;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .email-submit:hover {
-      opacity: 0.9;
-    }
 
     /* Backdrop-blur card effect */
     .glass {
@@ -543,688 +176,1464 @@
     .gradient-bg{background:linear-gradient(135deg,rgba(147,51,234,.08),rgba(236,72,153,.08))}
     .disabled{opacity:.5;cursor:not-allowed !important;transform:none !important}
 
-    .main-content {
-      position: relative !important; /* Change from fixed to relative */
-      filter: none !important;
-      transition: none !important;
-    }
-
-    .main-content.authenticated {
-      filter: none;
-    }
-
-    /* Add this at the beginning of your styles */
-    body.pre-auth::before {
-        display: none; /* Remove the dark overlay */
-    }
-
-    body.pre-auth .content-container {
-        filter: none !important; /* Remove blur from content */
-    }
-    
-    body.auth-complete .content-container {
-        filter: none;
-        transition: filter 0.5s ease;
-    }
-    
-    /* Auth modal styling */
-    #authModal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 1000;
-    }
-    
-    .auth-container {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        width: 100%;
-        max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        margin: 1rem;
-        z-index: 1001;
-    }
-    
-    .auth-logo {
-        display: block;
-        width: auto;
-        height: 40px;
-        margin: 0 auto 1.5rem;
-    }
-    
-    .auth-title {
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        color: #1a1a1a;
-    }
-    
-    .auth-subtitle {
-        color: #666;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    .google-btn {
-        width: 100%;
-        padding: 0.75rem;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-bottom: 1.5rem;
-    }
-    
-    .google-btn:hover {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-    }
-    
-    .divider {
-        position: relative;
-        text-align: center;
-        margin: 1.5rem 0;
-    }
-    
-    .divider::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: #e2e8f0;
-    }
-    
-    .divider span {
-        position: relative;
-        background: white;
-        padding: 0 1rem;
-        color: #666;
-    }
-    
-    .auth-form {
-        margin-bottom: 1.5rem;
-    }
-    
-    .auth-input {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-    }
-    
-    .auth-input:focus {
-        outline: none;
-        border-color: #8B5CF6;
-        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-    }
-    
-    .auth-button {
-        width: 100%;
-        padding: 0.75rem;
-        background: linear-gradient(135deg, #8B5CF6, #EC4899);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 500;
-        cursor: pointer;
-        position: relative;
-    }
-    
-    .auth-button:hover {
-        opacity: 0.95;
-    }
-    
-    .auth-button:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-    
-    .auth-button .spinner {
-        display: none;
-        width: 20px;
-        height: 20px;
-        border: 2px solid white;
-        border-top-color: transparent;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        animation: spin 1s linear infinite;
-    }
-    
-    .auth-button .btn-text {
-        transition: opacity 0.2s;
-    }
-    
-    .auth-button.loading .btn-text {
-        opacity: 0;
-    }
-    
-    .auth-button.loading .spinner {
-        display: block;
-    }
-    
-    .auth-status {
-        margin-top: 1rem;
-        text-align: center;
-        font-size: 0.875rem;
-    }
-    
-    .auth-terms {
-        text-align: center;
-        font-size: 12px;
-        color: #666;
-        margin-top: 1.5rem;
-    }
-    
-    .auth-terms a {
-        color: #8B5CF6;
-        text-decoration: none;
-    }
-    
-    .auth-terms a:hover {
-        text-decoration: underline;
-    }
-    
-    @keyframes spin {
-        to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    
-    /* Toast notification */
-    .toast {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
-        background: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        max-width: 300px;
-        z-index: 1001;
-        transition: transform 0.3s, opacity 0.3s;
-        transform: translateY(-10px);
-        opacity: 0;
-    }
-    
-    .toast.show {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    
-    .toast.success {
-        border-left: 4px solid #10B981;
-    }
-    
-    .toast.error {
-        border-left: 4px solid #EF4444;
-    }
-
-    /* Add these styles at the top of your existing style block */
-    
-    /* Blurry background before authentication */
-    body.unauthenticated .content-wrapper {
-      filter: blur(8px);
-      transition: filter 0.5s ease-in-out;
-    }
-    
-    body.authenticated .content-wrapper {
-      filter: none;
-      transition: filter 0.5s ease-in-out;
-    }
-    
-    /* Auth modal - make sure it's on top and fully visible */
-    #authModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      background: rgba(0, 0, 0, 0.7);
-    }
-    
-    .auth-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 400px;
-      margin: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      position: relative;
-      z-index: 2001;
-    }
-
-    /* Improved button styles for better click handling */
-    .google-btn, .email-submit {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .google-btn::after, .email-submit::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: 1;
-    }
-    
-    /* Loading states for buttons */
-    .is-loading .btn-text {
-      opacity: 0;
-    }
-    
-    .is-loading .spinner {
-      display: inline-block;
-    }
-    
-    .spinner {
-      display: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid currentColor;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 1s linear infinite;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    
-    @keyframes spin {
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    
-    /* Improved toast notifications */
-    #toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 3000;
-    }
-    
-    .toast {
-      padding: 12px 16px;
-      background: white;
-      color: #333;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      display: flex;
-      align-items: center;
-      min-width: 300px;
-      max-width: 450px;
-      transform: translateX(120%);
-      transition: transform 0.3s ease;
-    }
-    
-    .toast.show {
-      transform: translateX(0);
-    }
-    
-    .toast.success {
-      border-left: 4px solid #10B981;
-    }
-    
-    .toast.error {
-      border-left: 4px solid #EF4444;
-    }
-    
-    .toast-icon {
-      margin-right: 12px;
-      font-size: 18px;
-    }
-    
-    .toast.success .toast-icon {
-      color: #10B981;
-    }
-    
-    .toast.error .toast-icon {
-      color: #EF4444;
-    }
   </style>
-</head>
-
-<body class="unauthenticated">
-  <!-- Toast container -->
-  <div id="toast-container"></div>
-  
-  <!-- Content wrapper that will be blurred before auth -->
-  <div class="content-wrapper">
-    <!-- All your existing content goes here -->
-    <!-- Navigation bar -->
-    <div class="navbar">
-      <!-- Existing navbar content -->
-    </div>
-    
-    <!-- Main content -->
-    <div class="content">
-      <!-- Existing content -->
-    </div>
-  </div>
-  
-  <!-- Auth Modal - outside the content wrapper so it's not blurred -->
-  <div id="authModal">
-    <div class="auth-container">
-      <h2 class="text-2xl font-bold text-center mb-2">Real Conversations.</h2>
-      <h2 class="text-2xl font-bold text-center mb-4">Real Confidence.</h2>
-      <p class="text-gray-600 text-center mb-6">Please sign in to continue.</p>
-      
-      <!-- Email Sign In -->
-      <form id="email-form" class="space-y-4">
-        <input type="email" id="email" placeholder="Enter your email" required
-               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
-        
-        <button type="submit" class="email-submit w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-lg relative">
-          <span class="btn-text">Send Magic Link</span>
-          <div class="spinner"></div>
-        </button>
-      </form>
-      
-      <div id="auth-status-message" class="mt-4 text-sm text-center"></div>
-      
-      <p class="mt-6 text-xs text-center text-gray-500">
-        By continuing, you agree to our 
-        <a href="/terms" class="text-purple-600 hover:underline">Terms</a> & 
-        <a href="/privacy" class="text-purple-600 hover:underline">Privacy</a>
-      </p>
-    </div>
-  </div>
-
-  <!-- Authentication Scripts -->
-  <script type="module">
-    import { UserService, AuthService } from './js/services.js';
-    import { USER_ROLES, PROMPT_LIMITS, ANALYTICS_EVENTS, REFERRAL_SYSTEM } from './js/config.js';
-
-    // Constants from config
-    const FREE_PROMPT_LIMIT = PROMPT_LIMITS.FREE.total;
-    const MAX_REFERRALS_REWARDED = 3;
-    const REFERRAL_PROMPTS_TIERS = REFERRAL_SYSTEM.rewards;
-
-    // Local Storage Keys
-    const LS_KEY_PROMPTS = 'izzy_prompts_left';
-    const LS_KEY_CHAT = 'izzy_chat_history';
-    const LS_KEY_REFERRER = 'izzy_referrer';
-    const LS_KEY_REFERRAL_VISITED_PREFIX = 'izzy_referral_visited_';
-
-    // Application state
-    const state = {
-        currentUser: null,
-        currentUserId: null,
-        promptsUsed: 0,
-        promptsLeft: FREE_PROMPT_LIMIT,
-        isSubscribed: false,
-        currentConversationId: null,
-        personalReferralLink: "",
-        successfulReferralCount: 0,
-        recaptchaVerifier: null,
-        domElements: {}
-    };
-
-    // Initialize Firebase Auth state listener
-    const auth = firebase.auth();
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            // User is signed in
-            const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
-            state.currentUser = user;
-            state.currentUserId = user.uid;
-            console.log("User signed in:", state.currentUserId, "Is new user:", isNewUser);
-
-            // Generate personal referral link
-            state.personalReferralLink = `${window.location.origin}${window.location.pathname}?ref=${state.currentUserId}`;
-            if(state.domElements.personalLinkInput) {
-                state.domElements.personalLinkInput.value = state.personalReferralLink;
-            }
-
-            updateAuthUI(true);
-            state.domElements.authModal?.classList.add('hidden');
-            state.domElements.mainContent?.classList.remove('blur-background');
-            loadUserData(state.currentUserId);
-
-            if (isNewUser) {
-                creditReferrerOnSignUp(state.currentUserId);
-            }
-        } else {
-            // User is signed out
-            console.log("User signed out.");
-            state.currentUser = null;
-            state.currentUserId = null;
-            state.personalReferralLink = "";
-            state.successfulReferralCount = 0;
-
-            updateAuthUI(false);
-            resetAppState();
-            updateShareSectionUI();
-            openAuthModal();
-        }
-
-        // Force auth modal visible until Firebase finishes auth check
-        if (!firebase.auth().currentUser) openAuthModal();
-    });
-
-    /* ---------------- DOM Element References ---------------- */
-    function cacheDomElements() {
-        Object.assign(state.domElements, {
-            authModal: document.getElementById('authModal'),
-            subscribeModal: document.getElementById('subscribeModal'),
-            shareModal: document.getElementById('shareModal'),
-            mainContent: document.getElementById('mainContent'),
-            authStatusMessage: document.getElementById('auth-status-message'),
-            logoutButton: document.getElementById('logoutButton'),
-            mobileLogoutButton: document.getElementById('mobile-logoutButton'),
-            recaptchaContainer: document.getElementById('recaptcha-container'),
-            emailForm: document.getElementById('email-form'),
-            emailInput: document.getElementById('email'),
-            emailSubmitBtn: document.getElementById('email-submit-btn'),
-            googleSigninBtn: document.getElementById('google-signin-btn'),
-            chatContainer: document.getElementById('chat-container'),
-            conversationHistorySection: document.getElementById('conversation-history'),
-            promptsWarning: document.getElementById('prompts-warning'),
-            promptsWarningCount: document.getElementById('prompts-warning-count'),
-            userInput: document.getElementById('userInput'),
-            sendButton: document.getElementById('sendButton'),
-            sendButtonText: document.querySelector('#sendButton .send-btn-text'),
-            sendButtonSpinner: document.querySelector('#sendButton .spinner'),
-            emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
-            emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
-            restartBtn: document.getElementById('restartBtn'),
-            toast: document.getElementById('toast'),
-            mobileMenuButton: document.getElementById('mobile-menu-button'),
-            mobileMenu: document.getElementById('mobile-menu'),
-            closeMobileMenuButton: document.getElementById('close-mobile-menu'),
-            mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
-            conversationCountEl: document.getElementById('conversation-count'),
-            skillLevelEl: document.getElementById('skill-level'),
-            promptsLeftEl: document.getElementById('prompts-left'),
-            avatarFrame: document.getElementById('avatarFrame'),
-            micButtonIcon: document.querySelector('#micButton i'),
-            personalLinkInput: document.getElementById('personalLink'),
-            rewardsTextEl: document.getElementById('rewardsText'),
-            referralStatusEl: document.getElementById('referralStatus'),
-            shareTierButtons: {
-                1: document.getElementById('btnTier1'),
-                2: document.getElementById('btnTier2'),
-                3: document.getElementById('btnTier3')
-            }
-        });
-    }
-
-    // ... rest of your existing code ...
-  </script>
-
-  <!-- The rest of your scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
   <script>
-  /* ---------------- Firebase Initialization ---------------- */
-  const firebaseConfig = {
-    apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
-    authDomain: "izzy-auth.firebaseapp.com",
-    databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com",
-    projectId: "izzy-auth",
-    storageBucket: "izzy-auth.appspot.com",
-    messagingSenderId: "573135779043",
-    appId: "1:573135779043:web:f6c59473f9956c917041d6",
-    measurementId: "G-8JLKB2MMKS"
-  };
-
-  // Initialize Firebase with error handling
-  try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+    // Extend Tailwind theme with custom colors
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'izzy-blue': '#0047AB', // Custom blue
+            'izzy-purple': { // Custom purple shades
+              500: '#8B5CF6',
+              600: '#7C3AED',
+              700: '#6D28D9'
+            },
+            'izzy-pink': { // Custom pink shades
+              500: '#EC4899',
+              600: '#DB2777'
+            }
+          },
+        }
+      },
     }
-    const auth = firebase.auth();
-    const db = firebase.database();
-    console.log("Firebase initialized successfully");
-  } catch (error) {
-    console.error("Error initializing Firebase:", error);
-    showToast("Error initializing app. Please refresh the page.", true);
-  }
+  </script>
+</head>
 
-  // Magic Link Sign-in Function with improved validation and debugging
-  function sendMagicLink(event) {
-    event.preventDefault();
-    console.log("Starting magic link process...");
-    
-    const email = document.getElementById('email')?.value?.trim();
-    
-    if (!email || !email.includes('@')) {
-        showToast("Please enter a valid email address.", true);
+<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4">
+  <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in">
+    <div class="flex justify-center mb-6">
+      <div class="bg-gradient-to-r from-izzy-pink-500 to-izzy-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+        <span class="text-white text-2xl font-bold">IZZY</span>
+      </div>
+    </div>
+    <div class="text-center mb-8">
+      <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Real Conversations.</h1>
+      <h2 class="text-2xl sm:text-3xl font-semibold text-gray-900 mb-4">Real Confidence.</h2>
+      <p class="text-gray-600">Sign up or log in with your email to continue.</p>
+    </div>
+
+    <form id="email-form">
+      <label for="email" class="sr-only">Email address</label>
+      <input type="email" id="email" placeholder="Enter your email"
+             aria-label="Email address"
+             class="w-full px-4 py-3 rounded-full border border-gray-300 focus:ring-2 focus:ring-izzy-purple-500 mb-3"
+             required />
+      <button type="submit" id="email-submit-btn"
+        class="w-full py-3 rounded-full text-white font-semibold bg-gradient-to-r from-izzy-purple-500 to-izzy-pink-500 hover:from-izzy-purple-600 hover:to-izzy-pink-600 transition-all duration-300 flex items-center justify-center">
+        <span class="email-btn-text">Send Magic Link</span>
+        <span class="spinner hidden ml-2"></span>
+      </button>
+    </form>
+
+    <div id="auth-status-message" class="text-center text-sm mt-3 min-h-[1.2em]"></div>
+
+    <p class="text-center text-xs text-gray-500 mt-4">
+      By continuing, you agree to our
+      <a href="#terms" class="text-izzy-purple-500 hover:underline">Terms</a> & 
+      <a href="#privacy" class="text-izzy-purple-500 hover:underline">Privacy</a>.
+    </p>
+  </div>
+</div>
+
+<div id="subscribeModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in relative"> <button onclick="closeSubscribeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" aria-label="Close subscription modal">
+        <i class="fas fa-times text-xl"></i>
+    </button>
+
+    <div class="flex justify-center mb-6">
+      <div class="bg-gradient-to-r from-izzy-pink-500 to-izzy-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+        <span class="text-white text-2xl font-bold">IZZY</span>
+      </div>
+    </div>
+
+    <h2 class="text-xl sm:text-2xl font-bold text-center mb-4">Upgrade Your Experience</h2> <p class="text-center text-gray-600 mb-6">You've used all your free prompts. Subscribe now to get unlimited conversations with IZZY!</p>
+
+    <div class="space-y-4 mb-6">
+      <div class="border border-izzy-purple-200 p-4 rounded-lg hover:bg-purple-50 cursor-pointer transition-colors duration-200">
+        <div class="flex justify-between items-center"> <h3 class="font-bold text-lg">Monthly</h3> <span class="font-bold text-lg">$20/mo</span> </div>
+        <p class="text-sm text-gray-500 mt-1">Cancel anytime</p>
+      </div>
+
+      <div class="border-2 border-izzy-purple-500 p-4 rounded-lg bg-purple-50 cursor-pointer relative"> <span class="absolute -top-3 right-4 inline-block bg-izzy-purple-600 text-white text-xs px-2 py-1 rounded-full font-semibold">BEST VALUE</span> <div class="flex justify-between items-center">
+          <h3 class="font-bold text-lg">Annual</h3>
+          <span class="font-bold text-lg">$16.67/mo</span> </div>
+        <p class="text-sm text-gray-500 mt-1">Save $40 - billed annually ($200)</p>
+      </div>
+    </div>
+
+    <a href="#subscribe" onclick="closeSubscribeModal()" class="block w-full py-3 rounded-full text-white font-semibold bg-gradient-to-r from-izzy-purple-500 to-izzy-pink-500 hover:from-izzy-purple-600 hover:to-izzy-pink-600 text-center transition-all duration-300">
+      View Plans
+    </a>
+
+    <button onclick="closeSubscribeModal()" class="block w-full text-gray-500 mt-4 hover:underline">
+      Maybe Later
+    </button>
+  </div>
+</div>
+
+<div id="shareModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-center relative fade-in"> <button onclick="closeShareModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700" aria-label="Close share modal">
+        <i class="fas fa-times text-lg"></i>
+    </button>
+
+    <h2 class="text-2xl font-bold text-izzy-blue mb-4">Your Personal Link</h2>
+    <p class="text-sm text-gray-500 mb-2">Tap link to copy</p>
+
+<input  id="personalLink"
+        type="text"
+        readonly
+        onclick="copyReferralLink()"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4
+               text-gray-700 select-all cursor-pointer bg-gray-50"
+        title="Click to copy link">
+
+<p class="text-sm text-gray-500 mb-4">Or share via:</p>
+
+
+    <div class="space-y-3">
+      <button onclick="shareVia('whatsapp')"  class="share-button w-full py-2 rounded-lg bg-green-500  text-white font-semibold flex items-center justify-center gap-2">
+        <i class="fab fa-whatsapp"></i>WhatsApp
+      </button>
+      <button onclick="shareVia('email')"    class="share-button w-full py-2 rounded-lg bg-blue-500   text-white font-semibold flex items-center justify-center gap-2">
+        <i class="fas fa-envelope"></i>Email
+      </button>
+      <button onclick="shareVia('facebook')"  class="share-button w-full py-2 rounded-lg bg-blue-700   text-white font-semibold flex items-center justify-center gap-2">
+        <i class="fab fa-facebook-f"></i>Facebook
+      </button>
+      <button onclick="shareVia('twitter')"  class="share-button w-full py-2 rounded-lg bg-sky-500    text-white font-semibold flex items-center justify-center gap-2">
+        <i class="fab fa-twitter"></i>X / Twitter
+      </button>
+      <button onclick="shareVia('reddit')"    class="share-button w-full py-2 rounded-lg bg-orange-600 text-white font-semibold flex items-center justify-center gap-2">
+        <i class="fab fa-reddit-alien"></i>Reddit
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div id="recaptcha-container"></div>
+
+<button id="mobile-menu-button" class="mobile-nav-button fixed top-4 left-4 z-[101] bg-white rounded-full p-2 shadow-md" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"> <i class="fas fa-bars text-izzy-blue text-xl"></i>
+</button>
+
+<div id="mobile-menu" class="mobile-menu">
+  <div class="flex justify-end mb-8">
+    <button id="close-mobile-menu" aria-label="Close menu">
+      <i class="fas fa-times text-izzy-blue text-2xl"></i> </button>
+  </div>
+  <nav class="flex flex-col space-y-6 text-center"> <a href="#about" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">About</a>
+    <a href="#practice" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Practice</a>
+    <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a> <hr class="border-gray-200 my-4"> <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
+  </nav>
+</div>
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 px-6 py-4 desktop-nav items-center"> 
+  <a href="#" onclick="copyReferralLink()"
+  class="text-2xl font-bold text-izzy-blue mr-8">IZZY</a>
+  <div class="flex items-center space-x-6">
+    <a href="#about" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">About</a>
+    <a href="#practice" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Practice</a>
+    <a href="#subscribe" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Share</a> </div>
+  <div class="ml-auto flex items-center space-x-4">
+    <button id="logoutButton" class="text-red-500 font-semibold hover:text-red-700 hidden transition-colors">Logout</button>
+  </div>
+</nav>
+
+<main id="mainContent" class="pt-24 sm:pt-32 flex flex-col items-center px-4 sm:px-6 pb-20 transition-filter duration-300">
+
+  <section id="hero" class="text-center max-w-4xl mb-12 fade-in"> <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-600 bg-clip-text text-transparent leading-tight mb-4">
+      The World's First <br/> AI-Avatar for Real Life
+    </h1>
+    <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto"> Practice conversations, build confidence, and never be afraid to approach someone again.<br/>Try it for free (after login).
+    </p>
+
+    <div class="w-full max-w-xl mx-auto relative mb-10" style="padding-bottom: 75%;"> <iframe id="avatarFrame"
+        class="absolute top-0 left-0 w-full h-full rounded-3xl shadow-lg border border-purple-200"
+        allow="microphone; autoplay"
+        loading="lazy"
+        title="IZZY AI Avatar" src="https://studio.d-id.com/share?id=74b55d9015a0b211877183414aae362e&utm_source=copy">
+      </iframe>
+    </div>
+  </section>
+
+  <section id="practice" class="glass max-w-xl w-full text-center fade-in mb-6" style="animation-delay:.2s">
+    <label for="userInput" class="block text-lg font-semibold mb-3">Say something to IZZY:</label>
+    <div class="relative">
+        <textarea id="userInput" rows="3" maxlength="400" placeholder="Type or speak your message here… (max 400 chars)"
+              aria-label="Your message to IZZY"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-2 resize-none focus:ring-2 focus:ring-izzy-purple-500 focus:border-transparent pr-10" ></textarea> <button id="micButton" onclick="startDictation()" class="absolute right-3 top-3 text-gray-500 hover:text-izzy-purple-600" aria-label="Use voice input">
+            <i class="fas fa-microphone text-xl"></i>
+        </button>
+        <div class="mt-3 mb-4 text-sm text-gray-600">
+    Try an example:
+    <button id="promptCoffee"
+            class="text-izzy-purple-600 hover:underline mx-1">Coffee shop ☕</button>•
+    <button id="promptIntro"
+            class="text-izzy-purple-600 hover:underline mx-1">Introduce 👋</button>•
+    <button id="promptCompliment"
+            class="text-izzy-purple-600 hover:underline mx-1">Compliment ✨</button>
+  </div>
+
+  <!-- ▲  NEW BLOCK ENDS HERE ▲ -->
+
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+    <!-- send / restart buttons -->
+  </div>
+
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+        <button id="sendButton"
+                class="w-full sm:w-auto bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-500 text-white px-8 py-3 rounded-full shadow hover:from-izzy-purple-700 hover:to-izzy-pink-600 transition-all duration-300 flex items-center justify-center">
+          <span class="send-btn-text">Send Message</span>
+          <span class="spinner hidden ml-2"></span>
+        </button>
+        <button id="restartBtn"
+                class="w-full sm:w-auto hidden bg-gray-200 text-gray-800 px-6 py-3 rounded-full hover:bg-gray-300 transition-colors">
+          Restart Conversation
+        </button>
+    </div>
+
+    <!-- …existing textarea + buttons … -->
+
+<div id="prompts-warning"
+class="text-sm text-orange-600 mt-3 hidden">
+<strong>Note:</strong> You have
+<span id="prompts-warning-count">0</span> free prompts left.
+<a href="#subscribe"
+class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
+</div>
+
+</section>
+
+  <section id="conversation-history" class="glass max-w-xl w-full mt-6 hidden fade-in" style="animation-delay:.3s">
+    <h3 class="font-semibold text-lg mb-3 text-center">Conversation History</h3>
+    <div id="chat-container" class="max-h-64 overflow-y-auto space-y-3 p-1"> </div>
+  </section>
+
+
+  <div id="stats" class="mt-10 w-full max-w-xl fade-in" style="animation-delay:.4s"> <h3 class="text-xl font-semibold mb-4 text-center">Your Progress</h3>
+    <div class="grid grid-cols-3 gap-4 text-center bg-gray-50 p-4 rounded-lg">
+      <div>
+        <div id="conversation-count" class="text-2xl font-bold text-izzy-purple-600">0</div>
+        <div class="text-sm text-gray-500">Conversations</div>
+      </div>
+      <div>
+        <div id="skill-level" class="text-2xl font-bold text-izzy-purple-600">Beginner</div>
+        <div class="text-sm text-gray-500">Level</div>
+      </div>
+      <div>
+        <div id="prompts-left" class="text-2xl font-bold text-izzy-purple-600">3</div>
+        <div class="text-sm text-gray-500">Free Prompts</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="about" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-center text-gray-800 fade-in" style="animation-delay:.5s">
+    <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">IZZY Was Built For You!</h2>
+    <p class="text-lg italic font-semibold text-izzy-purple-600 mb-5">Stop texting. Stop hiding behind a screen.</p>
+    <p class="text-lg leading-relaxed">
+      IZZY isn't just another dating app – it's your personal conversation coach. Practice approaching and talking to women in realistic scenarios, guided by AI.
+    </p>
+    <p class="mt-4 text-lg leading-relaxed">
+       Our upcoming full version will let you personalize IZZY to simulate specific situations and personalities. Help us empower more men to build real confidence!
+    </p>
+     <a href="#share" class="inline-block mt-6 bg-gradient-to-r from-izzy-purple-500 to-izzy-pink-500 text-white px-6 py-3 rounded-full shadow hover:from-izzy-purple-600 hover:to-izzy-pink-600 transition-all duration-300">
+        Share IZZY & Earn Rewards
+    </a>
+  </section>
+
+  <section id="subscribe" class="w-full mt-16 sm:mt-20 fade-in" style="animation-delay: 0.6s;">
+    <div class="text-center mb-12">
+      <div class="flex justify-center mb-6">
+        <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+          <span class="text-white text-2xl font-bold">IZZY</span>
+        </div>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Choose Your Plan</h1>
+      <p class="text-lg text-gray-600 mt-4">Select the subscription that fits your needs</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mx-auto">
+      <div class="plan-card bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6">
+          <h2 class="text-2xl font-semibold text-gray-800">One Month</h2>
+          <div class="mt-4 flex items-end">
+            <span class="text-4xl font-bold text-purple-700">$30</span>
+            <span class="text-lg text-gray-600 ml-2">/ one-time</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Unlimited prompts</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Personalized Avatar</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Basic Conversational Training</span>
+            </li>
+          </ul>
+          <a href="https://buy.stripe.com/test_PLACEHOLDER_1" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
+            Subscribe
+          </a>
+        </div>
+      </div>
+
+      <div class="plan-card gradient-border bg-white rounded-3xl shadow-xl overflow-hidden relative transform md:scale-105"> <div class="popular-badge">Most Popular</div>
+        <div class="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
+          <h2 class="text-2xl font-semibold">Monthly</h2>
+          <div class="mt-4 flex items-end">
+            <span class="text-4xl font-bold">$20</span>
+            <span class="text-lg ml-2">/ month</span>
+          </div>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Unlimited prompts</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Personalized Avatar</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Advanced Conversational Training</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Cancel anytime</span>
+            </li>
+          </ul>
+          <a href="https://buy.stripe.com/test_dR6aHO9PM10AcR60oo" target="_blank" class="block text-center bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold py-3 px-6 rounded-full hover:from-purple-700 hover:to-pink-600 transition duration-300">
+            Subscribe Now
+          </a>
+        </div>
+      </div>
+
+      <div class="plan-card bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6">
+          <h2 class="text-2xl font-semibold text-gray-800">Annual</h2>
+          <div class="mt-4 flex items-end">
+            <span class="text-4xl font-bold text-purple-700">$200</span>
+            <span class="text-lg text-gray-600 ml-2">/ year</span>
+          </div>
+          <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded mt-2">Save $40</span>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Unlimited prompts</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Personalized Avatar</span>
+            </li>
+            <li class="flex items-center">
+             <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Premium Conversational Training</span>
+            </li>
+            <li class="flex items-center">
+              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+              <span>Priority Support</span>
+            </li>
+          </ul>
+           <a href="https://buy.stripe.com/test_6oE3cO9PM2h66qU4gg" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
+            Subscribe
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center max-w-2xl mx-auto">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4">Why Subscribe to IZZY?</h3>
+      <p class="text-gray-600 mb-6">
+        IZZY is not a dating app or a flirting asistant. Izzy helps you develop real confidence by providing a safe space to practice conversing with women. No more anxiety, no more awkward silences - just genuine communication skills you can use in real life.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
+          <i class="fas fa-shield-alt w-5 h-5 mr-2 text-purple-500"></i> 100% Safe Practice
+        </div>
+        <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
+          <i class="fas fa-comments w-5 h-5 mr-2 text-purple-500"></i> Realistic Interactions
+        </div>
+        <div class="bg-gray-50 px-4 py-2 rounded-full text-gray-600 flex items-center text-sm">
+          <i class="fas fa-clock w-5 h-5 mr-2 text-purple-500"></i> 24/7 Availability
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="share" class="w-full mt-16 sm:mt-20 fade-in" style="animation-delay: 0.7s;">
+    <header class="text-center">
+      <div class="flex justify-center mb-6">
+        <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
+          <span class="text-white text-2xl font-bold">IZZY</span>
+        </div>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Share IZZY</h1>
+      <p class="text-lg text-gray-600 mt-4">Help friends discover real confidence with women</p>
+      <p id="rewardsText" class="text-md text-purple-700 mt-2 font-semibold">Log in to start sharing & earn free prompts!</p>
+    </header>
+
+    <div class="max-w-4xl w-full gradient-bg rounded-3xl p-8 mx-auto mt-12">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="w-full md:w-1/2 mb-8 md:mb-0 md:pr-8">
+          <img src="https://placehold.co/600x400/E9D5FF/6D28D9?text=IZZY+In+Action" alt="IZZY demo showing conversation practice" class="rounded-2xl shadow-lg w-full">
+        </div>
+        <div class="w-full md:w-1/2">
+          <h2 class="text-2xl font-bold text-purple-700 mb-4">Why Share IZZY?</h2>
+          <p class="text-gray-700 mb-6">
+            IZZY lets you practice genuine conversations without fear. If you know a friend who could use it, and it may be valuable to him, share your link and both of you benefit free prompts!
+          </p>
+          <div class="gradient-card p-4">
+            <p class="text-gray-800 font-medium">
+              “I always get streesed out before talking to a woman. I never even thought about to approach them. But IZZY helped me practise, to be prepare for any ackward silents or moments, and now I'm much more confident! Thank you!</p>
+            <p class="text-right text-sm text-gray-500 mt-2">– Michael T.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-4xl w-full mx-auto mt-16">
+      <h2 class="text-2xl font-bold text-center text-purple-700 mb-8">Your Referral Progress</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+          <h3 class="text-lg font-semibold mb-2">Refer 1 friend</h3>
+          <p class="text-2xl font-bold text-izzy-purple-600 mb-4">+5 free prompts</p>
+          <button id="btnTier1" onclick="openShareModal()"
+            class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+            Share Now
+          </button>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+          <h3 class="text-lg font-semibold mb-2">Refer 2 friends</h3>
+          <p class="text-2xl font-bold text-izzy-purple-600 mb-4">+10 free prompts</p>
+          <button id="btnTier2" onclick="openShareModal()"
+            class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+            Share More
+          </button>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+          <h3 class="text-lg font-semibold mb-2">Refer 3 friends</h3>
+          <p class="text-2xl font-bold text-izzy-purple-600 mb-4">+20 free prompts</p>
+          <button id="btnTier3" onclick="openShareModal()"
+            class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+            Unlock Max Rewards
+          </button>
+        </div>
+      </div>
+       <p id="referralStatus" class="text-center text-gray-600 mt-6"></p> </div>
+  </section>
+
+  <section id="terms" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
+      <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Terms of Service</h2>
+      <p class="text-lg leading-relaxed">
+          [Your Terms of Service content goes here...]
+      </p>
+  </section>
+  <section id="privacy" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
+      <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Privacy Policy</h2>
+      <p class="text-lg leading-relaxed">
+          [Your Privacy Policy content goes here...]
+      </p>
+  </section>
+
+</main>
+
+<footer class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-6 px-6 mt-20 fade-in" style="animation-delay: 0.8s;">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+    <div class="text-center md:text-left mb-4 md:mb-0">
+      <div class="text-2xl font-bold mb-1">IZZY</div>
+      <p class="text-sm opacity-80">AI Avatar for Real Conversations</p>
+    </div>
+    <div class="flex space-x-4">
+      <a href="#terms" class="hover:text-white opacity-80 hover:opacity-100">Terms</a> <a href="#privacy" class="hover:text-white opacity-80 hover:opacity-100">Privacy</a> <a href="mailto:support@example.com" class="hover:text-white opacity-80 hover:opacity-100">Support</a> </div>
+  </div>
+</footer>
+
+
+<div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-[120]"> </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+
+<script>
+// Firebase Initialization
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  databaseURL: "YOUR_DATABASE_URL"
+};
+
+try {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log("Firebase Initialized");
+    } else {
+        firebase.app();
+        console.log("Firebase Already Initialized");
+    }
+} catch (e) {
+    console.error("Firebase initialization failed:", e);
+    alert("Application could not load. Please check console or refresh.");
+}
+
+const auth = firebase.auth();
+const db = firebase.database();
+
+// Constants
+const FREE_PROMPT_LIMIT = 3;
+const MAX_REFERRALS_REWARDED = 3;
+const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 };
+const ACTION_CODE_SETTINGS = {
+    url: 'https://your-domain.com', // Replace with your production URL
+    handleCodeInApp: true,
+};
+
+// Local Storage Keys
+const LS_KEY_PROMPTS = 'izzy_prompts_left_backup';
+const LS_KEY_CHAT = 'izzy_chat_history_backup';
+const LS_KEY_REFERRER = 'storedInviterUid';
+const LS_KEY_REFERRAL_VISITED_PREFIX = 'visitedAsReferral_';
+
+// Global state variables
+let currentUser = null;
+let currentUserId = null;
+let promptsUsed = 0;
+let promptsLeft = FREE_PROMPT_LIMIT;
+let isSubscribed = false;
+let currentConversationId = null;
+let personalReferralLink = "";
+let successfulReferralCount = 0;
+let recaptchaVerifier = null;
+
+// DOM Element References
+let domElements = {};
+function cacheDomElements() {
+    domElements = {
+        authModal: document.getElementById('authModal'),
+        subscribeModal: document.getElementById('subscribeModal'),
+        shareModal: document.getElementById('shareModal'),
+        mainContent: document.getElementById('mainContent'),
+        authStatusMessage: document.getElementById('auth-status-message'),
+        logoutButton: document.getElementById('logoutButton'),
+        mobileLogoutButton: document.getElementById('mobile-logoutButton'),
+        recaptchaContainer: document.getElementById('recaptcha-container'),
+        emailForm: document.getElementById('email-form'),
+        emailInput: document.getElementById('email'),
+        emailSubmitBtn: document.getElementById('email-submit-btn'),
+        chatContainer: document.getElementById('chat-container'),
+        conversationHistorySection: document.getElementById('conversation-history'),
+        promptsWarning: document.getElementById('prompts-warning'),
+        promptsWarningCount: document.getElementById('prompts-warning-count'),
+        userInput: document.getElementById('userInput'),
+        sendButton: document.getElementById('sendButton'),
+        sendButtonText: document.querySelector('#sendButton .send-btn-text'),
+        sendButtonSpinner: document.querySelector('#sendButton .spinner'),
+        emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
+        emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
+        restartBtn: document.getElementById('restartBtn'),
+        toast: document.getElementById('toast'),
+        mobileMenuButton: document.getElementById('mobile-menu-button'),
+        mobileMenu: document.getElementById('mobile-menu'),
+        closeMobileMenuButton: document.getElementById('close-mobile-menu'),
+        mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
+        conversationCountEl: document.getElementById('conversation-count'),
+        skillLevelEl: document.getElementById('skill-level'),
+        promptsLeftEl: document.getElementById('prompts-left'),
+        avatarFrame: document.getElementById('avatarFrame'),
+        micButtonIcon: document.querySelector('#micButton i'),
+        personalLinkInput: document.getElementById('personalLink'),
+        rewardsTextEl: document.getElementById('rewardsText'),
+        referralStatusEl: document.getElementById('referralStatus'),
+        shareTierButtons: {
+            1: document.getElementById('btnTier1'),
+            2: document.getElementById('btnTier2'),
+            3: document.getElementById('btnTier3')
+        }
+    };
+}
+
+// Referral Logic (Unchanged)
+function handleReferralVisit() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviterUid = urlParams.get('ref');
+    if (inviterUid && inviterUid !== 'undefined' && inviterUid.length > 5) {
+        console.log("Referral code detected:", inviterUid);
+        localStorage.setItem(LS_KEY_REFERRER, inviterUid);
+        const visitedKey = LS_KEY_REFERRAL_VISITED_PREFIX + inviterUid;
+        if (!localStorage.getItem(visitedKey)) {
+            console.log("First visit via this referral link for inviter:", inviterUid);
+            const refReceivedPath = `referralsReceived/${inviterUid}`;
+            db.ref(refReceivedPath).transaction(currentCount => (currentCount || 0) + 1)
+                .then(() => {
+                    console.log("Referral received count updated for", inviterUid);
+                    localStorage.setItem(visitedKey, 'true');
+                })
+                .catch(error => console.error("Failed to update referral received count:", error));
+        } else {
+            console.log("Already visited via this referral link for inviter:", inviterUid);
+        }
+    }
+}
+
+function creditReferrerOnSignUp(newUserId) {
+    const inviterUid = localStorage.getItem(LS_KEY_REFERRER);
+    if (inviterUid && inviterUid !== newUserId && inviterUid.length > 5) {
+        console.log(`Attempting to credit inviter ${inviterUid} for new user ${newUserId}`);
+        const successRefPath = `successfulReferrals/${inviterUid}/${newUserId}`;
+        const inviterUserRef = db.ref(`users/${inviterUid}`);
+        db.ref(successRefPath).transaction(currentData => {
+            if (currentData === null) {
+                return firebase.database.ServerValue.TIMESTAMP;
+            } else {
+                console.log(`Referral from ${inviterUid} to ${newUserId} already credited.`);
+                return;
+            }
+        })
+        .then(result => {
+            if (!result.committed) {
+                localStorage.removeItem(LS_KEY_REFERRER);
+                return Promise.reject("Referral already credited.");
+            }
+            console.log("Successful referral pair recorded in DB.");
+            return inviterUserRef.child('successfulReferralCount').transaction(count => (count || 0) + 1);
+        })
+        .then((result) => {
+            if (!result.committed) {
+                console.log("Inviter referral count transaction aborted (maybe concurrent update?).");
+                return Promise.reject("Failed to update inviter count.");
+            }
+            const newRefCount = result.snapshot.val();
+            console.log(`Inviter ${inviterUid} now has ${newRefCount} successful referrals.`);
+            grantReferralBonusPrompts(inviterUid, newRefCount);
+            localStorage.removeItem(LS_KEY_REFERRER);
+        })
+        .catch(error => {
+            if (error !== "Referral already credited." && error !== "Failed to update inviter count.") {
+                console.error("Error during referral crediting process:", error);
+            }
+            localStorage.removeItem(LS_KEY_REFERRER);
+        });
+    } else if (inviterUid) {
+        localStorage.removeItem(LS_KEY_REFERRER);
+    }
+}
+
+function grantReferralBonusPrompts(inviterUid, newRefCount) {
+    if (newRefCount > MAX_REFERRALS_REWARDED) {
+        console.log(`Inviter ${inviterUid} has already reached max referral rewards.`);
         return;
     }
+    const promptsToAdd = REFERRAL_PROMPTS_TIERS[newRefCount];
+    if (!promptsToAdd) {
+        console.log(`No specific prompt reward defined for reaching ${newRefCount} referrals.`);
+        return;
+    }
+    console.log(`Attempting to grant ${promptsToAdd} bonus prompts to inviter ${inviterUid} for reaching ${newRefCount} referrals.`);
+    const inviterUserRef = db.ref(`users/${inviterUid}`);
+    inviterUserRef.child('promptsLeft').transaction(currentPrompts => {
+        const currentVal = (typeof currentPrompts === 'number') ? currentPrompts : 0;
+        return currentVal + promptsToAdd;
+    }).then((result) => {
+        if (result.committed) {
+            const finalPromptCount = result.snapshot.val();
+            console.log(`Granted ${promptsToAdd} bonus prompts to inviter ${inviterUid}. New total: ${finalPromptCount}`);
+            db.ref(`notifications/${inviterUid}`).push({
+                type: 'referral_bonus',
+                message: `You earned ${promptsToAdd} free prompts for referring your ${getOrdinal(newRefCount)} friend!`,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                read: false
+            });
+        } else {
+            console.log(`Transaction to add bonus prompts for inviter ${inviterUid} aborted (maybe concurrent update?).`);
+        }
+    }).catch(error => {
+        console.error(`Error granting bonus prompts to inviter ${inviterUid}:`, error);
+    });
+}
 
-    const actionCodeSettings = {
-        url: window.location.origin + window.location.pathname, // Use full current URL
-        handleCodeInApp: true
-    };
+function getOrdinal(n) {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
-    console.log("Sending magic link to:", email);
-    console.log("Action code settings:", actionCodeSettings);
+// Authentication State Listener
+auth.onAuthStateChanged(user => {
+    if (Object.keys(domElements).length === 0) {
+        console.warn("DOM elements not cached yet in onAuthStateChanged");
+        cacheDomElements();
+        if (Object.keys(domElements).length === 0) return;
+    }
+    if (user) {
+        const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
+        currentUser = user;
+        currentUserId = user.uid;
+        console.log("User signed in:", currentUserId, "Is new user:", isNewUser);
+        personalReferralLink = `${window.location.origin}${window.location.pathname}?ref=${currentUserId}`;
+        if (domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
+        updateAuthUI(true);
+        domElements.authModal?.classList.add('hidden');
+        domElements.mainContent?.classList.remove('blur-background');
+        loadUserData(currentUserId);
+        if (isNewUser) {
+            creditReferrerOnSignUp(currentUserId);
+        }
+    } else {
+        console.log("User signed out.");
+        currentUser = null;
+        currentUserId = null;
+        personalReferralLink = "";
+        successfulReferralCount = 0;
+        updateAuthUI(false);
+        resetAppState();
+        updateShareSectionUI();
+        openAuthModal();
+    }
+});
 
-    const submitBtn = document.querySelector('.email-submit');
-    const btnText = submitBtn?.querySelector('.btn-text');
-    const spinner = submitBtn?.querySelector('.spinner');
+// UI Update Functions
+function updateAuthUI(isSignedIn) {
+    const showIfSignedIn = [domElements.logoutButton, domElements.mobileLogoutButton];
+    if (isSignedIn) {
+        showIfSignedIn.forEach(el => el?.classList.remove('hidden'));
+    } else {
+        showIfSignedIn.forEach(el => el?.classList.add('hidden'));
+    }
+}
 
-    // Show loading state
-    if (submitBtn) submitBtn.disabled = true;
-    if (btnText) btnText.style.opacity = '0';
-    if (spinner) spinner.style.display = 'block';
+function resetAppState() {
+    promptsUsed = 0;
+    promptsLeft = FREE_PROMPT_LIMIT;
+    isSubscribed = false;
+    currentConversationId = null;
+    if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = '0';
+    if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = 'Beginner';
+    if (domElements.promptsLeftEl) domElements.promptsLeftEl.textContent = FREE_PROMPT_LIMIT;
+    if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+    domElements.conversationHistorySection?.classList.add('hidden');
+    domElements.restartBtn?.classList.add('hidden');
+    if (!domElements.promptsWarning) {
+        console.error('promptsWarning element missing in DOM');
+    } else {
+        domElements.promptsWarning.classList.add('hidden');
+    }
+}
 
-    showToast("Sending magic link...", false);
+function showButtonLoading(button, textElement, spinnerElement, isLoading) {
+    if (!button || !textElement || !spinnerElement) return;
+    if (isLoading) {
+        button.disabled = true;
+        textElement.classList.add('hidden');
+        spinnerElement.classList.remove('hidden');
+    } else {
+        button.disabled = false;
+        textElement.classList.remove('hidden');
+        spinnerElement.classList.add('hidden');
+    }
+}
 
-    // Store email for later
-    localStorage.setItem('emailForSignIn', email);
-
-    firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-            console.log("Magic link sent successfully");
-            showToast(`Magic link sent to ${email}! Check your inbox (and spam folder).`, false);
-            if (document.getElementById('email')) {
-                document.getElementById('email').value = '';
+// User Data Management
+function loadUserData(userId) {
+    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
+    const userRef = db.ref(`users/${userId}`);
+    userRef.once('value')
+        .then(snapshot => {
+            const userData = snapshot.val();
+            if (userData) {
+                console.log("Loaded user data:", userData);
+                promptsUsed = userData.promptsUsed || 0;
+                promptsLeft = (typeof userData.promptsLeft === 'number') ? Math.max(0, userData.promptsLeft) : FREE_PROMPT_LIMIT;
+                isSubscribed = userData.subscribed || false;
+                currentConversationId = userData.currentConversationId || null;
+                successfulReferralCount = userData.successfulReferralCount || 0;
+                if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = userData.conversations || 0;
+                if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = userData.level || 'Beginner';
+                loadChatHistory(userId, currentConversationId);
+            } else {
+                console.log("New user detected, initializing data for:", userId);
+                const initialData = {
+                    email: currentUser.email || 'Not Provided',
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    conversations: 0,
+                    promptsUsed: 0,
+                    promptsLeft: FREE_PROMPT_LIMIT,
+                    level: 'Beginner',
+                    subscribed: false,
+                    currentConversationId: null,
+                    successfulReferralCount: 0
+                };
+                userRef.set(initialData)
+                    .then(() => {
+                        console.log("Initial user data saved.");
+                        promptsLeft = FREE_PROMPT_LIMIT;
+                        successfulReferralCount = 0;
+                        isSubscribed = false;
+                        currentConversationId = null;
+                        promptsUsed = 0;
+                        updatePromptsUI();
+                        checkSubscriptionStatus();
+                        updateShareSectionUI();
+                        resetAppState();
+                    })
+                    .catch(error => console.error("Error saving initial user data:", error));
+                return;
             }
+            updatePromptsUI();
+            checkSubscriptionStatus();
+            updateShareSectionUI();
+        })
+        .catch(error => {
+            console.error("Error loading user data:", error);
+            showToast("Error loading your data. Using defaults.", true);
+            resetAppState();
+            updateShareSectionUI();
+        })
+        .finally(() => {
+            showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
+        });
+}
+
+function updateUserData(userId, data) {
+    if (!userId) return Promise.reject("No user ID provided for update.");
+    console.log("Updating user data:", userId, data);
+    return db.ref(`users/${userId}`).update(data);
+}
+
+function loadChatHistory(userId, conversationId) {
+    if (!userId || !conversationId) {
+        domElements.conversationHistorySection?.classList.add('hidden');
+        if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+        domElements.restartBtn?.classList.add('hidden');
+        return;
+    }
+    const chatRef = db.ref(`chats/${userId}/${conversationId}`);
+    chatRef.orderByChild('timestamp').once('value')
+        .then(snapshot => {
+            if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+            if (snapshot.exists()) {
+                domElements.conversationHistorySection?.classList.remove('hidden');
+                domElements.restartBtn?.classList.remove('hidden');
+                let messages = [];
+                snapshot.forEach(childSnapshot => messages.push(childSnapshot.val()));
+                messages.forEach(msg => addMessageToHistory(msg.text, msg.sender));
+                if (messages.length > 0) {
+                    localStorage.setItem(LS_KEY_CHAT, JSON.stringify(messages.map(m => ({text: m.text, sender: m.sender}))));
+                } else {
+                    localStorage.removeItem(LS_KEY_CHAT);
+                }
+            } else {
+                domElements.conversationHistorySection?.classList.add('hidden');
+                domElements.restartBtn?.classList.add('hidden');
+                localStorage.removeItem(LS_KEY_CHAT);
+            }
+        }).catch(error => {
+            console.error("Error loading chat history:", error);
+            showToast("Could not load conversation history.", true);
+        });
+}
+
+function updatePromptsUI() {
+    if (!domElements.promptsLeftEl || !domElements.promptsWarning || !domElements.promptsWarningCount) return;
+    domElements.promptsLeftEl.textContent = isSubscribed ? '∞' : promptsLeft;
+    if (!isSubscribed && promptsLeft <= 1 && promptsLeft >= 0) {
+        domElements.promptsWarning.classList.remove('hidden');
+        domElements.promptsWarningCount.textContent = promptsLeft;
+    } else {
+        domElements.promptsWarning.classList.add('hidden');
+    }
+}
+
+function checkSubscriptionStatus() {
+    if (!isSubscribed && promptsLeft <= 0) {
+        disableSendButton();
+    } else {
+        enableSendButton();
+    }
+}
+
+function updateShareSectionUI() {
+    if (!domElements.rewardsTextEl || !domElements.referralStatusEl || !domElements.shareTierButtons[1]) return;
+    if (!currentUser) {
+        domElements.rewardsTextEl.textContent = "Log in to start sharing & earn free prompts!";
+        domElements.referralStatusEl.textContent = "";
+        Object.values(domElements.shareTierButtons).forEach(btn => {
+            if (!btn) return;
+            btn.classList.add('disabled');
+            btn.disabled = true;
+        });
+        if (domElements.personalLinkInput) domElements.personalLinkInput.value = "Log in to get your link";
+        return;
+    }
+    const count = successfulReferralCount;
+    let rewardText = "";
+    let statusText = `You have successfully referred ${count} friend${count === 1 ? '' : 's'}.`;
+    if (count >= MAX_REFERRALS_REWARDED) {
+        rewardText = "You've earned the maximum referral reward! 🎉";
+        statusText += " Thanks for sharing!";
+    } else if (count === 2) {
+        rewardText = `Refer one more friend to unlock +${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
+    } else if (count === 1) {
+        rewardText = `Refer ${MAX_REFERRALS_REWARDED - count} more friends for more rewards!`;
+    } else {
+        rewardText = "Share with friends and earn free prompts!";
+        statusText = "Start sharing to track your progress.";
+    }
+    domElements.rewardsTextEl.textContent = rewardText;
+    domElements.referralStatusEl.textContent = statusText;
+    Object.values(domElements.shareTierButtons).forEach(btn => {
+        if (!btn) return;
+        if (count >= MAX_REFERRALS_REWARDED) {
+            btn.classList.add('disabled');
+            btn.disabled = true;
+        } else {
+            btn.classList.remove('disabled');
+            btn.disabled = false;
+        }
+    });
+    if (domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
+}
+
+// Modal Management
+function openAuthModal() {
+    domElements.authModal?.classList.remove('hidden');
+    domElements.mainContent?.classList.add('blur-background');
+    clearStatusMessage();
+}
+
+function openSubscribeModal() {
+    domElements.subscribeModal?.classList.remove('hidden');
+    domElements.mainContent?.classList.add('blur-background');
+}
+
+function closeSubscribeModal() {
+    domElements.subscribeModal?.classList.add('hidden');
+    domElements.mainContent?.classList.remove('blur-background');
+}
+
+function openShareModal() {
+    if (!currentUser) {
+        showToast("Please log in to share.", true);
+        return;
+    }
+    domElements.shareModal?.classList.remove('hidden');
+}
+
+function closeShareModal() {
+    domElements.shareModal?.classList.add('hidden');
+}
+
+function showStatusMessage(msg, isError = false) {
+    const el = domElements.authStatusMessage;
+    if (!el) return;
+    el.textContent = msg;
+    el.className = `text-center text-sm mt-3 min-h-[1.2em] ${isError ? 'text-red-600' : 'text-green-600'}`;
+}
+
+function clearStatusMessage() {
+    const el = domElements.authStatusMessage;
+    if (!el) return;
+    el.textContent = '';
+    el.className = 'text-center text-sm mt-3 min-h-[1.2em]';
+}
+
+// Authentication Actions
+function sendMagicLink(event) {
+    event.preventDefault();
+    const email = domElements.emailInput.value.trim();
+    if (!email) {
+        showStatusMessage("Please enter your email address.", true);
+        return;
+    }
+    if (!recaptchaVerifier) {
+        showStatusMessage("reCAPTCHA not loaded. Please try again.", true);
+        return;
+    }
+    showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
+    clearStatusMessage();
+    auth.sendSignInLinkToEmail(email, ACTION_CODE_SETTINGS)
+        .then(() => {
+            window.localStorage.setItem('emailForSignIn', email);
+            showStatusMessage(`Magic link sent to ${email}. Check your inbox!`, false);
+            domElements.emailInput.value = '';
         })
         .catch((error) => {
             console.error("Error sending magic link:", error);
-            let errorMessage = "Error sending sign-in link. ";
-            
-            switch (error.code) {
-                case 'auth/invalid-email':
-                    errorMessage += "Please enter a valid email address.";
-                    break;
-                case 'auth/operation-not-allowed':
-                    errorMessage += "Email/password accounts are not enabled. Please contact support.";
-                    break;
-                default:
-                    errorMessage += error.message;
+            let message = "Failed to send magic link. Please try again.";
+            if (error.code === 'auth/invalid-email') {
+                message = "Invalid email address.";
+            } else if (error.code === 'auth/too-many-requests') {
+                message = "Too many requests. Please wait a moment.";
             }
-            
-            showToast(errorMessage, true);
+            showStatusMessage(message, true);
         })
         .finally(() => {
-            // Reset button state
-            if (submitBtn) submitBtn.disabled = false;
-            if (btnText) btnText.style.opacity = '1';
-            if (spinner) spinner.style.display = 'none';
+            showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
+            if (recaptchaVerifier) {
+                recaptchaVerifier.clear();
+                recaptchaVerifier = null;
+                setupRecaptcha();
+            }
         });
 }
 
-// Handle Magic Link Sign-in with improved error handling
 function handleMagicLinkSignIn() {
-    console.log("Checking for sign-in link...");
-    console.log("Current URL:", window.location.href);
-    
-    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-        console.log("Valid sign-in link detected");
-        
-        let email = localStorage.getItem('emailForSignIn');
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+        let email = window.localStorage.getItem('emailForSignIn');
         if (!email) {
-            email = window.prompt('Please provide your email for confirmation');
+            showStatusMessage("Please enter your email to verify the link.", true);
+            domElements.emailInput.focus();
+            return;
         }
-
-        if (email) {
-            console.log("Attempting to sign in with email:", email);
-            showToast("Signing you in...", false);
-            
-            firebase.auth().signInWithEmailLink(email, window.location.href)
-                .then((result) => {
-                    console.log("Sign-in successful");
-                    localStorage.removeItem('emailForSignIn');
-                    showToast('Successfully signed in!', false);
-                    
-                    // Remove the sign-in link from the URL
+        showStatusMessage("Verifying your magic link...", false);
+        auth.signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+                console.log("Signed in with email link successfully.");
+                window.localStorage.removeItem('emailForSignIn');
+                if (window.history && window.history.replaceState) {
                     window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                    // Hide auth modal after successful sign-in
-                    const authModal = document.getElementById('authModal');
-                    if (authModal) {
-                        authModal.style.display = 'none';
-                    }
-
-                    // Initialize new user if needed
-                    if (result.additionalUserInfo?.isNewUser) {
-                        return initializeNewUser(result.user);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error signing in with email link:', error);
-                    showToast(error.message || 'Error signing in. Please try again.', true);
-                });
-        }
-    } else {
-        console.log("No valid sign-in link detected in URL");
+                }
+                domElements.authModal?.classList.add('hidden');
+                domElements.mainContent?.classList.remove('blur-background');
+                showToast("Welcome! You're now signed in.");
+            })
+            .catch((error) => {
+                console.error("Error signing in with email link:", error);
+                let message = "Error signing in. Please try again.";
+                if (error.code === 'auth/expired-action-code') {
+                    message = "The sign-in link has expired. Request a new one.";
+                } else if (error.code === 'auth/invalid-action-code') {
+                    message = "Invalid sign-in link. Request a new one.";
+                } else if (error.code === 'auth/invalid-email') {
+                    message = "Invalid email. Please check and try again.";
+                }
+                showStatusMessage(message, true);
+                window.localStorage.removeItem('emailForSignIn');
+            });
     }
 }
 
-  // ... rest of your existing code ...
-  </script>
+function logout() {
+    auth.signOut()
+        .then(() => {
+            console.log("User signed out successfully.");
+            showToast("You have been logged out.");
+        })
+        .catch((error) => {
+            console.error("Sign out error:", error);
+            showToast("Error logging out. Please try again.", true);
+        });
+}
 
+// Chat Functionality
+function addMessageToHistory(text, sender = 'user') {
+    if (!domElements.chatContainer) return;
+    const bubble = document.createElement('div');
+    bubble.classList.add('chat-bubble');
+    bubble.classList.add(sender === 'user' ? 'user-bubble' : 'assistant-bubble');
+    bubble.textContent = text;
+    domElements.chatContainer.appendChild(bubble);
+    domElements.chatContainer.scrollTop = domElements.chatContainer.scrollHeight;
+    domElements.conversationHistorySection?.classList.remove('hidden');
+    domElements.restartBtn?.classList.remove('hidden');
+}
+
+function saveMessage(userId, conversationId, text, sender) {
+    if (!userId || !conversationId) return Promise.reject("Missing user or conversation ID for saving message.");
+    const chatRef = db.ref(`chats/${userId}/${conversationId}`);
+    const newMessageRef = chatRef.push();
+    const messageData = { text: text, sender: sender, timestamp: firebase.database.ServerValue.TIMESTAMP };
+    return newMessageRef.set(messageData).then(() => {
+        const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
+        localChat.push({ text, sender });
+        localStorage.setItem(LS_KEY_CHAT, JSON.stringify(localChat));
+    });
+}
+
+function sendMessage() {
+    const messageText = domElements.userInput.value.trim();
+    if (!messageText) return;
+    if (!currentUser || !currentUserId) {
+        return;
+    }
+    if (!isSubscribed && promptsLeft <= 0) {
+        openSubscribeModal();
+        showToast("Please subscribe to continue chatting.", true);
+        disableSendButton();
+        return;
+    }
+    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
+    addMessageToHistory(messageText, 'user');
+    if (!currentConversationId) {
+        currentConversationId = db.ref(`chats/${currentUserId}`).push().key;
+        updateUserData(currentUserId, { currentConversationId: currentConversationId, conversations: firebase.database.ServerValue.increment(1) })
+            .catch(err => console.error("Failed to update conversation ID/count:", err));
+    }
+    saveMessage(currentUserId, currentConversationId, messageText, 'user')
+        .catch(error => {
+            console.error("Failed to save user message:", error);
+            showToast("Error sending message. Please try again.", true);
+        });
+    const simulateApiCall = new Promise((resolve) => {
+        setTimeout(() => {
+            const responses = ["That's interesting! Tell me more.", "Okay, I see. What happened next?", "How did that make you feel?", "Hmm, let's think about that.", "Got it. What's on your mind now?", "Can you elaborate on that point?", "What are your thoughts on trying this approach...?"];
+            resolve(responses[Math.floor(Math.random() * responses.length)]);
+        }, 1500);
+    });
+    simulateApiCall.then(aiResponse => {
+        addMessageToHistory(aiResponse, 'assistant');
+        return saveMessage(currentUserId, currentConversationId, aiResponse, 'assistant');
+    })
+    .then(() => {
+        if (!isSubscribed) {
+            return db.ref(`users/${currentUserId}`).transaction(userData => {
+                if (userData) {
+                    userData.promptsLeft = Math.max(0, (userData.promptsLeft || 0) - 1);
+                    userData.promptsUsed = (userData.promptsUsed || 0) + 1;
+                }
+                return userData;
+            });
+        }
+        return Promise.resolve();
+    })
+    .then((result) => {
+        if (!isSubscribed && result.committed) {
+            promptsLeft = result.snapshot.val().promptsLeft;
+            promptsUsed = result.snapshot.val().promptsUsed;
+            updatePromptsUI();
+            checkSubscriptionStatus();
+            localStorage.setItem(LS_KEY_PROMPTS, promptsLeft);
+        }
+    })
+    .catch(error => {
+        console.error("Error processing/saving AI response or updating prompts:", error);
+        showToast("Error getting response. Please try again.", true);
+        addMessageToHistory("Sorry, I encountered an error.", 'assistant');
+    })
+    .finally(() => {
+        showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
+        domElements.userInput.value = '';
+        domElements.userInput.focus();
+    });
+    console.log("TODO: Trigger D-ID avatar to speak:", "...");
+}
+
+function restartConversation() {
+    if (!currentUser || !currentUserId) return;
+    console.log("Restarting conversation for user:", currentUserId);
+    const newConversationId = db.ref(`chats/${currentUserId}`).push().key;
+    updateUserData(currentUserId, { currentConversationId: newConversationId, conversations: firebase.database.ServerValue.increment(1) })
+        .then(() => {
+            currentConversationId = newConversationId;
+            if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+            domElements.conversationHistorySection?.classList.add('hidden');
+            domElements.restartBtn?.classList.add('hidden');
+            localStorage.removeItem(LS_KEY_CHAT);
+            showToast("New conversation started.");
+            domElements.userInput.value = '';
+            domElements.userInput.focus();
+        })
+        .catch(error => {
+            console.error("Error restarting conversation:", error);
+            showToast("Could not restart conversation. Please try again.", true);
+        });
+}
+
+// Voice Input
+let recognition = null;
+function startDictation() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        showToast("Sorry, your browser doesn't support voice input.", true);
+        return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!recognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        recognition.onstart = () => {
+            recognition.isListening = true;
+            domElements.micButtonIcon?.classList.add('text-red-500', 'fa-beat');
+            showToast("Listening...", false, 2000);
+        };
+        recognition.onresult = (event) => {
+            if (domElements.userInput) domElements.userInput.value = event.results[0][0].transcript;
+        };
+        recognition.onspeechend = () => {
+            recognition.stop();
+        };
+        recognition.onend = () => {
+            recognition.isListening = false;
+            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+        };
+        recognition.onerror = (event) => {
+            let errorMsg = "Voice recognition error.";
+            if (event.error === 'no-speech') errorMsg = "No speech detected.";
+            else if (event.error === 'audio-capture') errorMsg = "Microphone error.";
+            else if (event.error === 'not-allowed') errorMsg = "Permission denied.";
+            showToast(errorMsg, true);
+            recognition.isListening = false;
+            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+        };
+    }
+    if (recognition.isListening) {
+        recognition.stop();
+    } else {
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error("Failed to start SpeechRecognition:", error);
+            showToast("Could not start voice input.", true);
+            recognition.isListening = false;
+            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+        }
+    }
+}
+
+// Share Functionality
+function shareVia(channel) {
+    if (!currentUser) {
+        showToast("Please log in first to share.", true);
+        return;
+    }
+    if (!personalReferralLink) {
+        showToast("Could not generate your referral link.", true);
+        return;
+    }
+    const url = encodeURIComponent(personalReferralLink);
+    const text = encodeURIComponent("Check out IZZY – the AI conversation coach that helps build real confidence!");
+    let shareURL = "#";
+    switch (channel) {
+        case 'whatsapp':
+            shareURL = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            break;
+        case 'email':
+            shareURL = `mailto:?subject=Try%20IZZY%20-%20AI%20Conversation%20Coach&body=${text}%0A%0A${url}`;
+            break;
+        case 'facebook':
+            shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
+            break;
+        case 'twitter':
+            shareURL = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            break;
+        case 'reddit':
+            shareURL = `https://www.reddit.com/submit?url=${url}&title=${encodeURIComponent("Try IZZY - AI Conversation Coach")}`;
+            break;
+        default:
+            console.warn("Unknown share channel:", channel);
+            return;
+    }
+    window.open(shareURL, '_blank');
+    db.ref(`shareAttempts/${currentUserId}`).push({ channel: channel, timestamp: firebase.database.ServerValue.TIMESTAMP });
+    showToast("Sharing link opened!", false);
+}
+
+function copyReferralLink() {
+    if (!domElements.personalLinkInput) return;
+    try {
+        domElements.personalLinkInput.select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(domElements.personalLinkInput.value)
+                .then(() => showToast("Link copied to clipboard!", false))
+                .catch(err => {
+                    document.execCommand('copy');
+                    showToast("Link copied (fallback method)!", false);
+                });
+        } else {
+            document.execCommand('copy');
+            showToast("Link copied (fallback method)!", false);
+        }
+    } catch (err) {
+        console.error('Failed to copy link:', err);
+        showToast("Could not copy link.", true);
+    }
+    window.getSelection()?.removeAllRanges();
+}
+
+// Utility Functions
+let toastTimeout;
+function showToast(message, isError = false, duration = 3000) {
+    clearTimeout(toastTimeout);
+    if (!domElements.toast) return;
+    domElements.toast.textContent = message;
+    domElements.toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 z-[120] ${isError ? 'bg-red-600 text-white' : 'bg-gray-800 text-white'}`;
+    requestAnimationFrame(() => {
+        domElements.toast.classList.remove('translate-y-full', 'opacity-0');
+        domElements.toast.classList.add('translate-y-0', 'opacity-100');
+    });
+    toastTimeout = setTimeout(() => {
+        domElements.toast.classList.remove('translate-y-0', 'opacity-100');
+        domElements.toast.classList.add('translate-y-full', 'opacity-0');
+    }, duration);
+}
+
+function usePrompt(promptText) {
+    if (domElements.userInput) {
+        domElements.userInput.value = promptText;
+        domElements.userInput.focus();
+    }
+}
+
+function disableSendButton() {
+    if (!domElements.sendButton) return;
+    domElements.sendButton.disabled = true;
+    domElements.sendButton.classList.add('opacity-50', 'cursor-not-allowed');
+}
+
+function enableSendButton() {
+    if (!domElements.sendButton) return;
+    domElements.sendButton.disabled = false;
+    domElements.sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
+}
+
+// reCAPTCHA Setup
+function setupRecaptcha() {
+    if (!window.recaptchaVerifier && domElements.recaptchaContainer) {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(domElements.recaptchaContainer, {
+            'size': 'invisible',
+            'callback': (response) => {
+                console.log("reCAPTCHA solved:", response);
+            },
+            'expired-callback': () => {
+                console.log("reCAPTCHA expired");
+                showStatusMessage("reCAPTCHA expired. Please try again.", true);
+                window.recaptchaVerifier = null;
+                setupRecaptcha();
+            }
+        });
+        window.recaptchaVerifier.render().then(widgetId => {
+            console.log("reCAPTCHA rendered with widget ID:", widgetId);
+        }).catch(error => {
+            console.error("Error rendering reCAPTCHA:", error);
+            showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+        });
+    }
+}
+
+// Event Listeners
+function addEventListeners() {
+    domElements.emailForm?.addEventListener('submit', sendMagicLink);
+    domElements.logoutButton?.addEventListener('click', logout);
+    domElements.mobileLogoutButton?.addEventListener('click', () => {
+        logout();
+        closeMobileMenu();
+    });
+    domElements.sendButton?.addEventListener('click', sendMessage);
+    domElements.restartBtn?.addEventListener('click', restartConversation);
+    domElements.userInput?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+    domElements.micButtonIcon?.parentElement.addEventListener('click', startDictation);
+    domElements.mobileMenuButton?.addEventListener('click', toggleMobileMenu);
+    domElements.closeMobileMenuButton?.addEventListener('click', closeMobileMenu);
+    domElements.mobileMenuLinks?.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (link.getAttribute('href')?.startsWith('#') || link.tagName === 'BUTTON') {
+                closeMobileMenu();
+            }
+        });
+    });
+    domElements.subscribeModal?.addEventListener('click', (e) => {
+        if (e.target === domElements.subscribeModal) closeSubscribeModal();
+    });
+    domElements.shareModal?.addEventListener('click', (e) => {
+        if (e.target === domElements.shareModal) closeShareModal();
+    });
+    domElements.personalLinkInput?.addEventListener('click', copyReferralLink);
+    Object.values(domElements.shareTierButtons).forEach(button => {
+        if (button) button.addEventListener('click', openShareModal);
+    });
+    Object.entries(domElements).forEach(([key, el]) => {
+        if (!el) console.warn(`Missing DOM element for ${key}`);
+    });
+    document.getElementById('promptCoffee')?.addEventListener('click', () => usePrompt('Hi, I noticed you at the coffee shop'));
+    document.getElementById('promptIntro')?.addEventListener('click', () => usePrompt('Excuse me, I just wanted to introduce myself'));
+    document.getElementById('promptCompliment')?.addEventListener('click', () => usePrompt('I like your style, where did you get that?'));
+    const mainSubButtons = document.querySelectorAll('#subscribe .plan-card a[target="_blank"]');
+    mainSubButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            if (!currentUser) {
+                e.preventDefault();
+                showToast("Please log in before subscribing.", true);
+            } else {
+                console.log("Proceeding to subscription:", button.href);
+            }
+        });
+    });
+}
+
+// Mobile Menu Logic
+function toggleMobileMenu() {
+    const isOpen = domElements.mobileMenu.classList.contains('open');
+    if (isOpen) closeMobileMenu();
+    else openMobileMenu();
+}
+
+function openMobileMenu() {
+    if (domElements.mobileMenu) domElements.mobileMenu.classList.add('open');
+    domElements.mobileMenuButton?.setAttribute('aria-expanded', 'true');
+}
+
+function closeMobileMenu() {
+    if (domElements.mobileMenu) domElements.mobileMenu.classList.remove('open');
+    domElements.mobileMenuButton?.setAttribute('aria-expanded', 'false');
+}
+
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM fully loaded and parsed");
+    cacheDomElements();
+    handleMagicLinkSignIn();
+    addEventListeners();
+    handleReferralVisit();
+    setupRecaptcha();
+    const localPrompts = localStorage.getItem(LS_KEY_PROMPTS);
+    if (localPrompts !== null && !isSubscribed) {
+        promptsLeft = parseInt(localPrompts, 10);
+        console.log("Restored prompts left from localStorage:", promptsLeft);
+        updatePromptsUI();
+    }
+    const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
+    if (localChat.length > 0 && domElements.chatContainer && domElements.chatContainer.children.length === 0) {
+        console.log("Restoring chat from localStorage backup.");
+        localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
+    }
+});
+
+// Microphone Permission
+function requestMicPermission() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            stream.getTracks().forEach(t => t.stop());
+            console.log("Microphone permission granted");
+        })
+        .catch(err => {
+            console.warn("Mic permission denied:", err);
+        });
+}
+document.addEventListener('DOMContentLoaded', requestMicPermission);
+</script>
 </body>
 </html>

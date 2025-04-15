@@ -672,13 +672,14 @@ class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
 <script>
 // Firebase Initialization
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  databaseURL: "YOUR_DATABASE_URL"
+  apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+  authDomain: "izzy-auth.firebaseapp.com",
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com",
+  projectId: "izzy-auth",
+  storageBucket: "izzy-auth.firebasestorage.app",
+  messagingSenderId: "573135779043",
+  appId: "1:573135779043:web:f6c59473f9956c917041d6",
+  measurementId: "G-8JLKB2MMKS"
 };
 
 try {
@@ -691,7 +692,7 @@ try {
     }
 } catch (e) {
     console.error("Firebase initialization failed:", e);
-    alert("Application could not load. Please check console or refresh.");
+    showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
 }
 
 const auth = firebase.auth();
@@ -702,7 +703,7 @@ const FREE_PROMPT_LIMIT = 3;
 const MAX_REFERRALS_REWARDED = 3;
 const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 };
 const ACTION_CODE_SETTINGS = {
-    url: 'https://your-domain.com', // Replace with your production URL
+    url: 'https://izzy-auth.web.app', 
     handleCodeInApp: true,
 };
 
@@ -1162,16 +1163,27 @@ function sendMagicLink(event) {
         showStatusMessage("Please enter your email address.", true);
         return;
     }
-    if (!recaptchaVerifier) {
-        showStatusMessage("reCAPTCHA not loaded. Please try again.", true);
-        return;
+    if (!window.recaptchaVerifier) {
+        setupRecaptcha();
+        setTimeout(() => {
+            if (!window.recaptchaVerifier) {
+                showStatusMessage("reCAPTCHA not loaded. Please try again.", true);
+                return;
+            }
+            sendMagicLinkWithRecaptcha(email);
+        }, 1000); // Allow time for reCAPTCHA to initialize
+    } else {
+        sendMagicLinkWithRecaptcha(email);
     }
+}
+
+function sendMagicLinkWithRecaptcha(email) {
     showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
     clearStatusMessage();
     auth.sendSignInLinkToEmail(email, ACTION_CODE_SETTINGS)
         .then(() => {
             window.localStorage.setItem('emailForSignIn', email);
-            showStatusMessage(`Magic link sent to ${email}. Check your inbox!`, false);
+            showStatusMessage(`Magic link sent to ${email}. Check your inbox and spam folder!`, false);
             domElements.emailInput.value = '';
         })
         .catch((error) => {
@@ -1181,14 +1193,18 @@ function sendMagicLink(event) {
                 message = "Invalid email address.";
             } else if (error.code === 'auth/too-many-requests') {
                 message = "Too many requests. Please wait a moment.";
+            } else if (error.code === 'auth/missing-continue-uri') {
+                message = "Invalid configuration. Please contact support.";
+            } else if (error.code === 'auth/unauthorized-continue-uri') {
+                message = "Domain not authorized. Please contact support.";
             }
             showStatusMessage(message, true);
         })
         .finally(() => {
             showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
-            if (recaptchaVerifier) {
-                recaptchaVerifier.clear();
-                recaptchaVerifier = null;
+            if (window.recaptchaVerifier) {
+                window.recaptchaVerifier.clear();
+                window.recaptchaVerifier = null;
                 setupRecaptcha();
             }
         });
@@ -1504,27 +1520,42 @@ function enableSendButton() {
     domElements.sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
 }
 
-// reCAPTCHA Setup
 function setupRecaptcha() {
-    if (!window.recaptchaVerifier && domElements.recaptchaContainer) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(domElements.recaptchaContainer, {
-            'size': 'invisible',
-            'callback': (response) => {
-                console.log("reCAPTCHA solved:", response);
-            },
-            'expired-callback': () => {
-                console.log("reCAPTCHA expired");
-                showStatusMessage("reCAPTCHA expired. Please try again.", true);
-                window.recaptchaVerifier = null;
-                setupRecaptcha();
-            }
-        });
-        window.recaptchaVerifier.render().then(widgetId => {
-            console.log("reCAPTCHA rendered with widget ID:", widgetId);
-        }).catch(error => {
-            console.error("Error rendering reCAPTCHA:", error);
-            showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
-        });
+    if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+    }
+    if (domElements.recaptchaContainer) {
+        try {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(domElements.recaptchaContainer, {
+                'size': 'invisible',
+                'callback': (response) => {
+                    console.log("reCAPTCHA solved:", response);
+                },
+                'expired-callback': () => {
+                    console.log("reCAPTCHA expired");
+                    showStatusMessage("reCAPTCHA expired. Please try again.", true);
+                    window.recaptchaVerifier = null;
+                    setupRecaptcha();
+                },
+                'error-callback': (error) => {
+                    console.error("reCAPTCHA error:", error);
+                    showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+                }
+            });
+            window.recaptchaVerifier.render().then(widgetId => {
+                console.log("reCAPTCHA rendered with widget ID:", widgetId);
+            }).catch(error => {
+                console.error("Error rendering reCAPTCHA:", error);
+                showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+            });
+        } catch (error) {
+            console.error("Error setting up reCAPTCHA:", error);
+            showStatusMessage("reCAPTCHA initialization failed. Please try again.", true);
+        }
+    } else {
+        console.error("reCAPTCHA container not found");
+        showStatusMessage("reCAPTCHA setup failed. Please refresh.", true);
     }
 }
 
@@ -1602,23 +1633,29 @@ function closeMobileMenu() {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM fully loaded and parsed");
-    cacheDomElements();
-    handleMagicLinkSignIn();
-    addEventListeners();
-    handleReferralVisit();
-    setupRecaptcha();
-    const localPrompts = localStorage.getItem(LS_KEY_PROMPTS);
-    if (localPrompts !== null && !isSubscribed) {
-        promptsLeft = parseInt(localPrompts, 10);
-        console.log("Restored prompts left from localStorage:", promptsLeft);
-        updatePromptsUI();
+  cacheDomElements();
+  domElements.emailSubmitBtn.disabled = true; // Disable button initially
+  domElements.emailButtonText.textContent = "Loading..."; // Show loading text
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      console.log("Firebase Initialized");
+    } else {
+      firebase.app();
+      console.log("Firebase Already Initialized");
     }
-    const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-    if (localChat.length > 0 && domElements.chatContainer && domElements.chatContainer.children.length === 0) {
-        console.log("Restoring chat from localStorage backup.");
-        localChat.forEach(msg => addMessageToHistory(msg.text, msg.sender));
-    }
+    domElements.emailSubmitBtn.disabled = false; // Enable button after initialization
+    domElements.emailButtonText.textContent = "Send Magic Link"; // Reset button text
+  } catch (e) {
+    console.error("Firebase initialization failed:", e);
+    showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
+  }
+  handleMagicLinkSignIn();
+  addEventListeners();
+  handleReferralVisit();
+  setupRecaptcha();
 });
 
 // Microphone Permission

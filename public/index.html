@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta name="description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:title" content="IZZY – AI Avatar for Real Conversations">
+  <meta property="og:title"       content="IZZY – AI Avatar for Real Conversations">
   <meta property="og:description" content="Practice real conversations with IZZY, the AI avatar coach.">
-  <meta property="og:url" content="https://izzy-auth.web.app">
-  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://izzy-auth.web.app">  <meta property="og:type"        content="website">
   <meta property="og:image" content="https://izzy-auth.web.app/img/og.png">
-  <meta property="og:image:alt" content="Screenshot of IZZY AI avatar app">
+  <meta property="og:image:alt"   content="Screenshot of IZZY AI avatar app">
+
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,20 +18,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+
   <style>
     /* Basic Reset & Font */
-    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; } /* Added smooth scroll */
     body { font-family: 'Inter', sans-serif; background: #fff; color:#333; }
 
     /* Backdrop-blur card effect */
     .glass {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      padding: 2rem;
-      box-shadow: 0 20px 25px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.85); /* Semi-transparent white */
+      backdrop-filter: blur(10px); /* Blur effect */
+      -webkit-backdrop-filter: blur(10px); /* Safari support */
+      border-radius: 1rem; /* Rounded corners */
+      padding: 2rem; /* Padding */
+      box-shadow: 0 20px 25px rgba(0,0,0,0.05); /* Subtle shadow */
+      border: 1px solid rgba(255, 255, 255, 0.2); /* Optional subtle border */
     }
 
     /* Blur background behind modals */
@@ -45,38 +47,40 @@
 
     /* Chat bubble styling */
     .chat-bubble {
-      border-radius: 18px;
-      padding: 10px 15px;
-      max-width: 80%;
-      margin-bottom: 10px;
-      word-wrap: break-word;
+      border-radius: 18px; /* Rounded bubbles */
+      padding: 10px 15px; /* Padding inside bubbles */
+      max-width: 80%; /* Max width to prevent full width */
+      margin-bottom: 10px; /* Spacing between bubbles */
+      word-wrap: break-word; /* Ensure long words break */
     }
     .user-bubble {
-      background-color: #E9F3FF;
-      margin-left: auto;
-      border-bottom-right-radius: 4px;
+      background-color: #E9F3FF; /* Light blue for user */
+      margin-left: auto; /* Align to the right */
+      border-bottom-right-radius: 4px; /* Slightly less round corner */
     }
     .assistant-bubble {
-      background-color: #F2F2F7;
-      margin-right: auto;
-      border-bottom-left-radius: 4px;
+      background-color: #F2F2F7; /* Light gray for assistant */
+      margin-right: auto; /* Align to the left */
+      border-bottom-left-radius: 4px; /* Slightly less round corner */
     }
 
     /* Focus states for better accessibility */
-    button:focus, input:focus, a:focus, iframe:focus, textarea:focus {
-      outline: 2px solid #8B5CF6;
+    button:focus, input:focus, a:focus, iframe:focus, textarea:focus { /* Added textarea */
+      outline: 2px solid #8B5CF6; /* Purple outline */
       outline-offset: 2px;
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3); /* Optional softer glow */
     }
+    /* Remove default iframe border if focused */
     iframe:focus {
         border: none;
     }
 
+
     /* Loading spinner animation */
     .spinner {
-      border: 3px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top: 3px solid #8B5CF6;
+      border: 3px solid rgba(255,255,255,0.3); /* Light border */
+      border-radius: 50%; /* Circle */
+      border-top: 3px solid #8B5CF6; /* Purple top border for spin effect */
       width: 20px;
       height: 20px;
       animation: spin 1s linear infinite;
@@ -99,38 +103,38 @@
         width: 100%;
         height: 100%;
         background: white;
-        z-index: 100;
+        z-index: 100; /* Ensure it's above other content */
         padding: 2rem;
-        transform: translateX(-100%);
+        transform: translateX(-100%); /* Start off-screen */
         transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
+        display: flex; /* Use flex for layout */
+        flex-direction: column; /* Stack items vertically */
       }
 
       .mobile-menu.open {
-        transform: translateX(0);
+        transform: translateX(0); /* Slide in */
       }
 
       .desktop-nav {
-        display: none;
+        display: none; /* Hide desktop nav on small screens */
       }
 
       .mobile-nav-button {
-        display: block;
+        display: block; /* Show mobile button */
       }
     }
 
     @media (min-width: 641px) {
       .mobile-nav-button {
-        display: none;
+        display: none; /* Hide mobile button on large screens */
       }
 
       .mobile-menu {
-        display: none;
+        display: none; /* Hide mobile menu */
       }
 
       .desktop-nav {
-        display: flex;
+        display: flex; /* Show desktop nav */
       }
     }
 
@@ -168,20 +172,22 @@
                     linear-gradient(to right,#9333ea,#ec4899) border-box;border:2px solid transparent;border-radius:1rem}
     .gradient-bg{background:linear-gradient(135deg,rgba(147,51,234,.08),rgba(236,72,153,.08))}
     .disabled{opacity:.5;cursor:not-allowed !important;transform:none !important}
+
   </style>
 
   <script>
+    // Extend Tailwind theme with custom colors
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            'izzy-blue': '#0047AB',
-            'izzy-purple': {
+            'izzy-blue': '#0047AB', // Custom blue
+            'izzy-purple': { // Custom purple shades
               500: '#8B5CF6',
               600: '#7C3AED',
               700: '#6D28D9'
             },
-            'izzy-pink': {
+            'izzy-pink': { // Custom pink shades
               500: '#EC4899',
               600: '#DB2777'
             }
@@ -192,8 +198,7 @@
   </script>
 </head>
 
-<body class="text-gray-900 antialiased">
-<div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4">
+<body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4">
   <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in">
     <div class="flex justify-center mb-6">
       <div class="bg-gradient-to-r from-izzy-pink-500 to-izzy-purple-500 rounded-full w-16 h-16 flex items-center justify-center">
@@ -229,9 +234,7 @@
   </div>
 </div>
 
-<div id="subscribeModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4">
-  <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in relative">
-    <button onclick="closeSubscribeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" aria-label="Close subscription modal">
+<div id="subscribeModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full fade-in relative"> <button onclick="closeSubscribeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" aria-label="Close subscription modal">
         <i class="fas fa-times text-xl"></i>
     </button>
 
@@ -241,24 +244,17 @@
       </div>
     </div>
 
-    <h2 class="text-xl sm:text-2xl font-bold text-center mb-4">Upgrade Your Experience</h2>
-    <p class="text-center text-gray-600 mb-6">You've used all your free prompts. Subscribe now to get unlimited conversations with IZZY!</p>
+    <h2 class="text-xl sm:text-2xl font-bold text-center mb-4">Upgrade Your Experience</h2> <p class="text-center text-gray-600 mb-6">You've used all your free prompts. Subscribe now to get unlimited conversations with IZZY!</p>
 
     <div class="space-y-4 mb-6">
       <div class="border border-izzy-purple-200 p-4 rounded-lg hover:bg-purple-50 cursor-pointer transition-colors duration-200">
-        <div class="flex justify-between items-center">
-          <h3 class="font-bold text-lg">Monthly</h3>
-          <span class="font-bold text-lg">$20/mo</span>
-        </div>
+        <div class="flex justify-between items-center"> <h3 class="font-bold text-lg">Monthly</h3> <span class="font-bold text-lg">$20/mo</span> </div>
         <p class="text-sm text-gray-500 mt-1">Cancel anytime</p>
       </div>
 
-      <div class="border-2 border-izzy-purple-500 p-4 rounded-lg bg-purple-50 cursor-pointer relative">
-        <span class="absolute -top-3 right-4 inline-block bg-izzy-purple-600 text-white text-xs px-2 py-1 rounded-full font-semibold">BEST VALUE</span>
-        <div class="flex justify-between items-center">
+      <div class="border-2 border-izzy-purple-500 p-4 rounded-lg bg-purple-50 cursor-pointer relative"> <span class="absolute -top-3 right-4 inline-block bg-izzy-purple-600 text-white text-xs px-2 py-1 rounded-full font-semibold">BEST VALUE</span> <div class="flex justify-between items-center">
           <h3 class="font-bold text-lg">Annual</h3>
-          <span class="font-bold text-lg">$16.67/mo</span>
-        </div>
+          <span class="font-bold text-lg">$16.67/mo</span> </div>
         <p class="text-sm text-gray-500 mt-1">Save $40 - billed annually ($200)</p>
       </div>
     </div>
@@ -273,88 +269,83 @@
   </div>
 </div>
 
-<div id="shareModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4">
-  <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-center relative fade-in">
-    <button onclick="closeShareModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700" aria-label="Close share modal">
+<div id="shareModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 hidden p-4"> <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-center relative fade-in"> <button onclick="closeShareModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700" aria-label="Close share modal">
         <i class="fas fa-times text-lg"></i>
     </button>
 
     <h2 class="text-2xl font-bold text-izzy-blue mb-4">Your Personal Link</h2>
     <p class="text-sm text-gray-500 mb-2">Tap link to copy</p>
 
-    <input id="personalLink" type="text" readonly onclick="copyReferralLink()"
-           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4 text-gray-700 select-all cursor-pointer bg-gray-50"
-           title="Click to copy link">
+<input  id="personalLink"
+        type="text"
+        readonly
+        onclick="copyReferralLink()"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4
+               text-gray-700 select-all cursor-pointer bg-gray-50"
+        title="Click to copy link">
 
-    <p class="text-sm text-gray-500 mb-4">Or share via:</p>
+<p class="text-sm text-gray-500 mb-4">Or share via:</p>
+
 
     <div class="space-y-3">
-      <button onclick="shareVia('whatsapp')" class="share-button w-full py-2 rounded-lg bg-green-500 text-white font-semibold flex items-center justify-center gap-2">
+      <button onclick="shareVia('whatsapp')"  class="share-button w-full py-2 rounded-lg bg-green-500  text-white font-semibold flex items-center justify-center gap-2">
         <i class="fab fa-whatsapp"></i>WhatsApp
       </button>
-      <button onclick="shareVia('email')" class="share-button w-full py-2 rounded-lg bg-blue-500 text-white font-semibold flex items-center justify-center gap-2">
+      <button onclick="shareVia('email')"    class="share-button w-full py-2 rounded-lg bg-blue-500   text-white font-semibold flex items-center justify-center gap-2">
         <i class="fas fa-envelope"></i>Email
       </button>
-      <button onclick="shareVia('facebook')" class="share-button w-full py-2 rounded-lg bg-blue-700 text-white font-semibold flex items-center justify-center gap-2">
+      <button onclick="shareVia('facebook')"  class="share-button w-full py-2 rounded-lg bg-blue-700   text-white font-semibold flex items-center justify-center gap-2">
         <i class="fab fa-facebook-f"></i>Facebook
       </button>
-      <button onclick="shareVia('twitter')" class="share-button w-full py-2 rounded-lg bg-sky-500 text-white font-semibold flex items-center justify-center gap-2">
+      <button onclick="shareVia('twitter')"  class="share-button w-full py-2 rounded-lg bg-sky-500    text-white font-semibold flex items-center justify-center gap-2">
         <i class="fab fa-twitter"></i>X / Twitter
       </button>
-      <button onclick="shareVia('reddit')" class="share-button w-full py-2 rounded-lg bg-orange-600 text-white font-semibold flex items-center justify-center gap-2">
+      <button onclick="shareVia('reddit')"    class="share-button w-full py-2 rounded-lg bg-orange-600 text-white font-semibold flex items-center justify-center gap-2">
         <i class="fab fa-reddit-alien"></i>Reddit
       </button>
     </div>
   </div>
 </div>
 
+
 <div id="recaptcha-container"></div>
 
-<button id="mobile-menu-button" class="mobile-nav-button fixed top-4 left-4 z-[101] bg-white rounded-full p-2 shadow-md" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-  <i class="fas fa-bars text-izzy-blue text-xl"></i>
+<button id="mobile-menu-button" class="mobile-nav-button fixed top-4 left-4 z-[101] bg-white rounded-full p-2 shadow-md" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"> <i class="fas fa-bars text-izzy-blue text-xl"></i>
 </button>
 
 <div id="mobile-menu" class="mobile-menu">
   <div class="flex justify-end mb-8">
     <button id="close-mobile-menu" aria-label="Close menu">
-      <i class="fas fa-times text-izzy-blue text-2xl"></i>
-    </button>
+      <i class="fas fa-times text-izzy-blue text-2xl"></i> </button>
   </div>
-  <nav class="flex flex-col space-y-6 text-center">
-    <a href="#about" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">About</a>
+  <nav class="flex flex-col space-y-6 text-center"> <a href="#about" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">About</a>
     <a href="#practice" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Practice</a>
-    <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a>
-    <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a>
-    <hr class="border-gray-200 my-4">
-    <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
+    <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a> <hr class="border-gray-200 my-4"> <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
   </nav>
-  <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
 </div>
 
 <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 px-6 py-4 desktop-nav items-center"> 
-  <a href="#" onclick="copyReferralLink()" class="text-2xl font-bold text-izzy-blue mr-8">IZZY</a>
+  <a href="#" onclick="copyReferralLink()"
+  class="text-2xl font-bold text-izzy-blue mr-8">IZZY</a>
   <div class="flex items-center space-x-6">
     <a href="#about" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">About</a>
     <a href="#practice" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Practice</a>
-    <a href="#subscribe" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Subscribe</a>
-    <a href="#share" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Share</a>
-  </div>
+    <a href="#subscribe" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold hover:text-izzy-purple-600 transition-colors">Share</a> </div>
   <div class="ml-auto flex items-center space-x-4">
     <button id="logoutButton" class="text-red-500 font-semibold hover:text-red-700 hidden transition-colors">Logout</button>
   </div>
 </nav>
 
 <main id="mainContent" class="pt-24 sm:pt-32 flex flex-col items-center px-4 sm:px-6 pb-20 transition-filter duration-300">
-  <section id="hero" class="text-center max-w-4xl mb-12 fade-in">
-    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-600 bg-clip-text text-transparent leading-tight mb-4">
+
+  <section id="hero" class="text-center max-w-4xl mb-12 fade-in"> <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-600 bg-clip-text text-transparent leading-tight mb-4">
       The World's First <br/> AI-Avatar for Real Life
     </h1>
-    <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-      Practice conversations, build confidence, and never be afraid to approach someone again.<br/>Try it for free (after login).
+    <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto"> Practice conversations, build confidence, and never be afraid to approach someone again.<br/>Try it for free (after login).
     </p>
 
-    <div class="w-full max-w-xl mx-auto relative mb-10" style="padding-bottom: 75%;">
-      <iframe id="avatarFrame"
+    <div class="w-full max-w-xl mx-auto relative mb-10" style="padding-bottom: 75%;"> <iframe id="avatarFrame"
         class="absolute top-0 left-0 w-full h-full rounded-3xl shadow-lg border border-purple-200"
         allow="microphone; autoplay"
         loading="lazy"
@@ -366,40 +357,51 @@
   <section id="practice" class="glass max-w-xl w-full text-center fade-in mb-6" style="animation-delay:.2s">
     <label for="userInput" class="block text-lg font-semibold mb-3">Say something to IZZY:</label>
     <div class="relative">
-      <label for="userInput" class="sr-only">Your message to IZZY</label>
-      <textarea id="userInput" rows="3" maxlength="400" placeholder="Type or speak your message here… (max 400 chars)"
-                aria-label="Your message to IZZY"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-2 resize-none focus:ring-2 focus:ring-izzy-purple-500 focus:border-transparent pr-10"></textarea>
-      <button id="micButton" onclick="startDictation()" class="absolute right-3 top-3 text-gray-500 hover:text-izzy-purple-600" aria-label="Use voice input">
-        <i class="fas fa-microphone text-xl"></i>
-      </button>
-    </div>
+        <label for="userInput" class="sr-only">Your message to IZZY</label> <!-- Add this -->
+        <textarea id="userInput" rows="3" maxlength="400" placeholder="Type or speak your message here… (max 400 chars)"
+              aria-label="Your message to IZZY"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-2 resize-none focus:ring-2 focus:ring-izzy-purple-500 focus:border-transparent pr-10" ></textarea>
+        <button id="micButton" onclick="startDictation()" class="absolute right-3 top-3 text-gray-500 hover:text-巴巴-purple-600" aria-label="Use voice input">
+            <i class="fas fa-microphone text-xl"></i>
+        </button>
+
+  <!-- ▲  NEW BLOCK ENDS HERE ▲ -->
+
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
+    <!-- send / restart buttons -->
+  </div>
 
     <div class="flex flex-col sm:flex-row justify-center items-center gap-3">
-      <button id="sendButton"
-              class="w-full sm:w-auto bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-500 text-white px-8 py-3 rounded-full shadow hover:from-izzy-purple-700 hover:to-izzy-pink-600 transition-all duration-300 flex items-center justify-center">
-        <span class="send-btn-text">Send Message</span>
-        <span class="spinner hidden ml-2"></span>
-      </button>
-      <button id="restartBtn"
-              class="w-full sm:w-auto hidden bg-gray-200 text-gray-800 px-6 py-3 rounded-full hover:bg-gray-300 transition-colors">
-        Restart Conversation
-      </button>
+        <button id="sendButton"
+                class="w-full sm:w-auto bg-gradient-to-r from-izzy-purple-600 to-izzy-pink-500 text-white px-8 py-3 rounded-full shadow hover:from-izzy-purple-700 hover:to-izzy-pink-600 transition-all duration-300 flex items-center justify-center">
+          <span class="send-btn-text">Send Message</span>
+          <span class="spinner hidden ml-2"></span>
+        </button>
+        <button id="restartBtn"
+                class="w-full sm:w-auto hidden bg-gray-200 text-gray-800 px-6 py-3 rounded-full hover:bg-gray-300 transition-colors">
+          Restart Conversation
+        </button>
     </div>
 
-    <div id="prompts-warning" class="text-sm text-orange-600 mt-3 hidden">
-      <strong>Note:</strong> You have <span id="prompts-warning-count">0</span> free prompts left.
-      <a href="#subscribe" class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
-    </div>
-  </section>
+    <!-- …existing textarea + buttons … -->
+
+<div id="prompts-warning"
+class="text-sm text-orange-600 mt-3 hidden">
+<strong>Note:</strong> You have
+<span id="prompts-warning-count">0</span> free prompts left.
+<a href="#subscribe"
+class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
+</div>
+
+</section>
 
   <section id="conversation-history" class="glass max-w-xl w-full mt-6 hidden fade-in" style="animation-delay:.3s">
     <h3 class="font-semibold text-lg mb-3 text-center">Conversation History</h3>
-    <div id="chat-container" class="max-h-64 overflow-y-auto space-y-3 p-1"></div>
+    <div id="chat-container" class="max-h-64 overflow-y-auto space-y-3 p-1"> </div>
   </section>
 
-  <div id="stats" class="mt-10 w-full max-w-xl fade-in" style="animation-delay:.4s">
-    <h3 class="text-xl font-semibold mb-4 text-center">Your Progress</h3>
+
+  <div id="stats" class="mt-10 w-full max-w-xl fade-in" style="animation-delay:.4s"> <h3 class="text-xl font-semibold mb-4 text-center">Your Progress</h3>
     <div class="grid grid-cols-3 gap-4 text-center bg-gray-50 p-4 rounded-lg">
       <div>
         <div id="conversation-count" class="text-2xl font-bold text-izzy-purple-600">0</div>
@@ -423,10 +425,10 @@
       IZZY isn't just another dating app – it's your personal conversation coach. Practice approaching and talking to women in realistic scenarios, guided by AI.
     </p>
     <p class="mt-4 text-lg leading-relaxed">
-      Our upcoming full version will let you personalize IZZY to simulate specific situations and personalities. Help us empower more men to build real confidence!
+       Our upcoming full version will let you personalize IZZY to simulate specific situations and personalities. Help us empower more men to build real confidence!
     </p>
-    <a href="#share" class="inline-block mt-6 bg-gradient-to-r from-izzy-purple-500 to-izzy-pink-500 text-white px-6 py-3 rounded-full shadow hover:from-izzy-purple-600 hover:to-izzy-pink-600 transition-all duration-300">
-      Share IZZY & Earn Rewards
+     <a href="#share" class="inline-block mt-6 bg-gradient-to-r from-izzy-purple-500 to-izzy-pink-500 text-white px-6 py-3 rounded-full shadow hover:from-izzy-purple-600 hover:to-izzy-pink-600 transition-all duration-300">
+        Share IZZY & Earn Rewards
     </a>
   </section>
 
@@ -471,8 +473,7 @@
         </div>
       </div>
 
-      <div class="plan-card gradient-border bg-white rounded-3xl shadow-xl overflow-hidden relative transform md:scale-105">
-        <div class="popular-badge">Most Popular</div>
+      <div class="plan-card gradient-border bg-white rounded-3xl shadow-xl overflow-hidden relative transform md:scale-105"> <div class="popular-badge">Most Popular</div>
         <div class="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
           <h2 class="text-2xl font-semibold">Monthly</h2>
           <div class="mt-4 flex items-end">
@@ -525,7 +526,7 @@
               <span>Personalized Avatar</span>
             </li>
             <li class="flex items-center">
-              <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
+             <span class="bg-purple-100 rounded-full p-1 mr-3 flex-shrink-0"><i class="fas fa-check text-purple-600 text-xs"></i></span>
               <span>Premium Conversational Training</span>
             </li>
             <li class="flex items-center">
@@ -533,7 +534,7 @@
               <span>Priority Support</span>
             </li>
           </ul>
-          <a href="https://buy.stripe.com/test_6oE3cO9PM2h66qU4gg" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
+           <a href="https://buy.stripe.com/test_6oE3cO9PM2h66qU4gg" target="_blank" class="block text-center bg-white border-2 border-purple-500 text-purple-600 font-semibold py-3 px-6 rounded-full hover:bg-purple-50 transition duration-300">
             Subscribe
           </a>
         </div>
@@ -583,10 +584,10 @@
           </p>
           <div class="gradient-card p-4">
             <p class="text-gray-800 font-medium">
-              "I always got stressed out before talking to a woman and never even thought about approaching them. But IZZY helped me practice, preparing me for any awkward silences or moments, and now I'm much more confident! Thank you!"
+                "I always got stressed out before talking to a woman and never even thought about approaching them. But IZZY helped me practice, preparing me for any awkward silences or moments, and now I'm much more confident! Thank you!"
             </p>
             <p class="text-right text-sm text-gray-500 mt-2">– Michael T.</p>
-          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -598,7 +599,7 @@
           <h3 class="text-lg font-semibold mb-2">Refer 1 friend</h3>
           <p class="text-2xl font-bold text-izzy-purple-600 mb-4">+5 free prompts</p>
           <button id="btnTier1" onclick="openShareModal()"
-                  class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+            class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
             Share Now
           </button>
         </div>
@@ -606,7 +607,7 @@
           <h3 class="text-lg font-semibold mb-2">Refer 2 friends</h3>
           <p class="text-2xl font-bold text-izzy-purple-600 mb-4">+10 free prompts</p>
           <button id="btnTier2" onclick="openShareModal()"
-                  class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+            class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
             Share More
           </button>
         </div>
@@ -614,27 +615,29 @@
           <h3 class="text-lg font-semibold mb-2">Refer 3 friends</h3>
           <p class="text-2xl font-bold text-izzy-purple-600 mb-4">+20 free prompts</p>
           <button id="btnTier3" onclick="openShareModal()"
-                  class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
+            class="share-button bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium py-2 px-6 rounded-full w-full">
             Unlock Max Rewards
           </button>
         </div>
       </div>
-      <p id="referralStatus" class="text-center text-gray-600 mt-6"></p>
-    </div>
+       <p id="referralStatus" class="text-center text-gray-600 mt-6"></p> </div>
   </section>
 
   <section id="terms" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
     <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Terms of Service</h2>
     <p class="text-lg leading-relaxed">
-      Welcome to IZZY! By using our service, you agree to the following terms...
+        Welcome to IZZY! By using our service, you agree to the following terms...
+        <!-- Add your full Terms of Service here -->
     </p>
-  </section>
-  <section id="privacy" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
+</section>
+<section id="privacy" class="max-w-3xl mt-16 sm:mt-20 px-4 sm:px-8 text-gray-800 fade-in">
     <h2 class="text-3xl font-bold text-izzy-purple-700 mb-3">Privacy Policy</h2>
     <p class="text-lg leading-relaxed">
-      At IZZY, we value your privacy. This Privacy Policy explains how we collect, use, and protect your data...
+        At IZZY, we value your privacy. This Privacy Policy explains how we collect, use, and protect your data...
+        <!-- Add your full Privacy Policy here -->
     </p>
-  </section>
+</section>
+
 </main>
 
 <footer class="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-6 px-6 mt-20 fade-in" style="animation-delay: 0.8s;">
@@ -644,256 +647,264 @@
       <p class="text-sm opacity-80">AI Avatar for Real Conversations</p>
     </div>
     <div class="flex space-x-4">
-      <a href="#terms" class="hover:text-white opacity-80 hover:opacity-100">Terms</a>
-      <a href="#privacy" class="hover:text-white opacity-80 hover:opacity-100">Privacy</a>
-      <a href="mailto:support@example.com" class="hover:text-white opacity-80 hover:opacity-100">Support</a>
-    </div>
+      <a href="#terms" class="hover:text-white opacity-80 hover:opacity-100">Terms</a> <a href="#privacy" class="hover:text-white opacity-80 hover:opacity-100">Privacy</a> <a href="mailto:support@example.com" class="hover:text-white opacity-80 hover:opacity-100">Support</a> </div>
   </div>
 </footer>
 
-<div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-[120]"></div>
+
+<div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-[120]"> </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-  window.recaptchaLoaded = false;
-  window.onRecaptchaLoad = function() {
+  // At the top of your <script> section, just after ACTION_CODE_SETTINGS
+window.recaptchaLoaded = false;
+window.onRecaptchaLoad = function() {
     console.log("reCAPTCHA script loaded");
     window.recaptchaLoaded = true;
-    setupRecaptcha();
-  };
+    setupRecaptcha(); // Call setupRecaptcha only after the script loads
+};
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
-    authDomain: "izzy-auth.firebaseapp.com",
-    databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com",
-    projectId: "izzy-auth",
-    storageBucket: "izzy-auth.firebasestorage.app",
-    messagingSenderId: "573135779043",
-    appId: "1:573135779043:web:f6c59473f9956c917041d6",
-    measurementId: "G-8JLKB2MMKS"
-  };
+// Firebase Initialization
+const firebaseConfig = {
+  apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+  authDomain: "izzy-auth.firebaseapp.com",
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com",
+  projectId: "izzy-auth",
+  storageBucket: "izzy-auth.firebasestorage.app",
+  messagingSenderId: "573135779043",
+  appId: "1:573135779043:web:f6c59473f9956c917041d6",
+  measurementId: "G-8JLKB2MMKS"
+};
 
-  const auth = firebase.auth();
-  const db = firebase.database();
+const auth = firebase.auth();
+const db = firebase.database();
 
-  const FREE_PROMPT_LIMIT = 3;
-  const MAX_REFERRALS_REWARDED = 3;
-  const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 };
-  const ACTION_CODE_SETTINGS = {
-    url: 'https://izzy-auth.web.app',
+// Constants
+const FREE_PROMPT_LIMIT = 3;
+const MAX_REFERRALS_REWARDED = 3;
+const REFERRAL_PROMPTS_TIERS = { 1: 5, 2: 10, 3: 20 };
+const ACTION_CODE_SETTINGS = {
+    url: 'https://izzy-auth.web.app', 
     handleCodeInApp: true,
-  };
+};
 
-  const LS_KEY_PROMPTS = 'izzy_prompts_left_backup';
-  const LS_KEY_CHAT = 'izzy_chat_history_backup';
-  const LS_KEY_REFERRER = 'storedInviterUid';
-  const LS_KEY_REFERRAL_VISITED_PREFIX = 'visitedAsReferral_';
+// Local Storage Keys
+const LS_KEY_PROMPTS = 'izzy_prompts_left_backup';
+const LS_KEY_CHAT = 'izzy_chat_history_backup';
+const LS_KEY_REFERRER = 'storedInviterUid';
+const LS_KEY_REFERRAL_VISITED_PREFIX = 'visitedAsReferral_';
 
-  let currentUser = null;
-  let currentUserId = null;
-  let promptsUsed = 0;
-  let promptsLeft = FREE_PROMPT_LIMIT;
-  let isSubscribed = false;
-  let currentConversationId = null;
-  let personalReferralLink = "";
-  let successfulReferralCount = 0;
+// Global state variables
+let currentUser = null;
+let currentUserId = null;
+let promptsUsed = 0;
+let promptsLeft = FREE_PROMPT_LIMIT;
+let isSubscribed = false;
+let currentConversationId = null;
+let personalReferralLink = "";
+let successfulReferralCount = 0;
+let recaptchaVerifier = null;
 
-  let domElements = {};
-  function cacheDomElements() {
+// DOM Element References
+let domElements = {};
+function cacheDomElements() {
     domElements = {
-      authModal: document.getElementById('authModal'),
-      subscribeModal: document.getElementById('subscribeModal'),
-      shareModal: document.getElementById('shareModal'),
-      mainContent: document.getElementById('mainContent'),
-      authStatusMessage: document.getElementById('auth-status-message'),
-      logoutButton: document.getElementById('logoutButton'),
-      mobileLogoutButton: document.getElementById('mobile-logoutButton'),
-      recaptchaContainer: document.getElementById('recaptcha-container'),
-      emailForm: document.getElementById('email-form'),
-      emailInput: document.getElementById('email'),
-      emailSubmitBtn: document.getElementById('email-submit-btn'),
-      chatContainer: document.getElementById('chat-container'),
-      conversationHistorySection: document.getElementById('conversation-history'),
-      promptsWarning: document.getElementById('prompts-warning'),
-      promptsWarningCount: document.getElementById('prompts-warning-count'),
-      userInput: document.getElementById('userInput'),
-      sendButton: document.getElementById('sendButton'),
-      sendButtonText: document.querySelector('#sendButton .send-btn-text'),
-      sendButtonSpinner: document.querySelector('#sendButton .spinner'),
-      emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
-      emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
-      restartBtn: document.getElementById('restartBtn'),
-      toast: document.getElementById('toast'),
-      mobileMenuButton: document.getElementById('mobile-menu-button'),
-      mobileMenu: document.getElementById('mobile-menu'),
-      closeMobileMenuButton: document.getElementById('close-mobile-menu'),
-      mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
-      conversationCountEl: document.getElementById('conversation-count'),
-      skillLevelEl: document.getElementById('skill-level'),
-      promptsLeftEl: document.getElementById('prompts-left'),
-      avatarFrame: document.getElementById('avatarFrame'),
-      micButtonIcon: document.querySelector('#micButton i'),
-      personalLinkInput: document.getElementById('personalLink'),
-      rewardsTextEl: document.getElementById('rewardsText'),
-      referralStatusEl: document.getElementById('referralStatus'),
-      shareTierButtons: {
-        1: document.getElementById('btnTier1'),
-        2: document.getElementById('btnTier2'),
-        3: document.getElementById('btnTier3')
-      }
+        authModal: document.getElementById('authModal'),
+        subscribeModal: document.getElementById('subscribeModal'),
+        shareModal: document.getElementById('shareModal'),
+        mainContent: document.getElementById('mainContent'),
+        authStatusMessage: document.getElementById('auth-status-message'),
+        logoutButton: document.getElementById('logoutButton'),
+        mobileLogoutButton: document.getElementById('mobile-logoutButton'),
+        recaptchaContainer: document.getElementById('recaptcha-container'),
+        emailForm: document.getElementById('email-form'),
+        emailInput: document.getElementById('email'),
+        emailSubmitBtn: document.getElementById('email-submit-btn'),
+        chatContainer: document.getElementById('chat-container'),
+        conversationHistorySection: document.getElementById('conversation-history'),
+        promptsWarning: document.getElementById('prompts-warning'),
+        promptsWarningCount: document.getElementById('prompts-warning-count'),
+        userInput: document.getElementById('userInput'),
+        sendButton: document.getElementById('sendButton'),
+        sendButtonText: document.querySelector('#sendButton .send-btn-text'),
+        sendButtonSpinner: document.querySelector('#sendButton .spinner'),
+        emailButtonText: document.querySelector('#email-submit-btn .email-btn-text'),
+        emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
+        restartBtn: document.getElementById('restartBtn'),
+        toast: document.getElementById('toast'),
+        mobileMenuButton: document.getElementById('mobile-menu-button'),
+        mobileMenu: document.getElementById('mobile-menu'),
+        closeMobileMenuButton: document.getElementById('close-mobile-menu'),
+        mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
+        conversationCountEl: document.getElementById('conversation-count'),
+        skillLevelEl: document.getElementById('skill-level'),
+        promptsLeftEl: document.getElementById('prompts-left'),
+        avatarFrame: document.getElementById('avatarFrame'),
+        micButtonIcon: document.querySelector('#micButton i'),
+        personalLinkInput: document.getElementById('personalLink'),
+        rewardsTextEl: document.getElementById('rewardsText'),
+        referralStatusEl: document.getElementById('referralStatus'),
+        shareTierButtons: {
+            1: document.getElementById('btnTier1'),
+            2: document.getElementById('btnTier2'),
+            3: document.getElementById('btnTier3')
+        }
     };
-  }
+}
 
-  function handleReferralVisit() {
+// Referral Logic (Unchanged)
+function handleReferralVisit() {
     const urlParams = new URLSearchParams(window.location.search);
     const inviterUid = urlParams.get('ref');
     if (inviterUid && inviterUid !== 'undefined' && inviterUid.length > 5) {
-      console.log("Referral code detected:", inviterUid);
-      localStorage.setItem(LS_KEY_REFERRER, inviterUid);
-      const visitedKey = LS_KEY_REFERRAL_VISITED_PREFIX + inviterUid;
-      if (!localStorage.getItem(visitedKey)) {
-        console.log("First visit via this referral link for inviter:", inviterUid);
-        const refReceivedPath = `referralsReceived/${inviterUid}`;
-        db.ref(refReceivedPath).transaction(currentCount => (currentCount || 0) + 1)
-          .then(() => {
-            console.log("Referral received count updated for", inviterUid);
-            localStorage.setItem(visitedKey, 'true');
-          })
-          .catch(error => console.error("Failed to update referral received count:", error));
-      } else {
-        console.log("Already visited via this referral link for inviter:", inviterUid);
-      }
+        console.log("Referral code detected:", inviterUid);
+        localStorage.setItem(LS_KEY_REFERRER, inviterUid);
+        const visitedKey = LS_KEY_REFERRAL_VISITED_PREFIX + inviterUid;
+        if (!localStorage.getItem(visitedKey)) {
+            console.log("First visit via this referral link for inviter:", inviterUid);
+            const refReceivedPath = `referralsReceived/${inviterUid}`;
+            db.ref(refReceivedPath).transaction(currentCount => (currentCount || 0) + 1)
+                .then(() => {
+                    console.log("Referral received count updated for", inviterUid);
+                    localStorage.setItem(visitedKey, 'true');
+                })
+                .catch(error => console.error("Failed to update referral received count:", error));
+        } else {
+            console.log("Already visited via this referral link for inviter:", inviterUid);
+        }
     }
-  }
+}
 
-  function creditReferrerOnSignUp(newUserId) {
+function creditReferrerOnSignUp(newUserId) {
     const inviterUid = localStorage.getItem(LS_KEY_REFERRER);
     if (inviterUid && inviterUid !== newUserId && inviterUid.length > 5) {
-      console.log(`Attempting to credit inviter ${inviterUid} for new user ${newUserId}`);
-      const successRefPath = `successfulReferrals/${inviterUid}/${newUserId}`;
-      const inviterUserRef = db.ref(`users/${inviterUid}`);
-      db.ref(successRefPath).transaction(currentData => {
-        if (currentData === null) {
-          return firebase.database.ServerValue.TIMESTAMP;
-        } else {
-          console.log(`Referral from ${inviterUid} to ${newUserId} already credited.`);
-          return;
-        }
-      })
-      .then(result => {
-        if (!result.committed) {
-          localStorage.removeItem(LS_KEY_REFERRER);
-          return Promise.reject("Referral already credited.");
-        }
-        console.log("Successful referral pair recorded in DB.");
-        return inviterUserRef.child('successfulReferralCount').transaction(count => (count || 0) + 1);
-      })
-      .then((result) => {
-        if (!result.committed) {
-          console.log("Inviter referral count transaction aborted (maybe concurrent update?).");
-          return Promise.reject("Failed to update inviter count.");
-        }
-        const newRefCount = result.snapshot.val();
-        console.log(`Inviter ${inviterUid} now has ${newRefCount} successful referrals.`);
-        grantReferralBonusPrompts(inviterUid, newRefCount);
-        localStorage.removeItem(LS_KEY_REFERRER);
-      })
-      .catch(error => {
-        if (error !== "Referral already credited." && error !== "Failed to update inviter count.") {
-          console.error("Error during referral crediting process:", error);
-        }
-        localStorage.removeItem(LS_KEY_REFERRER);
-      });
+        console.log(`Attempting to credit inviter ${inviterUid} for new user ${newUserId}`);
+        const successRefPath = `successfulReferrals/${inviterUid}/${newUserId}`;
+        const inviterUserRef = db.ref(`users/${inviterUid}`);
+        db.ref(successRefPath).transaction(currentData => {
+            if (currentData === null) {
+                return firebase.database.ServerValue.TIMESTAMP;
+            } else {
+                console.log(`Referral from ${inviterUid} to ${newUserId} already credited.`);
+                return;
+            }
+        })
+        .then(result => {
+            if (!result.committed) {
+                localStorage.removeItem(LS_KEY_REFERRER);
+                return Promise.reject("Referral already credited.");
+            }
+            console.log("Successful referral pair recorded in DB.");
+            return inviterUserRef.child('successfulReferralCount').transaction(count => (count || 0) + 1);
+        })
+        .then((result) => {
+            if (!result.committed) {
+                console.log("Inviter referral count transaction aborted (maybe concurrent update?).");
+                return Promise.reject("Failed to update inviter count.");
+            }
+            const newRefCount = result.snapshot.val();
+            console.log(`Inviter ${inviterUid} now has ${newRefCount} successful referrals.`);
+            grantReferralBonusPrompts(inviterUid, newRefCount);
+            localStorage.removeItem(LS_KEY_REFERRER);
+        })
+        .catch(error => {
+            if (error !== "Referral already credited." && error !== "Failed to update inviter count.") {
+                console.error("Error during referral crediting process:", error);
+            }
+            localStorage.removeItem(LS_KEY_REFERRER);
+        });
     } else if (inviterUid) {
-      localStorage.removeItem(LS_KEY_REFERRER);
+        localStorage.removeItem(LS_KEY_REFERRER);
     }
-  }
+}
 
-  function grantReferralBonusPrompts(inviterUid, newRefCount) {
+function grantReferralBonusPrompts(inviterUid, newRefCount) {
     if (newRefCount > MAX_REFERRALS_REWARDED) {
-      console.log(`Inviter ${inviterUid} has already reached max referral rewards.`);
-      return;
+        console.log(`Inviter ${inviterUid} has already reached max referral rewards.`);
+        return;
     }
     const promptsToAdd = REFERRAL_PROMPTS_TIERS[newRefCount];
     if (!promptsToAdd) {
-      console.log(`No specific prompt reward defined for reaching ${newRefCount} referrals.`);
-      return;
+        console.log(`No specific prompt reward defined for reaching ${newRefCount} referrals.`);
+        return;
     }
     console.log(`Attempting to grant ${promptsToAdd} bonus prompts to inviter ${inviterUid} for reaching ${newRefCount} referrals.`);
     const inviterUserRef = db.ref(`users/${inviterUid}`);
     inviterUserRef.child('promptsLeft').transaction(currentPrompts => {
-      const currentVal = (typeof currentPrompts === 'number') ? currentPrompts : 0;
-      return currentVal + promptsToAdd;
+        const currentVal = (typeof currentPrompts === 'number') ? currentPrompts : 0;
+        return currentVal + promptsToAdd;
     }).then((result) => {
-      if (result.committed) {
-        const finalPromptCount = result.snapshot.val();
-        console.log(`Granted ${promptsToAdd} bonus prompts to inviter ${inviterUid}. New total: ${finalPromptCount}`);
-        db.ref(`notifications/${inviterUid}`).push({
-          type: 'referral_bonus',
-          message: `You earned ${promptsToAdd} free prompts for referring your ${getOrdinal(newRefCount)} friend!`,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          read: false
-        });
-      } else {
-        console.log(`Transaction to add bonus prompts for inviter ${inviterUid} aborted (maybe concurrent update?).`);
-      }
+        if (result.committed) {
+            const finalPromptCount = result.snapshot.val();
+            console.log(`Granted ${promptsToAdd} bonus prompts to inviter ${inviterUid}. New total: ${finalPromptCount}`);
+            db.ref(`notifications/${inviterUid}`).push({
+                type: 'referral_bonus',
+                message: `You earned ${promptsToAdd} free prompts for referring your ${getOrdinal(newRefCount)} friend!`,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                read: false
+            });
+        } else {
+            console.log(`Transaction to add bonus prompts for inviter ${inviterUid} aborted (maybe concurrent update?).`);
+        }
     }).catch(error => {
-      console.error(`Error granting bonus prompts to inviter ${inviterUid}:`, error);
+        console.error(`Error granting bonus prompts to inviter ${inviterUid}:`, error);
     });
-  }
+}
 
-  function getOrdinal(n) {
+function getOrdinal(n) {
     const s = ["th", "st", "nd", "rd"];
     const v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
-  }
+}
 
-  auth.onAuthStateChanged(user => {
+// Authentication State Listener
+auth.onAuthStateChanged(user => {
     if (Object.keys(domElements).length === 0) {
-      console.warn("DOM elements not cached yet in onAuthStateChanged");
-      cacheDomElements();
-      if (Object.keys(domElements).length === 0) return;
+        console.warn("DOM elements not cached yet in onAuthStateChanged");
+        cacheDomElements();
+        if (Object.keys(domElements).length === 0) return;
     }
     if (user) {
-      const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
-      currentUser = user;
-      currentUserId = user.uid;
-      console.log("User signed in:", currentUserId, "Is new user:", isNewUser);
-      personalReferralLink = `${window.location.origin}${window.location.pathname}?ref=${currentUserId}`;
-      if (domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
-      updateAuthUI(true);
-      domElements.authModal?.classList.add('hidden');
-      domElements.mainContent?.classList.remove('blur-background');
-      loadUserData(currentUserId);
-      if (isNewUser) {
-        creditReferrerOnSignUp(currentUserId);
-      }
+        const isNewUser = user.metadata.creationTime === user.metadata.lastSignInTime;
+        currentUser = user;
+        currentUserId = user.uid;
+        console.log("User signed in:", currentUserId, "Is new user:", isNewUser);
+        personalReferralLink = `${window.location.origin}${window.location.pathname}?ref=${currentUserId}`;
+        if (domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
+        updateAuthUI(true);
+        domElements.authModal?.classList.add('hidden');
+        domElements.mainContent?.classList.remove('blur-background');
+        loadUserData(currentUserId);
+        if (isNewUser) {
+            creditReferrerOnSignUp(currentUserId);
+        }
     } else {
-      console.log("User signed out.");
-      currentUser = null;
-      currentUserId = null;
-      personalReferralLink = "";
-      successfulReferralCount = 0;
-      updateAuthUI(false);
-      resetAppState();
-      updateShareSectionUI();
-      openAuthModal();
+        console.log("User signed out.");
+        currentUser = null;
+        currentUserId = null;
+        personalReferralLink = "";
+        successfulReferralCount = 0;
+        updateAuthUI(false);
+        resetAppState();
+        updateShareSectionUI();
+        openAuthModal();
     }
-  });
+});
 
-  function updateAuthUI(isSignedIn) {
+// UI Update Functions
+function updateAuthUI(isSignedIn) {
     const showIfSignedIn = [domElements.logoutButton, domElements.mobileLogoutButton];
     if (isSignedIn) {
-      showIfSignedIn.forEach(el => el?.classList.remove('hidden'));
+        showIfSignedIn.forEach(el => el?.classList.remove('hidden'));
     } else {
-      showIfSignedIn.forEach(el => el?.classList.add('hidden'));
+        showIfSignedIn.forEach(el => el?.classList.add('hidden'));
     }
-  }
+}
 
-  function resetAppState() {
+function resetAppState() {
     promptsUsed = 0;
     promptsLeft = FREE_PROMPT_LIMIT;
     isSubscribed = false;
@@ -905,315 +916,335 @@
     domElements.conversationHistorySection?.classList.add('hidden');
     domElements.restartBtn?.classList.add('hidden');
     if (!domElements.promptsWarning) {
-      console.error('promptsWarning element missing in DOM');
+        console.error('promptsWarning element missing in DOM');
     } else {
-      domElements.promptsWarning.classList.add('hidden');
+        domElements.promptsWarning.classList.add('hidden');
     }
-  }
+}
 
-  function showButtonLoading(button, textElement, spinnerElement, isLoading) {
+function showButtonLoading(button, textElement, spinnerElement, isLoading) {
     if (!button || !textElement || !spinnerElement) return;
     if (isLoading) {
-      button.disabled = true;
-      textElement.classList.add('hidden');
-      spinnerElement.classList.remove('hidden');
+        button.disabled = true;
+        textElement.classList.add('hidden');
+        spinnerElement.classList.remove('hidden');
     } else {
-      button.disabled = false;
-      textElement.classList.remove('hidden');
-      spinnerElement.classList.add('hidden');
+        button.disabled = false;
+        textElement.classList.remove('hidden');
+        spinnerElement.classList.add('hidden');
     }
-  }
+}
 
-  function loadUserData(userId) {
+// User Data Management
+function loadUserData(userId) {
     showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
     const userRef = db.ref(`users/${userId}`);
     userRef.once('value')
-      .then(snapshot => {
-        const userData = snapshot.val();
-        if (userData) {
-          console.log("Loaded user data:", userData);
-          promptsUsed = userData.promptsUsed || 0;
-          promptsLeft = (typeof userData.promptsLeft === 'number') ? Math.max(0, userData.promptsLeft) : FREE_PROMPT_LIMIT;
-          isSubscribed = userData.subscribed || false;
-          currentConversationId = userData.currentConversationId || null;
-          successfulReferralCount = userData.successfulReferralCount || 0;
-          if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = userData.conversations || 0;
-          if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = userData.level || 'Beginner';
-          loadChatHistory(userId, currentConversationId);
-        } else {
-          console.log("New user detected, initializing data for:", userId);
-          const initialData = {
-            email: currentUser.email || 'Not Provided',
-            createdAt: firebase.database.ServerValue.TIMESTAMP,
-            conversations: 0,
-            promptsUsed: 0,
-            promptsLeft: FREE_PROMPT_LIMIT,
-            level: 'Beginner',
-            subscribed: false,
-            currentConversationId: null,
-            successfulReferralCount: 0
-          };
-          userRef.set(initialData)
-            .then(() => {
-              console.log("Initial user data saved.");
-              promptsLeft = FREE_PROMPT_LIMIT;
-              successfulReferralCount = 0;
-              isSubscribed = false;
-              currentConversationId = null;
-              promptsUsed = 0;
-              updatePromptsUI();
-              checkSubscriptionStatus();
-              updateShareSectionUI();
-              resetAppState();
-            })
-            .catch(error => console.error("Error saving initial user data:", error));
-          return;
-        }
-        updatePromptsUI();
-        checkSubscriptionStatus();
-        updateShareSectionUI();
-      })
-      .catch(error => {
-        console.error("Error loading user data:", error);
-        showToast("Error loading your data. Using defaults.", true);
-        resetAppState();
-        updateShareSectionUI();
-      })
-      .finally(() => {
-        showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
-      });
-  }
+        .then(snapshot => {
+            const userData = snapshot.val();
+            if (userData) {
+                console.log("Loaded user data:", userData);
+                promptsUsed = userData.promptsUsed || 0;
+                promptsLeft = (typeof userData.promptsLeft === 'number') ? Math.max(0, userData.promptsLeft) : FREE_PROMPT_LIMIT;
+                isSubscribed = userData.subscribed || false;
+                currentConversationId = userData.currentConversationId || null;
+                successfulReferralCount = userData.successfulReferralCount || 0;
+                if (domElements.conversationCountEl) domElements.conversationCountEl.textContent = userData.conversations || 0;
+                if (domElements.skillLevelEl) domElements.skillLevelEl.textContent = userData.level || 'Beginner';
+                loadChatHistory(userId, currentConversationId);
+            } else {
+                console.log("New user detected, initializing data for:", userId);
+                const initialData = {
+                    email: currentUser.email || 'Not Provided',
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    conversations: 0,
+                    promptsUsed: 0,
+                    promptsLeft: FREE_PROMPT_LIMIT,
+                    level: 'Beginner',
+                    subscribed: false,
+                    currentConversationId: null,
+                    successfulReferralCount: 0
+                };
+                userRef.set(initialData)
+                    .then(() => {
+                        console.log("Initial user data saved.");
+                        promptsLeft = FREE_PROMPT_LIMIT;
+                        successfulReferralCount = 0;
+                        isSubscribed = false;
+                        currentConversationId = null;
+                        promptsUsed = 0;
+                        updatePromptsUI();
+                        checkSubscriptionStatus();
+                        updateShareSectionUI();
+                        resetAppState();
+                    })
+                    .catch(error => console.error("Error saving initial user data:", error));
+                return;
+            }
+            updatePromptsUI();
+            checkSubscriptionStatus();
+            updateShareSectionUI();
+        })
+        .catch(error => {
+            console.error("Error loading user data:", error);
+            showToast("Error loading your data. Using defaults.", true);
+            resetAppState();
+            updateShareSectionUI();
+        })
+        .finally(() => {
+            showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
+        });
+}
 
-  function updateUserData(userId, data) {
+function updateUserData(userId, data) {
     if (!userId) return Promise.reject("No user ID provided for update.");
     console.log("Updating user data:", userId, data);
     return db.ref(`users/${userId}`).update(data);
-  }
+}
 
-  function loadChatHistory(userId, conversationId) {
+function loadChatHistory(userId, conversationId) {
     if (!userId || !conversationId) {
-      domElements.conversationHistorySection?.classList.add('hidden');
-      if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
-      domElements.restartBtn?.classList.add('hidden');
-      return;
+        domElements.conversationHistorySection?.classList.add('hidden');
+        if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+        domElements.restartBtn?.classList.add('hidden');
+        return;
     }
     const chatRef = db.ref(`chats/${userId}/${conversationId}`);
     chatRef.orderByChild('timestamp').once('value')
-      .then(snapshot => {
-        if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
-        if (snapshot.exists()) {
-          domElements.conversationHistorySection?.classList.remove('hidden');
-          domElements.restartBtn?.classList.remove('hidden');
-          let messages = [];
-          snapshot.forEach(childSnapshot => messages.push(childSnapshot.val()));
-          messages.forEach(msg => addMessageToHistory(msg.text, msg.sender));
-          if (messages.length > 0) {
-            localStorage.setItem(LS_KEY_CHAT, JSON.stringify(messages.map(m => ({text: m.text, sender: m.sender}))));
-          } else {
-            localStorage.removeItem(LS_KEY_CHAT);
-          }
-        } else {
-          domElements.conversationHistorySection?.classList.add('hidden');
-          domElements.restartBtn?.classList.add('hidden');
-          localStorage.removeItem(LS_KEY_CHAT);
-        }
-      }).catch(error => {
-        console.error("Error loading chat history:", error);
-        showToast("Could not load conversation history.", true);
-      });
-  }
+        .then(snapshot => {
+            if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+            if (snapshot.exists()) {
+                domElements.conversationHistorySection?.classList.remove('hidden');
+                domElements.restartBtn?.classList.remove('hidden');
+                let messages = [];
+                snapshot.forEach(childSnapshot => messages.push(childSnapshot.val()));
+                messages.forEach(msg => addMessageToHistory(msg.text, msg.sender));
+                if (messages.length > 0) {
+                    localStorage.setItem(LS_KEY_CHAT, JSON.stringify(messages.map(m => ({text: m.text, sender: m.sender}))));
+                } else {
+                    localStorage.removeItem(LS_KEY_CHAT);
+                }
+            } else {
+                domElements.conversationHistorySection?.classList.add('hidden');
+                domElements.restartBtn?.classList.add('hidden');
+                localStorage.removeItem(LS_KEY_CHAT);
+            }
+        }).catch(error => {
+            console.error("Error loading chat history:", error);
+            showToast("Could not load conversation history.", true);
+        });
+}
 
-  function updatePromptsUI() {
+function updatePromptsUI() {
     if (!domElements.promptsLeftEl || !domElements.promptsWarning || !domElements.promptsWarningCount) return;
     domElements.promptsLeftEl.textContent = isSubscribed ? '∞' : promptsLeft;
     if (!isSubscribed && promptsLeft <= 1 && promptsLeft >= 0) {
-      domElements.promptsWarning.classList.remove('hidden');
-      domElements.promptsWarningCount.textContent = promptsLeft;
+        domElements.promptsWarning.classList.remove('hidden');
+        domElements.promptsWarningCount.textContent = promptsLeft;
     } else {
-      domElements.promptsWarning.classList.add('hidden');
+        domElements.promptsWarning.classList.add('hidden');
     }
-  }
+}
 
-  function checkSubscriptionStatus() {
+function checkSubscriptionStatus() {
     if (!isSubscribed && promptsLeft <= 0) {
-      disableSendButton();
+        disableSendButton();
     } else {
-      enableSendButton();
+        enableSendButton();
     }
-  }
+}
 
-  function updateShareSectionUI() {
+function updateShareSectionUI() {
     if (!domElements.rewardsTextEl || !domElements.referralStatusEl || !domElements.shareTierButtons[1]) return;
     if (!currentUser) {
-      domElements.rewardsTextEl.textContent = "Log in to start sharing & earn free prompts!";
-      domElements.referralStatusEl.textContent = "";
-      Object.values(domElements.shareTierButtons).forEach(btn => {
-        if (!btn) return;
-        btn.classList.add('disabled');
-        btn.disabled = true;
-      });
-      if (domElements.personalLinkInput) domElements.personalLinkInput.value = "Log in to get your link";
-      return;
+        domElements.rewardsTextEl.textContent = "Log in to start sharing & earn free prompts!";
+        domElements.referralStatusEl.textContent = "";
+        Object.values(domElements.shareTierButtons).forEach(btn => {
+            if (!btn) return;
+            btn.classList.add('disabled');
+            btn.disabled = true;
+        });
+        if (domElements.personalLinkInput) domElements.personalLinkInput.value = "Log in to get your link";
+        return;
     }
     const count = successfulReferralCount;
     let rewardText = "";
     let statusText = `You have successfully referred ${count} friend${count === 1 ? '' : 's'}.`;
     if (count >= MAX_REFERRALS_REWARDED) {
-      rewardText = "You've earned the maximum referral reward! 🎉";
-      statusText += " Thanks for sharing!";
+        rewardText = "You've earned the maximum referral reward! 🎉";
+        statusText += " Thanks for sharing!";
     } else if (count === 2) {
-      rewardText = `Refer one more friend to unlock +${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
+        rewardText = `Refer one more friend to unlock +${REFERRAL_PROMPTS_TIERS[3]} free prompts!`;
     } else if (count === 1) {
-      rewardText = `Refer ${MAX_REFERRALS_REWARDED - count} more friends for more rewards!`;
+        rewardText = `Refer ${MAX_REFERRALS_REWARDED - count} more friends for more rewards!`;
     } else {
-      rewardText = "Share with friends and earn free prompts!";
-      statusText = "Start sharing to track your progress.";
+        rewardText = "Share with friends and earn free prompts!";
+        statusText = "Start sharing to track your progress.";
     }
     domElements.rewardsTextEl.textContent = rewardText;
     domElements.referralStatusEl.textContent = statusText;
     Object.values(domElements.shareTierButtons).forEach(btn => {
-      if (!btn) return;
-      if (count >= MAX_REFERRALS_REWARDED) {
-        btn.classList.add('disabled');
-        btn.disabled = true;
-      } else {
-        btn.classList.remove('disabled');
-        btn.disabled = false;
-      }
+        if (!btn) return;
+        if (count >= MAX_REFERRALS_REWARDED) {
+            btn.classList.add('disabled');
+            btn.disabled = true;
+        } else {
+            btn.classList.remove('disabled');
+            btn.disabled = false;
+        }
     });
     if (domElements.personalLinkInput) domElements.personalLinkInput.value = personalReferralLink;
-  }
+}
 
-  function openAuthModal() {
+// Modal Management
+function openAuthModal() {
     domElements.authModal?.classList.remove('hidden');
     domElements.mainContent?.classList.add('blur-background');
     clearStatusMessage();
-  }
+}
 
-  function openSubscribeModal() {
+function openSubscribeModal() {
     domElements.subscribeModal?.classList.remove('hidden');
     domElements.mainContent?.classList.add('blur-background');
-  }
+}
 
-  function closeSubscribeModal() {
+function closeSubscribeModal() {
     domElements.subscribeModal?.classList.add('hidden');
     domElements.mainContent?.classList.remove('blur-background');
-  }
+}
 
-  function openShareModal() {
+function openShareModal() {
     if (!currentUser) {
-      showToast("Please log in to share.", true);
-      return;
+        showToast("Please log in to share.", true);
+        return;
     }
     domElements.shareModal?.classList.remove('hidden');
-  }
+}
 
-  function closeShareModal() {
+function closeShareModal() {
     domElements.shareModal?.classList.add('hidden');
-  }
+}
 
-  function showStatusMessage(msg, isError = false) {
+function showStatusMessage(msg, isError = false) {
     const el = domElements.authStatusMessage;
     if (!el) return;
     el.textContent = msg;
     el.className = `text-center text-sm mt-3 min-h-[1.2em] ${isError ? 'text-red-600' : 'text-green-600'}`;
-  }
+}
 
-  function clearStatusMessage() {
+function clearStatusMessage() {
     const el = domElements.authStatusMessage;
     if (!el) return;
     el.textContent = '';
     el.className = 'text-center text-sm mt-3 min-h-[1.2em]';
-  }
+}
 
-  function sendMagicLinkWithRecaptcha(email) {
-    console.log("Attempting to send magic link to:", email);
-    showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
-    clearStatusMessage();
-    auth.sendSignInLinkToEmail(email, ACTION_CODE_SETTINGS)
-      .then(() => {
-        console.log("Magic link sent successfully to:", email);
-        window.localStorage.setItem('emailForSignIn', email);
-        showStatusMessage(`Magic link sent to ${email}. Check your inbox and spam folder!`, false);
-        domElements.emailInput.value = '';
+// Authentication Actions
+function sendMagicLink(event) {
+  event.preventDefault();
+  const email = domElements.emailInput.value.trim();
+  if (!email) {
+    showStatusMessage("Please enter your email address.", true);
+    return;
+  }
+  
+  showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
+  clearStatusMessage();
+  
+  // Define actionCodeSettings as required by Firebase
+  const actionCodeSettings = {
+    // URL you want to redirect back to. Must be whitelisted in Firebase Console
+    url: window.location.href,
+    // This must be true for email link auth
+    handleCodeInApp: true
+  };
+
+  auth.sendSignInLinkToEmail(email, actionCodeSettings)
+    .then(() => {
+      // The link was successfully sent
+      window.localStorage.setItem('emailForSignIn', email);
+      showStatusMessage(`Magic link sent to ${email}. Please check your inbox (and spam folder)!`, false);
+      domElements.emailInput.value = '';
+      showToast("Authentication email sent! Check your inbox.", false);
+    })
+    .catch((error) => {
+      console.error("Error sending magic link:", error);
+      let message = "Failed to send magic link. Please try again.";
+      if (error.code === 'auth/invalid-email') {
+        message = "Invalid email address.";
+      } else if (error.code === 'auth/too-many-requests') {
+        message = "Too many requests. Please try again later.";
+      } else if (error.code === 'auth/missing-continue-uri') {
+        message = "Invalid configuration. Please contact support.";
+      } else if (error.code === 'auth/unauthorized-continue-uri') {
+        message = "Domain not authorized. Please contact support.";
+      } else if (error.code === 'auth/operation-not-allowed') {
+        message = "Email/password sign-in is not enabled. Please contact support.";
+      }
+      showStatusMessage(message, true);
+    })
+    .finally(() => {
+      showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
+    });
+}
+
+function handleMagicLinkSignIn() {
+  if (auth.isSignInWithEmailLink(window.location.href)) {
+    let email = window.localStorage.getItem('emailForSignIn');
+    
+    if (!email) {
+      // User opened the link on a different device
+      email = window.prompt("Please provide your email for confirmation");
+      if (!email) return; // User cancelled the prompt
+    }
+    
+    showToast("Signing you in...", false);
+    
+    auth.signInWithEmailLink(email, window.location.href)
+      .then((result) => {
+        console.log("Signed in with email link successfully");
+        window.localStorage.removeItem('emailForSignIn');
+        
+        // Clear the URL parameters to prevent issues with future sign-ins
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
+        domElements.authModal?.classList.add('hidden');
+        domElements.mainContent?.classList.remove('blur-background');
+        showToast("Welcome! You're now signed in.");
       })
       .catch((error) => {
-        console.error("Error sending magic link:", error);
-        let message = "Failed to send magic link. Please try again.";
-        if (error.code === 'auth/invalid-email') {
-          message = "Invalid email address.";
-        } else if (error.code === 'auth/too-many-requests') {
-          message = "We've reached our daily limit for sending magic links. Please try again tomorrow or contact support.";
-        } else if (error.code === 'auth/missing-continue-uri') {
-          message = "Invalid configuration. Please contact support.";
-        } else if (error.code === 'auth/unauthorized-continue-uri') {
-          message = "Domain not authorized. Please contact support.";
-        } else if (error.code === 'auth/captcha-check-failed') {
-          message = "Failed to verify reCAPTCHA. Please refresh the page.";
-        } else if (error.code === 'auth/network-request-failed') {
-          message = "Network error. Please check your connection and try again.";
+        console.error("Error signing in with email link:", error);
+        let message = "Error signing in. Please try again.";
+        if (error.code === 'auth/expired-action-code') {
+          message = "The sign-in link has expired. Please request a new one.";
+        } else if (error.code === 'auth/invalid-action-code') {
+          message = "Invalid sign-in link. Please request a new one.";
+        } else if (error.code === 'auth/invalid-email') {
+          message = "Invalid email. Please check and try again.";
         }
         showStatusMessage(message, true);
-      })
-      .finally(() => {
-        showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
-        if (window.recaptchaVerifier) {
-          window.recaptchaVerifier.clear();
-          window.recaptchaVerifier = null;
-          setupRecaptcha();
-        }
+        showToast(message, true);
+        window.localStorage.removeItem('emailForSignIn');
       });
   }
+}
 
-  function handleMagicLinkSignIn() {
-    if (auth.isSignInWithEmailLink(window.location.href)) {
-      let email = window.localStorage.getItem('emailForSignIn');
-      if (!email) {
-        showStatusMessage("Please enter your email to verify the link.", true);
-        domElements.emailInput.focus();
-        return;
-      }
-      showStatusMessage("Verifying your magic link...", false);
-      auth.signInWithEmailLink(email, window.location.href)
-        .then((result) => {
-          console.log("Signed in with email link successfully.");
-          window.localStorage.removeItem('emailForSignIn');
-          if (window.history && window.history.replaceState) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-          }
-          domElements.authModal?.classList.add('hidden');
-          domElements.mainContent?.classList.remove('blur-background');
-          showToast("Welcome! You're now signed in.");
+function logout() {
+    auth.signOut()
+        .then(() => {
+            console.log("User signed out successfully.");
+            showToast("You have been logged out.");
         })
         .catch((error) => {
-          console.error("Error signing in with email link:", error);
-          let message = "Error signing in. Please try again.";
-          if (error.code === 'auth/expired-action-code') {
-            message = "The sign-in link has expired. Request a new one.";
-          } else if (error.code === 'auth/invalid-action-code') {
-            message = "Invalid sign-in link. Request a new one.";
-          } else if (error.code === 'auth/invalid-email') {
-            message = "Invalid email. Please check and try again.";
-          }
-          showStatusMessage(message, true);
-          window.localStorage.removeItem('emailForSignIn');
+            console.error("Sign out error:", error);
+            showToast("Error logging out. Please try again.", true);
         });
-    }
-  }
+}
 
-  function logout() {
-    auth.signOut()
-      .then(() => {
-        console.log("User signed out successfully.");
-        showToast("You have been logged out.");
-      })
-      .catch((error) => {
-        console.error("Sign out error:", error);
-        showToast("Error logging out. Please try again.", true);
-      });
-  }
-
-  function addMessageToHistory(text, sender = 'user') {
+// Chat Functionality
+function addMessageToHistory(text, sender = 'user') {
     if (!domElements.chatContainer) return;
     const bubble = document.createElement('div');
     bubble.classList.add('chat-bubble');
@@ -1223,124 +1254,447 @@
     domElements.chatContainer.scrollTop = domElements.chatContainer.scrollHeight;
     domElements.conversationHistorySection?.classList.remove('hidden');
     domElements.restartBtn?.classList.remove('hidden');
-  }
+}
 
-  function saveMessage(userId, conversationId, text, sender) {
+function saveMessage(userId, conversationId, text, sender) {
     if (!userId || !conversationId) return Promise.reject("Missing user or conversation ID for saving message.");
     const chatRef = db.ref(`chats/${userId}/${conversationId}`);
     const newMessageRef = chatRef.push();
     const messageData = { text: text, sender: sender, timestamp: firebase.database.ServerValue.TIMESTAMP };
     return newMessageRef.set(messageData).then(() => {
-      const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-      localChat.push({ text, sender });
-      localStorage.setItem(LS_KEY_CHAT, JSON.stringify(localChat));
+        const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
+        localChat.push({ text, sender });
+        localStorage.setItem(LS_KEY_CHAT, JSON.stringify(localChat));
     });
-  }
+}
 
-  function sendMessage() {
-    const messageText = domElements.userInput.value.trim();
-    if (!messageText) return;
-    if (!currentUser || !currentUserId) {
-      return;
-    }
-    if (!isSubscribed && promptsLeft <= 0) {
-      openSubscribeModal();
-      showToast("Please subscribe to continue chatting.", true);
-      disableSendButton();
-      return;
-    }
-    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
-    addMessageToHistory(messageText, 'user');
-    if (!currentConversationId) {
-      currentConversationId = db.ref(`chats/${currentUserId}`).push().key;
-      updateUserData(currentUserId, { currentConversationId: currentConversationId, conversations: firebase.database.ServerValue.increment(1) })
-        .catch(err => console.error("Failed to update conversation ID/count:", err));
-    }
-    saveMessage(currentUserId, currentConversationId, messageText, 'user')
-      .catch(error => {
-        console.error("Failed to save user message:", error);
-        showToast("Error sending message. Please try again.", true);
-      });
-    const simulateApiCall = new Promise((resolve) => {
-      setTimeout(() => {
-        const responses = ["That's interesting! Tell me more.", "Okay, I see. What happened next?", "How did that make you feel?", "Hmm, let's think about that.", "Got it. What's on your mind now?", "Can you elaborate on that point?", "What are your thoughts on trying this approach...?"];
-        resolve(responses[Math.floor(Math.random() * responses.length)]);
-      }, 1500);
-    });
-    simulateApiCall.then(aiResponse => {
-      addMessageToHistory(aiResponse, 'assistant');
-      return saveMessage(currentUserId, currentConversationId, aiResponse, 'assistant');
-    })
-    .then(() => {
-      if (!isSubscribed) {
-        return db.ref(`users/${currentUserId}`).transaction(userData => {
-          if (userData) {
-            userData.promptsLeft = Math.max(0, (userData.promptsLeft || 0) - 1);
-            userData.promptsUsed = (userData.promptsUsed || 0) + 1;
-          }
-          return userData;
-        });
-      }
-      return Promise.resolve();
-    })
-    .then((result) => {
-      if (!isSubscribed && result && result.committed) {
-        promptsLeft = result.snapshot.val().promptsLeft;
-        promptsUsed = result.snapshot.val().promptsUsed;
-        updatePromptsUI();
-        checkSubscriptionStatus();
-        localStorage.setItem(LS_KEY_PROMPTS, promptsLeft);
-      }
-    })
+function sendMessage() {
+  const messageText = domElements.userInput.value.trim();
+  if (!messageText) return;
+  if (!currentUser || !currentUserId) {
+    return;
+  }
+  if (!isSubscribed && promptsLeft <= 0) {
+    openSubscribeModal();
+    showToast("Please subscribe to continue chatting.", true);
+    disableSendButton();
+    return;
+  }
+  
+  showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
+  addMessageToHistory(messageText, 'user');
+  
+  if (!currentConversationId) {
+    currentConversationId = db.ref(`chats/${currentUserId}`).push().key;
+    updateUserData(currentUserId, { currentConversationId: currentConversationId, conversations: firebase.database.ServerValue.increment(1) })
+      .catch(err => console.error("Failed to update conversation ID/count:", err));
+  }
+  
+  saveMessage(currentUserId, currentConversationId, messageText, 'user')
     .catch(error => {
-      console.error("Error processing/saving AI response or updating prompts:", error);
-      showToast("Error getting response. Please try again.", true);
-    })
-    .finally(() => {
-      showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
-      domElements.userInput.value = '';
-      domElements.userInput.focus();
+      console.error("Failed to save user message:", error);
+      showToast("Error sending message. Please try again.", true);
     });
-    console.log("TODO: Trigger D-ID avatar to speak:", "...");
-  }
+    
+  const simulateApiCall = new Promise((resolve) => {
+    setTimeout(() => {
+      const responses = ["That's interesting! Tell me more.", "Okay, I see. What happened next?", "How did that make you feel?", "Hmm, let's think about that.", "Got it. What's on your mind now?", "Can you elaborate on that point?", "What are your thoughts on trying this approach...?"];
+      resolve(responses[Math.floor(Math.random() * responses.length)]);
+    }, 1500);
+  });
+  
+  simulateApiCall.then(aiResponse => {
+    addMessageToHistory(aiResponse, 'assistant');
+    return saveMessage(currentUserId, currentConversationId, aiResponse, 'assistant');
+  })
+  .then(() => {
+    if (!isSubscribed) {
+      // Decrement prompts locally first for immediate UI update
+      promptsLeft = Math.max(0, promptsLeft - 1);
+      promptsUsed++;
+      updatePromptsUI();
+      
+      // Then update in the database
+      return db.ref(`users/${currentUserId}`).update({
+        promptsLeft: promptsLeft,
+        promptsUsed: promptsUsed
+      });
+    }
+    return Promise.resolve();
+  })
+  .catch(error => {
+    console.error("Error processing/saving AI response or updating prompts:", error);
+    showToast("Error getting response. Please try again.", true);
+  })
+  .finally(() => {
+    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
+    domElements.userInput.value = '';
+    domElements.userInput.focus();
+    checkSubscriptionStatus();
+  });
+}
 
-  function restartConversation() {
+function restartConversation() {
     if (!currentUser || !currentUserId) return;
     console.log("Restarting conversation for user:", currentUserId);
     const newConversationId = db.ref(`chats/${currentUserId}`).push().key;
     updateUserData(currentUserId, { currentConversationId: newConversationId, conversations: firebase.database.ServerValue.increment(1) })
-      .then(() => {
-        currentConversationId = newConversationId;
-        if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
-        domElements.conversationHistorySection?.classList.add('hidden');
-        domElements.restartBtn?.classList.add('hidden');
-        localStorage.removeItem(LS_KEY_CHAT);
-        showToast("New conversation started.");
-        domElements.userInput.value = '';
-        domElements.userInput.focus();
-      })
-      .catch(error => {
-        console.error("Error restarting conversation:", error);
-        showToast("Could not restart conversation. Please try again.", true);
-      });
-  }
+        .then(() => {
+            currentConversationId = newConversationId;
+            if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
+            domElements.conversationHistorySection?.classList.add('hidden');
+            domElements.restartBtn?.classList.add('hidden');
+            localStorage.removeItem(LS_KEY_CHAT);
+            showToast("New conversation started.");
+            domElements.userInput.value = '';
+            domElements.userInput.focus();
+        })
+        .catch(error => {
+            console.error("Error restarting conversation:", error);
+            showToast("Could not restart conversation. Please try again.", true);
+        });
+}
 
-  let recognition = null;
-  function startDictation() {
+// Voice Input
+let recognition = null;
+function startDictation() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      showToast("Sorry, your browser doesn't support voice input.", true);
-      return;
+        showToast("Sorry, your browser doesn't support voice input.", true);
+        return;
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!recognition) {
-      recognition = new SpeechRecognition();
-      recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-      recognition.onstart = () => {
-        recognition.isListening = true;
-        domElements.micButtonIcon?.classList.add('text-red-500', 'fa-beat');
-        showToast("Listening...", false, 2000);
-      };
-      recognition.onresult = (event) => {
-        if (domElements.userInput) domElements.userInput.value = event.results[0][0].transcript
+        recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        recognition.onstart = () => {
+            recognition.isListening = true;
+            domElements.micButtonIcon?.classList.add('text-red-500', 'fa-beat');
+            showToast("Listening...", false, 2000);
+        };
+        recognition.onresult = (event) => {
+            if (domElements.userInput) domElements.userInput.value = event.results[0][0].transcript;
+        };
+        recognition.onspeechend = () => {
+            recognition.stop();
+        };
+        recognition.onend = () => {
+            recognition.isListening = false;
+            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+        };
+        recognition.onerror = (event) => {
+            let errorMsg = "Voice recognition error.";
+            if (event.error === 'no-speech') errorMsg = "No speech detected.";
+            else if (event.error === 'audio-capture') errorMsg = "Microphone error.";
+            else if (event.error === 'not-allowed') errorMsg = "Permission denied.";
+            showToast(errorMsg, true);
+            recognition.isListening = false;
+            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+        };
+    }
+    if (recognition.isListening) {
+        recognition.stop();
+    } else {
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error("Failed to start SpeechRecognition:", error);
+            showToast("Could not start voice input.", true);
+            recognition.isListening = false;
+            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+        }
+    }
+}
+
+// Share Functionality
+function shareVia(channel) {
+    if (!currentUser) {
+        showToast("Please log in first to share.", true);
+        return;
+    }
+    if (!personalReferralLink) {
+        showToast("Could not generate your referral link.", true);
+        return;
+    }
+    const url = encodeURIComponent(personalReferralLink);
+    const text = encodeURIComponent("Check out IZZY – the AI conversation coach that helps build real confidence!");
+    let shareURL = "#";
+    switch (channel) {
+        case 'whatsapp':
+            shareURL = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            break;
+        case 'email':
+            shareURL = `mailto:?subject=Try%20IZZY%20-%20AI%20Conversation%20Coach&body=${text}%0A%0A${url}`;
+            break;
+        case 'facebook':
+            shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
+            break;
+        case 'twitter':
+            shareURL = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            break;
+        case 'reddit':
+            shareURL = `https://www.reddit.com/submit?url=${url}&title=${encodeURIComponent("Try IZZY - AI Conversation Coach")}`;
+            break;
+        default:
+            console.warn("Unknown share channel:", channel);
+            return;
+    }
+    window.open(shareURL, '_blank');
+    db.ref(`shareAttempts/${currentUserId}`).push({ channel: channel, timestamp: firebase.database.ServerValue.TIMESTAMP });
+    showToast("Sharing link opened!", false);
+}
+
+function copyReferralLink() {
+    if (!domElements.personalLinkInput) return;
+    try {
+        domElements.personalLinkInput.select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(domElements.personalLinkInput.value)
+                .then(() => showToast("Link copied to clipboard!", false))
+                .catch(err => {
+                    document.execCommand('copy');
+                    showToast("Link copied (fallback method)!", false);
+                });
+        } else {
+            document.execCommand('copy');
+            showToast("Link copied (fallback method)!", false);
+        }
+    } catch (err) {
+        console.error('Failed to copy link:', err);
+        showToast("Could not copy link.", true);
+    }
+    window.getSelection()?.removeAllRanges();
+}
+
+// Utility Functions
+let toastTimeout;
+function showToast(message, isError = false, duration = 3000) {
+    clearTimeout(toastTimeout);
+    if (!domElements.toast) return;
+    domElements.toast.textContent = message;
+    domElements.toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 z-[120] ${isError ? 'bg-red-600 text-white' : 'bg-gray-800 text-white'}`;
+    requestAnimationFrame(() => {
+        domElements.toast.classList.remove('translate-y-full', 'opacity-0');
+        domElements.toast.classList.add('translate-y-0', 'opacity-100');
+    });
+    toastTimeout = setTimeout(() => {
+        domElements.toast.classList.remove('translate-y-0', 'opacity-100');
+        domElements.toast.classList.add('translate-y-full', 'opacity-0');
+    }, duration);
+}
+
+function usePrompt(promptText) {
+    if (domElements.userInput) {
+        domElements.userInput.value = promptText;
+        domElements.userInput.focus();
+    }
+}
+
+function disableSendButton() {
+    if (!domElements.sendButton) return;
+    domElements.sendButton.disabled = true;
+    domElements.sendButton.classList.add('opacity-50', 'cursor-not-allowed');
+}
+
+function enableSendButton() {
+    if (!domElements.sendButton) return;
+    domElements.sendButton.disabled = false;
+    domElements.sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
+}
+
+function setupRecaptcha() {
+    if (!window.recaptchaLoaded) {
+        console.error("reCAPTCHA script not loaded yet");
+        showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+        domElements.emailSubmitBtn.disabled = false;
+        domElements.emailButtonText.textContent = "Send Magic Link";
+        return;
+    }
+    if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+    }
+    try {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+                console.log("reCAPTCHA solved:", response);
+            },
+            'expired-callback': () => {
+                console.log("reCAPTCHA expired");
+                window.recaptchaVerifier = null;
+                setupRecaptcha();
+            }
+        });
+        window.recaptchaVerifier.render().then(widgetId => {
+            console.log("reCAPTCHA rendered, widget ID:", widgetId);
+            domElements.emailSubmitBtn.disabled = false;
+            domElements.emailButtonText.textContent = "Send Magic Link";
+        }).catch(error => {
+            console.error("reCAPTCHA render error:", error, "Code:", error.code, "Message:", error.message);
+            showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+            domElements.emailSubmitBtn.disabled = false;
+            domElements.emailButtonText.textContent = "Send Magic Link";
+        });
+    } catch (error) {
+        console.error("Error setting up reCAPTCHA:", error);
+        showStatusMessage("Please try again in a moment.", true);
+        domElements.emailSubmitBtn.disabled = false;
+        domElements.emailButtonText.textContent = "Send Magic Link";
+    }
+}
+       
+function sendMagicLink(event) {
+    event.preventDefault();
+    const email = domElements.emailInput.value.trim();
+    if (!email) {
+        showStatusMessage("Please enter your email address.", true);
+        return;
+    }
+    if (!window.recaptchaVerifier) {
+        setupRecaptcha();
+    } else {
+        sendMagicLinkWithRecaptcha(email);
+    }
+}
+        window.recaptchaVerifier.render().then(widgetId => {
+    console.log("reCAPTCHA rendered, widget ID:", widgetId);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
+}).catch(error => {
+    console.error("reCAPTCHA render error:", error, "Code:", error.code, "Message:", error.message);
+    showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
+});
+
+function sendMagicLink(event) {
+    event.preventDefault();
+    const email = domElements.emailInput.value.trim();
+    if (!email) {
+        showStatusMessage("Please enter your email address.", true);
+        return;
+    }
+    if (!window.recaptchaVerifier) {
+        setupRecaptcha();
+    } else {
+        sendMagicLinkWithRecaptcha(email);
+    }
+}
+
+// Event Listeners
+function addEventListeners() {
+    domElements.emailForm?.addEventListener('submit', sendMagicLink);
+    domElements.logoutButton?.addEventListener('click', logout);
+    domElements.mobileLogoutButton?.addEventListener('click', () => {
+        logout();
+        closeMobileMenu();
+    });
+    domElements.sendButton?.addEventListener('click', sendMessage);
+    domElements.restartBtn?.addEventListener('click', restartConversation);
+    domElements.userInput?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+    domElements.micButtonIcon?.parentElement.addEventListener('click', startDictation);
+    domElements.mobileMenuButton?.addEventListener('click', toggleMobileMenu);
+    domElements.closeMobileMenuButton?.addEventListener('click', closeMobileMenu);
+    domElements.mobileMenuLinks?.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (link.getAttribute('href')?.startsWith('#') || link.tagName === 'BUTTON') {
+                closeMobileMenu();
+            }
+        });
+    });
+    domElements.subscribeModal?.addEventListener('click', (e) => {
+        if (e.target === domElements.subscribeModal) closeSubscribeModal();
+    });
+    domElements.shareModal?.addEventListener('click', (e) => {
+        if (e.target === domElements.shareModal) closeShareModal();
+    });
+    domElements.personalLinkInput?.addEventListener('click', copyReferralLink);
+    Object.values(domElements.shareTierButtons).forEach(button => {
+        if (button) button.addEventListener('click', openShareModal);
+    });
+    Object.entries(domElements).forEach(([key, el]) => {
+        if (!el) console.warn(`Missing DOM element for ${key}`);
+    });
+    document.getElementById('promptCoffee')?.addEventListener('click', () => usePrompt('Hi, I noticed you at the coffee shop'));
+    document.getElementById('promptIntro')?.addEventListener('click', () => usePrompt('Excuse me, I just wanted to introduce myself'));
+    document.getElementById('promptCompliment')?.addEventListener('click', () => usePrompt('I like your style, where did you get that?'));
+    const mainSubButtons = document.querySelectorAll('#subscribe .plan-card a[target="_blank"]');
+    mainSubButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            if (!currentUser) {
+                e.preventDefault();
+                showToast("Please log in before subscribing.", true);
+            } else {
+                console.log("Proceeding to subscription:", button.href);
+            }
+        });
+    });
+}
+
+// Mobile Menu Logic
+function toggleMobileMenu() {
+    const isOpen = domElements.mobileMenu.classList.contains('open');
+    if (isOpen) closeMobileMenu();
+    else openMobileMenu();
+}
+
+function openMobileMenu() {
+    if (domElements.mobileMenu) domElements.mobileMenu.classList.add('open');
+    domElements.mobileMenuButton?.setAttribute('aria-expanded', 'true');
+}
+
+function closeMobileMenu() {
+    if (domElements.mobileMenu) domElements.mobileMenu.classList.remove('open');
+    domElements.mobileMenuButton?.setAttribute('aria-expanded', 'false');
+}
+
+// Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    cacheDomElements();
+    
+    try {
+      firebase.initializeApp(firebaseConfig);
+      console.log("Firebase Initialized");
+      
+      // Initialize auth and db right after app initialization
+      const auth = firebase.auth();
+      const db = firebase.database();
+      
+      // Enable the submit button
+      if (domElements.emailSubmitBtn) {
+        domElements.emailSubmitBtn.disabled = false;
+        domElements.emailButtonText.textContent = "Send Magic Link";
+      }
+    } catch (e) {
+      console.error("Firebase initialization failed:", e);
+      showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
+    }
+    
+    handleMagicLinkSignIn();
+    addEventListeners();
+    handleReferralVisit();
+});
+
+// Microphone Permission
+function requestMicPermission() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            stream.getTracks().forEach(t => t.stop());
+            console.log("Microphone permission granted");
+        })
+        .catch(err => {
+            console.warn("Mic permission denied:", err);
+        });
+}
+document.addEventListener('DOMContentLoaded', requestMicPermission);
+</script>
+</body>
+</html>

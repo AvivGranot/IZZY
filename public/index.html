@@ -322,7 +322,7 @@
     <a href="#practice" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Practice</a>
     <a href="#subscribe" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Subscribe</a> <a href="#share" class="text-izzy-blue font-semibold text-lg hover:text-izzy-purple-600 mobile-menu-link">Share</a> <hr class="border-gray-200 my-4"> <button id="mobile-logoutButton" class="text-red-500 font-semibold text-lg hover:text-red-700 hidden mobile-menu-link">Logout</button>
   </nav>
-  <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=onRecaptchaLoad" async defer></script>
 </div>
 
 <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 px-6 py-4 desktop-nav items-center"> 
@@ -1139,310 +1139,214 @@ function clearStatusMessage() {
     el.className = 'text-center text-sm mt-3 min-h-[1.2em]';
 }
 
-// Authentication Actions
-function sendMagicLink(event) {
-  event.preventDefault();
-  const email = domElements.emailInput.value.trim();
-  if (!email) {
-    showStatusMessage("Please enter your email address.", true);
-    return;
-  }
-  
-  showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
-  clearStatusMessage();
-  
-  // Define actionCodeSettings as required by Firebase
-  const actionCodeSettings = {
-    // URL you want to redirect back to. Must be whitelisted in Firebase Console
-    url: window.location.href,
-    // This must be true for email link auth
-    handleCodeInApp: true
-  };
+function sendMagicLinkWithRecaptcha(email) {
+    // Validate email before attempting to send
+    if (!email || !validateEmail(email)) {
+        showStatusMessage("Please enter a valid email address.", true);
+        return;
+    }
 
-  auth.sendSignInLinkToEmail(email, actionCodeSettings)
-    .then(() => {
-      // The link was successfully sent
-      window.localStorage.setItem('emailForSignIn', email);
-      showStatusMessage(`Magic link sent to ${email}. Please check your inbox (and spam folder)!`, false);
-      domElements.emailInput.value = '';
-      showToast("Authentication email sent! Check your inbox.", false);
-    })
-    .catch((error) => {
-      console.error("Error sending magic link:", error);
-      let message = "Failed to send magic link. Please try again.";
-      if (error.code === 'auth/invalid-email') {
-        message = "Invalid email address.";
-      } else if (error.code === 'auth/too-many-requests') {
-        message = "Too many requests. Please try again later.";
-      } else if (error.code === 'auth/missing-continue-uri') {
-        message = "Invalid configuration. Please contact support.";
-      } else if (error.code === 'auth/unauthorized-continue-uri') {
-        message = "Domain not authorized. Please contact support.";
-      } else if (error.code === 'auth/operation-not-allowed') {
-        message = "Email/password sign-in is not enabled. Please contact support.";
-      }
-      showStatusMessage(message, true);
-    })
-    .finally(() => {
-      showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
-    });
-}
-
-function handleMagicLinkSignIn() {
-  if (auth.isSignInWithEmailLink(window.location.href)) {
-    let email = window.localStorage.getItem('emailForSignIn');
+    showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
+    clearStatusMessage();
     
-    if (!email) {
-      // User opened the link on a different device
-      email = window.prompt("Please provide your email for confirmation");
-      if (!email) return; // User cancelled the prompt
+    // Make sure recaptcha is set up properly
+    if (!window.recaptchaVerifier) {
+        setupRecaptcha();
     }
     
-    showToast("Signing you in...", false);
+    // Show immediate feedback that we're processing
+    showStatusMessage(`Sending magic link to ${email}...`, false);
     
-    auth.signInWithEmailLink(email, window.location.href)
-      .then((result) => {
-        console.log("Signed in with email link successfully");
-        window.localStorage.removeItem('emailForSignIn');
-        
-        // Clear the URL parameters to prevent issues with future sign-ins
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
-        
-        domElements.authModal?.classList.add('hidden');
-        domElements.mainContent?.classList.remove('blur-background');
-        showToast("Welcome! You're now signed in.");
-      })
-      .catch((error) => {
-        console.error("Error signing in with email link:", error);
-        let message = "Error signing in. Please try again.";
-        if (error.code === 'auth/expired-action-code') {
-          message = "The sign-in link has expired. Please request a new one.";
-        } else if (error.code === 'auth/invalid-action-code') {
-          message = "Invalid sign-in link. Please request a new one.";
-        } else if (error.code === 'auth/invalid-email') {
-          message = "Invalid email. Please check and try again.";
-        }
-        showStatusMessage(message, true);
-        showToast(message, true);
-        window.localStorage.removeItem('emailForSignIn');
-      });
-  }
-}
-
-function logout() {
-    auth.signOut()
+    auth.sendSignInLinkToEmail(email, ACTION_CODE_SETTINGS)
         .then(() => {
-            console.log("User signed out successfully.");
-            showToast("You have been logged out.");
+            window.localStorage.setItem('emailForSignIn', email);
+            
+            // Enhanced success message with clear instructions
+            showStatusMessage(`
+                <div class="success-message">
+                    <p><strong>Magic link sent to ${email}!</strong></p>
+                    <p>Please check your inbox and spam folder.</p>
+                    <p>The link will expire in 15 minutes.</p>
+                </div>
+            `, false);
+            
+            // Clear input field on success
+            domElements.emailInput.value = '';
+            
+            // Show toast notification as additional confirmation
+            showToast("Email sent successfully! Check your inbox.", false);
         })
         .catch((error) => {
-            console.error("Sign out error:", error);
-            showToast("Error logging out. Please try again.", true);
-        });
-}
-
-// Chat Functionality
-function addMessageToHistory(text, sender = 'user') {
-    if (!domElements.chatContainer) return;
-    const bubble = document.createElement('div');
-    bubble.classList.add('chat-bubble');
-    bubble.classList.add(sender === 'user' ? 'user-bubble' : 'assistant-bubble');
-    bubble.textContent = text;
-    domElements.chatContainer.appendChild(bubble);
-    domElements.chatContainer.scrollTop = domElements.chatContainer.scrollHeight;
-    domElements.conversationHistorySection?.classList.remove('hidden');
-    domElements.restartBtn?.classList.remove('hidden');
-}
-
-function saveMessage(userId, conversationId, text, sender) {
-    if (!userId || !conversationId) return Promise.reject("Missing user or conversation ID for saving message.");
-    const chatRef = db.ref(`chats/${userId}/${conversationId}`);
-    const newMessageRef = chatRef.push();
-    const messageData = { text: text, sender: sender, timestamp: firebase.database.ServerValue.TIMESTAMP };
-    return newMessageRef.set(messageData).then(() => {
-        const localChat = JSON.parse(localStorage.getItem(LS_KEY_CHAT) || '[]');
-        localChat.push({ text, sender });
-        localStorage.setItem(LS_KEY_CHAT, JSON.stringify(localChat));
-    });
-}
-
-function sendMessage() {
-  const messageText = domElements.userInput.value.trim();
-  if (!messageText) return;
-  if (!currentUser || !currentUserId) {
-    return;
-  }
-  if (!isSubscribed && promptsLeft <= 0) {
-    openSubscribeModal();
-    showToast("Please subscribe to continue chatting.", true);
-    disableSendButton();
-    return;
-  }
-  
-  showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
-  addMessageToHistory(messageText, 'user');
-  
-  if (!currentConversationId) {
-    currentConversationId = db.ref(`chats/${currentUserId}`).push().key;
-    updateUserData(currentUserId, { currentConversationId: currentConversationId, conversations: firebase.database.ServerValue.increment(1) })
-      .catch(err => console.error("Failed to update conversation ID/count:", err));
-  }
-  
-  saveMessage(currentUserId, currentConversationId, messageText, 'user')
-    .catch(error => {
-      console.error("Failed to save user message:", error);
-      showToast("Error sending message. Please try again.", true);
-    });
-    
-  const simulateApiCall = new Promise((resolve) => {
-    setTimeout(() => {
-      const responses = ["That's interesting! Tell me more.", "Okay, I see. What happened next?", "How did that make you feel?", "Hmm, let's think about that.", "Got it. What's on your mind now?", "Can you elaborate on that point?", "What are your thoughts on trying this approach...?"];
-      resolve(responses[Math.floor(Math.random() * responses.length)]);
-    }, 1500);
-  });
-  
-  simulateApiCall.then(aiResponse => {
-    addMessageToHistory(aiResponse, 'assistant');
-    return saveMessage(currentUserId, currentConversationId, aiResponse, 'assistant');
-  })
-  .then(() => {
-    if (!isSubscribed) {
-      // Decrement prompts locally first for immediate UI update
-      promptsLeft = Math.max(0, promptsLeft - 1);
-      promptsUsed++;
-      updatePromptsUI();
-      
-      // Then update in the database
-      return db.ref(`users/${currentUserId}`).update({
-        promptsLeft: promptsLeft,
-        promptsUsed: promptsUsed
-      });
-    }
-    return Promise.resolve();
-  })
-  .catch(error => {
-    console.error("Error processing/saving AI response or updating prompts:", error);
-    showToast("Error getting response. Please try again.", true);
-  })
-  .finally(() => {
-    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
-    domElements.userInput.value = '';
-    domElements.userInput.focus();
-    checkSubscriptionStatus();
-  });
-}
-
-function restartConversation() {
-    if (!currentUser || !currentUserId) return;
-    console.log("Restarting conversation for user:", currentUserId);
-    const newConversationId = db.ref(`chats/${currentUserId}`).push().key;
-    updateUserData(currentUserId, { currentConversationId: newConversationId, conversations: firebase.database.ServerValue.increment(1) })
-        .then(() => {
-            currentConversationId = newConversationId;
-            if (domElements.chatContainer) domElements.chatContainer.innerHTML = '';
-            domElements.conversationHistorySection?.classList.add('hidden');
-            domElements.restartBtn?.classList.add('hidden');
-            localStorage.removeItem(LS_KEY_CHAT);
-            showToast("New conversation started.");
-            domElements.userInput.value = '';
-            domElements.userInput.focus();
+            console.error("Error sending magic link:", error);
+            let message = "Failed to send magic link. Please try again.";
+            
+            // More comprehensive error handling
+            if (error.code === 'auth/invalid-email') {
+                message = "Invalid email address. Please check and try again.";
+            } else if (error.code === 'auth/too-many-requests') {
+                message = "We've reached our daily limit for sending magic links. Please try again tomorrow or contact support.";
+            } else if (error.code === 'auth/missing-continue-uri' || error.code === 'auth/unauthorized-continue-uri') {
+                message = "Authentication configuration error. Please contact support with error code: " + error.code;
+                // Log this critical error for immediate attention
+                logConfigError(error);
+            } else if (error.code === 'auth/captcha-check-failed') {
+                message = "Failed to verify reCAPTCHA. Please refresh the page and try again.";
+            } else if (error.code === 'auth/network-request-failed') {
+                message = "Network error. Please check your connection and try again.";
+            } else if (error.code === 'auth/operation-not-allowed') {
+                message = "Email/password accounts are not enabled. Please contact support.";
+            } else if (error.code === 'auth/invalid-sender') {
+                message = "Invalid email sender configuration. Please contact support.";
+            }
+            
+            showStatusMessage(message, true);
+            showToast("Error sending email. " + message, true);
         })
-        .catch(error => {
-            console.error("Error restarting conversation:", error);
-            showToast("Could not restart conversation. Please try again.", true);
+        .finally(() => {
+            showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, false);
+            
+            // Reset and re-setup recaptcha
+            if (window.recaptchaVerifier) {
+                window.recaptchaVerifier.clear();
+                window.recaptchaVerifier = null;
+                setupRecaptcha();
+            }
         });
 }
 
-// Voice Input
-let recognition = null;
-function startDictation() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        showToast("Sorry, your browser doesn't support voice input.", true);
-        return;
-    }
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!recognition) {
-        recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-        recognition.onstart = () => {
-            recognition.isListening = true;
-            domElements.micButtonIcon?.classList.add('text-red-500', 'fa-beat');
-            showToast("Listening...", false, 2000);
-        };
-        recognition.onresult = (event) => {
-            if (domElements.userInput) domElements.userInput.value = event.results[0][0].transcript;
-        };
-        recognition.onspeechend = () => {
-            recognition.stop();
-        };
-        recognition.onend = () => {
-            recognition.isListening = false;
-            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
-        };
-        recognition.onerror = (event) => {
-            let errorMsg = "Voice recognition error.";
-            if (event.error === 'no-speech') errorMsg = "No speech detected.";
-            else if (event.error === 'audio-capture') errorMsg = "Microphone error.";
-            else if (event.error === 'not-allowed') errorMsg = "Permission denied.";
-            showToast(errorMsg, true);
-            recognition.isListening = false;
-            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
-        };
-    }
-    if (recognition.isListening) {
-        recognition.stop();
-    } else {
-        try {
-            recognition.start();
-        } catch (error) {
-            console.error("Failed to start SpeechRecognition:", error);
-            showToast("Could not start voice input.", true);
-            recognition.isListening = false;
-            domElements.micButtonIcon?.classList.remove('text-red-500', 'fa-beat');
+// Add email validation function
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+}
+
+// Log critical configuration errors
+function logConfigError(error) {
+    // You can implement this to log to your server or a monitoring service
+    console.error("CRITICAL AUTH CONFIG ERROR:", error);
+    // Example: send to server endpoint
+    // fetch('/api/log-error', { method: 'POST', body: JSON.stringify({ error }) });
+}
+
+// Function to handle magic link sign-in with improved feedback
+function handleMagicLinkSignIn() {
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+        let email = window.localStorage.getItem('emailForSignIn');
+        
+        if (!email) {
+            // Create a form to collect email if not in localStorage
+            showEmailVerificationForm();
+            return;
         }
+        
+        // Show processing state
+        showStatusMessage("Verifying your magic link...", false);
+        showButtonLoading(domElements.verifyLinkBtn, domElements.verifyLinkText, domElements.verifyLinkSpinner, true);
+        
+        auth.signInWithEmailLink(email, window.location.href)
+            .then((result) => {
+                console.log("Signed in with email link successfully.");
+                window.localStorage.removeItem('emailForSignIn');
+                
+                // Clean up URL parameters for security and aesthetics
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+                
+                // Hide auth modal
+                domElements.authModal?.classList.add('hidden');
+                domElements.mainContent?.classList.remove('blur-background');
+                
+                // Show success message
+                showToast("Welcome to Claude! You're now signed in.", false);
+                
+                // Optional: Redirect user or update UI state
+                updateUIForLoggedInUser(result.user);
+            })
+            .catch((error) => {
+                console.error("Error signing in with email link:", error);
+                let message = "Error signing in. Please try again.";
+                
+                if (error.code === 'auth/expired-action-code') {
+                    message = "The sign-in link has expired. Please request a new one.";
+                } else if (error.code === 'auth/invalid-action-code') {
+                    message = "Invalid sign-in link. Please request a new one.";
+                } else if (error.code === 'auth/invalid-email') {
+                    message = "Invalid email. Please check and try again.";
+                } else if (error.code === 'auth/user-disabled') {
+                    message = "This account has been disabled. Please contact support.";
+                }
+                
+                showStatusMessage(message, true);
+                window.localStorage.removeItem('emailForSignIn');
+            })
+            .finally(() => {
+                showButtonLoading(domElements.verifyLinkBtn, domElements.verifyLinkText, domElements.verifyLinkSpinner, false);
+            });
     }
 }
 
-// Share Functionality
-function shareVia(channel) {
-    if (!currentUser) {
-        showToast("Please log in first to share.", true);
-        return;
+// Function to display email verification form when localStorage email is missing
+function showEmailVerificationForm() {
+    // This assumes you have a container element for this verification form
+    const formHTML = `
+        <div class="email-verification-form">
+            <h3>Complete Sign-In</h3>
+            <p>Please enter the email address you used to request the magic link:</p>
+            <input type="email" id="verification-email" placeholder="Your email address" class="form-input">
+            <button id="verify-link-btn" class="btn btn-primary mt-3">
+                <span id="verify-link-text">Complete Sign-In</span>
+                <span id="verify-link-spinner" class="hidden spinner-border"></span>
+            </button>
+        </div>
+    `;
+    
+    if (domElements.verificationFormContainer) {
+        domElements.verificationFormContainer.innerHTML = formHTML;
+        domElements.verificationFormContainer.classList.remove('hidden');
+        
+        // Update domElements to include new form elements
+        domElements.verifyLinkBtn = document.getElementById('verify-link-btn');
+        domElements.verifyLinkText = document.getElementById('verify-link-text');
+        domElements.verifyLinkSpinner = document.getElementById('verify-link-spinner');
+        
+        const verificationEmailInput = document.getElementById('verification-email');
+        
+        // Add event listener for the verify button
+        domElements.verifyLinkBtn?.addEventListener('click', () => {
+            const enteredEmail = verificationEmailInput.value.trim();
+            if (validateEmail(enteredEmail)) {
+                // Store email and try sign-in again
+                window.localStorage.setItem('emailForSignIn', enteredEmail);
+                handleMagicLinkSignIn();
+            } else {
+                showStatusMessage("Please enter a valid email address.", true);
+            }
+        });
+    } else {
+        showStatusMessage("Please enter your email to verify the link.", true);
     }
-    if (!personalReferralLink) {
-        showToast("Could not generate your referral link.", true);
-        return;
+}
+
+// Optional function to update UI after successful login
+function updateUIForLoggedInUser(user) {
+    // Update any UI elements that should change when user is logged in
+    if (domElements.userProfileSection) {
+        domElements.userProfileSection.classList.remove('hidden');
     }
-    const url = encodeURIComponent(personalReferralLink);
-    const text = encodeURIComponent("Check out IZZY – the AI conversation coach that helps build real confidence!");
-    let shareURL = "#";
-    switch (channel) {
-        case 'whatsapp':
-            shareURL = `https://api.whatsapp.com/send?text=${text}%20${url}`;
-            break;
-        case 'email':
-            shareURL = `mailto:?subject=Try%20IZZY%20-%20AI%20Conversation%20Coach&body=${text}%0A%0A${url}`;
-            break;
-        case 'facebook':
-            shareURL = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
-            break;
-        case 'twitter':
-            shareURL = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-            break;
-        case 'reddit':
-            shareURL = `https://www.reddit.com/submit?url=${url}&title=${encodeURIComponent("Try IZZY - AI Conversation Coach")}`;
-            break;
-        default:
-            console.warn("Unknown share channel:", channel);
-            return;
+    
+    if (domElements.loginBtn) {
+        domElements.loginBtn.classList.add('hidden');
     }
-    window.open(shareURL, '_blank');
-    db.ref(`shareAttempts/${currentUserId}`).push({ channel: channel, timestamp: firebase.database.ServerValue.TIMESTAMP });
-    showToast("Sharing link opened!", false);
+    
+    if (domElements.logoutBtn) {
+        domElements.logoutBtn.classList.remove('hidden');
+    }
+    
+    // You might want to display the user's email or name
+    if (domElements.userDisplayName && user.email) {
+        domElements.userDisplayName.textContent = user.displayName || user.email.split('@')[0];
+    }
 }
 
 function copyReferralLink() {
@@ -1658,28 +1562,42 @@ function closeMobileMenu() {
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
     cacheDomElements();
-    
+    domElements.emailSubmitBtn.disabled = true;
+    domElements.emailButtonText.textContent = "Loading...";
     try {
-      firebase.initializeApp(firebaseConfig);
-      console.log("Firebase Initialized");
-      
-      // Initialize auth and db right after app initialization
-      const auth = firebase.auth();
-      const db = firebase.database();
-      
-      // Enable the submit button
-      if (domElements.emailSubmitBtn) {
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase Initialized");
+        } else {
+            firebase.app();
+            console.log("Firebase Already Initialized");
+        }
+    } catch (e) {
+        console.error("Firebase initialization failed:", e);
+        showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
         domElements.emailSubmitBtn.disabled = false;
         domElements.emailButtonText.textContent = "Send Magic Link";
-      }
-    } catch (e) {
-      console.error("Firebase initialization failed:", e);
-      showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
     }
-    
     handleMagicLinkSignIn();
     addEventListeners();
     handleReferralVisit();
+
+    // Add a timeout to handle reCAPTCHA load failure
+    const recaptchaLoadTimeout = setTimeout(() => {
+        if (!window.recaptchaLoaded) {
+            console.error("reCAPTCHA script failed to load within 10 seconds");
+            showStatusMessage("Failed to load reCAPTCHA. Please refresh the page.", true);
+            domElements.emailSubmitBtn.disabled = false;
+            domElements.emailButtonText.textContent = "Send Magic Link";
+        }
+    }, 10000); // 10 seconds timeout
+
+    // Clear the timeout if reCAPTCHA loads successfully
+    const originalOnRecaptchaLoad = window.onRecaptchaLoad;
+    window.onRecaptchaLoad = function() {
+        clearTimeout(recaptchaLoadTimeout);
+        originalOnRecaptchaLoad();
+    };
 });
 
 // Microphone Permission

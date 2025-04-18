@@ -1,8 +1,17 @@
 {
-  "dependencies": {
-    "axios": "^1.8.4",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0"
+  "name": "izzy",
+  "version": "1.0.0",
+  "description": "IZZY – AI Avatar for Real Conversations",
+  "main": "index.js",
+  "scripts": {
+    "build": "node node_modules/tailwindcss/lib/cli.js -i ./input.css -o ./dist/output.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.4.38",
+    "tailwindcss": "3.4.3"
   }
 }

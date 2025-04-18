@@ -13,8 +13,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IZZY – AI Avatar for Real Conversations</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
+  <link rel="stylesheet" href="output.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -175,27 +175,6 @@
 
   </style>
 
-  <script>
-    // Extend Tailwind theme with custom colors
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'izzy-blue': '#0047AB', // Custom blue
-            'izzy-purple': { // Custom purple shades
-              500: '#8B5CF6',
-              600: '#7C3AED',
-              700: '#6D28D9'
-            },
-            'izzy-pink': { // Custom pink shades
-              500: '#EC4899',
-              600: '#DB2777'
-            }
-          },
-        }
-      },
-    }
-  </script>
 </head>
 
 <body class="text-gray-900 antialiased"> <div id="authModal" class="fixed inset-0 z-[110] flex items-center justify-center bg-black bg-opacity-50 p-4">
@@ -672,63 +651,79 @@ class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-  // At the top of your <script> section, just after ACTION_CODE_SETTINGS
+// Define reCAPTCHA handler globally
 window.recaptchaLoaded = false;
-window.onRecaptchaLoad = function() {
-    console.log("reCAPTCHA script loaded");
-    window.recaptchaLoaded = true;
-    setupRecaptcha(); // Call setupRecaptcha only after the script loads
+window.onRecaptchaLoad = function () {
+  console.log("reCAPTCHA script loaded");
+  window.recaptchaLoaded = true;
+  setupRecaptcha();
 };
 
-// Firebase configuration - Replace with your actual Firebase config values
+// Firebase configuration for izzy-auth
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBlmM-6P2WHj59R5FAvFy6ZjIDA637f7p4",
+  authDomain: "izzy-auth.firebaseapp.com",
+  databaseURL: "https://izzy-auth-default-rtdb.firebaseio.com",
+  projectId: "izzy-auth",
+  storageBucket: "izzy-auth.firebasestorage.app",
+  messagingSenderId: "573135779043",
+  appId: "1:573135779043:web:f6c59473f9956c917041d6",
+  measurementId: "G-8JLKB2MMKS"
 };
 
-// DOM Elements - Declare these once all elements exist
+// DOM Elements
 let domElements = {};
-
-// Action code settings for email link
 const ACTION_CODE_SETTINGS = {
   url: window.location.origin + window.location.pathname,
   handleCodeInApp: true
 };
 
-// Initialize Firebase and all DOM references only after document is ready
+// Initialize everything on DOM load
 document.addEventListener('DOMContentLoaded', () => {
   console.log("Document ready, initializing application...");
   
-  // First, initialize Firebase before any other operations
+  // Initialize Firebase
   initializeFirebase();
   
-  // Then, initialize DOM references
+  // Initialize DOM elements
   initializeDOMElements();
   
   // Set up event listeners
   setupEventListeners();
   
-  // Check for pending email sign-in link
+  // Handle magic link sign-in
   handleMagicLinkSignIn();
+  
+  // Set up reCAPTCHA retry logic
+  let recaptchaAttempts = 0;
+  const maxRecaptchaAttempts = 3;
+  const recaptchaLoadTimeout = setTimeout(() => {
+    if (!window.recaptchaLoaded && recaptchaAttempts < maxRecaptchaAttempts) {
+      console.warn(`reCAPTCHA attempt ${recaptchaAttempts + 1} failed to load. Retrying...`);
+      recaptchaAttempts++;
+      const script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    } else if (!window.recaptchaLoaded) {
+      console.error('reCAPTCHA failed to load after multiple attempts');
+      showStatusMessage('Failed to load reCAPTCHA. Please refresh the page.', true);
+      domElements.emailSubmitBtn.disabled = false;
+      domElements.emailButtonText.textContent = 'Send Magic Link';
+    }
+  }, 10000);
 });
 
 // Initialize Firebase
 function initializeFirebase() {
   try {
-    // Initialize Firebase only if it hasn't been initialized
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
       console.log("Firebase initialized successfully");
     }
-    
-    // Initialize auth and database references
     window.auth = firebase.auth();
     window.db = firebase.database();
-    
     return true;
   } catch (error) {
     console.error("Firebase initialization error:", error);
@@ -737,112 +732,156 @@ function initializeFirebase() {
   }
 }
 
-// Initialize all DOM element references
+// Initialize DOM elements
 function initializeDOMElements() {
   domElements = {
-    // Auth related elements
-    authModal: document.getElementById('auth-modal'),
+    authModal: document.getElementById('authModal'),
     emailForm: document.getElementById('email-form'),
-    emailInput: document.getElementById('email-input'),
+    emailInput: document.getElementById('email'),
     emailSubmitBtn: document.getElementById('email-submit-btn'),
-    emailButtonText: document.getElementById('email-button-text'),
-    emailButtonSpinner: document.getElementById('email-spinner'),
-    statusMessage: document.getElementById('status-message'),
+    emailButtonText: document.querySelector('.email-btn-text'),
+    emailButtonSpinner: document.querySelector('#email-submit-btn .spinner'),
+    statusMessage: document.getElementById('auth-status-message'),
     recaptchaContainer: document.getElementById('recaptcha-container'),
-    mainContent: document.getElementById('main-content'),
-    
-    // Other UI elements
-    userInput: document.getElementById('user-input'),
-    sendButton: document.getElementById('send-button'),
-    sendButtonText: document.getElementById('send-button-text'),
-    sendButtonSpinner: document.getElementById('send-spinner'),
+    mainContent: document.getElementById('mainContent'),
+    userInput: document.getElementById('userInput'),
+    sendButton: document.getElementById('sendButton'),
+    sendButtonText: document.querySelector('.send-btn-text'),
+    sendButtonSpinner: document.querySelector('#sendButton .spinner'),
     chatContainer: document.getElementById('chat-container'),
     conversationHistorySection: document.getElementById('conversation-history'),
-    restartBtn: document.getElementById('restart-btn'),
-    micButtonIcon: document.getElementById('mic-button-icon'),
-    
-    // Profile elements
+    restartBtn: document.getElementById('restartBtn'),
+    micButtonIcon: document.querySelector('#micButton i'),
     userProfileSection: document.getElementById('user-profile'),
     userDisplayName: document.getElementById('user-display-name'),
     loginBtn: document.getElementById('login-btn'),
-    logoutBtn: document.getElementById('logout-btn')
+    logoutBtn: document.getElementById('logoutButton'),
+    mobileLogoutButton: document.getElementById('mobile-logoutButton'),
+    mobileMenuButton: document.getElementById('mobile-menu-button'),
+    closeMobileMenuButton: document.getElementById('close-mobile-menu'),
+    mobileMenu: document.getElementById('mobile-menu'),
+    mobileMenuLinks: document.querySelectorAll('.mobile-menu-link'),
+    subscribeModal: document.getElementById('subscribeModal'),
+    shareModal: document.getElementById('shareModal'),
+    personalLinkInput: document.getElementById('personalLink'),
+    shareTierButtons: {
+      tier1: document.getElementById('btnTier1'),
+      tier2: document.getElementById('btnTier2'),
+      tier3: document.getElementById('btnTier3')
+    },
+    verificationFormContainer: document.getElementById('verification-form-container'),
+    verifyLinkBtn: document.getElementById('verify-link-btn'),
+    verifyLinkText: document.getElementById('verify-link-text'),
+    verifyLinkSpinner: document.getElementById('verify-link-spinner'),
+    toast: document.getElementById('toast')
   };
-  
   console.log("DOM elements initialized");
 }
 
-// Set up all event listeners
+// Set up event listeners
 function setupEventListeners() {
-  // Email form submission
-  if (domElements.emailForm) {
-    domElements.emailForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = domElements.emailInput.value.trim();
-      sendMagicLinkWithRecaptcha(email);
-    });
-  }
-  
-  // Send button
-  if (domElements.sendButton) {
-    domElements.sendButton.addEventListener('click', sendMessage);
-  }
-  
-  // Restart conversation button
-  if (domElements.restartBtn) {
-    domElements.restartBtn.addEventListener('click', restartConversation);
-  }
-  
-  // User input field (Enter key to send)
-  if (domElements.userInput) {
-    domElements.userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
+  if (domElements.emailForm) domElements.emailForm.addEventListener('submit', sendMagicLink);
+  if (domElements.logoutButton) domElements.logoutButton.addEventListener('click', logout);
+  if (domElements.mobileLogoutButton) domElements.mobileLogoutButton.addEventListener('click', () => {
+    logout();
+    closeMobileMenu();
+  });
+  if (domElements.sendButton) domElements.sendButton.addEventListener('click', sendMessage);
+  if (domElements.restartBtn) domElements.restartBtn.addEventListener('click', restartConversation);
+  if (domElements.userInput) domElements.userInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+  if (domElements.micButtonIcon) domElements.micButtonIcon.parentElement.addEventListener('click', startDictation);
+  if (domElements.mobileMenuButton) domElements.mobileMenuButton.addEventListener('click', toggleMobileMenu);
+  if (domElements.closeMobileMenuButton) domElements.closeMobileMenuButton.addEventListener('click', closeMobileMenu);
+  if (domElements.mobileMenuLinks) domElements.mobileMenuLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      if (link.getAttribute('href')?.startsWith('#') || link.tagName === 'BUTTON') {
+        closeMobileMenu();
       }
     });
-  }
-  
-  // Logout button
-  if (domElements.logoutBtn) {
-    domElements.logoutBtn.addEventListener('click', logout);
-  }
-  
+  });
+  if (domElements.subscribeModal) domElements.subscribeModal.addEventListener('click', (e) => {
+    if (e.target === domElements.subscribeModal) closeSubscribeModal();
+  });
+  if (domElements.shareModal) domElements.shareModal.addEventListener('click', (e) => {
+    if (e.target === domElements.shareModal) closeShareModal();
+  });
+  if (domElements.personalLinkInput) domElements.personalLinkInput.addEventListener('click', copyReferralLink);
+  Object.values(domElements.shareTierButtons).forEach(button => {
+    if (button) button.addEventListener('click', openShareModal);
+  });
+  document.querySelectorAll('#subscribe .plan-card a[target="_blank"]').forEach(button => {
+    button.addEventListener('click', (e) => {
+      if (!window.currentUser) {
+        e.preventDefault();
+        showToast("Please log in before subscribing.", true);
+      } else {
+        console.log("Proceeding to subscription:", button.href);
+      }
+    });
+  });
   console.log("Event listeners set up");
 }
 
-// Set up reCAPTCHA - called after the script loads
-window.onRecaptchaLoad = function() {
-  console.log("reCAPTCHA script loaded");
-  setupRecaptcha();
-};
-
 // Setup reCAPTCHA
 function setupRecaptcha() {
-  // Make sure Firebase and DOM are initialized before setting up reCAPTCHA
-  if (!window.auth || !domElements.recaptchaContainer) {
-    console.log("Waiting for Firebase and DOM to initialize before setting up reCAPTCHA");
-    setTimeout(setupRecaptcha, 100);
+  if (!window.recaptchaLoaded) {
+    console.error("reCAPTCHA script not loaded yet");
+    showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
     return;
   }
-  
+  if (window.recaptchaVerifier) {
+    window.recaptchaVerifier.clear();
+    window.recaptchaVerifier = null;
+  }
   try {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible',
       'callback': (response) => {
-        console.log("reCAPTCHA verified");
+        console.log("reCAPTCHA solved:", response);
       },
       'expired-callback': () => {
         console.log("reCAPTCHA expired");
-        // Reset and reinitialize
-        window.recaptchaVerifier.clear();
         window.recaptchaVerifier = null;
         setupRecaptcha();
       }
     });
-    console.log("reCAPTCHA setup complete");
+    window.recaptchaVerifier.render().then(widgetId => {
+      console.log("reCAPTCHA rendered, widget ID:", widgetId);
+      domElements.emailSubmitBtn.disabled = false;
+      domElements.emailButtonText.textContent = "Send Magic Link";
+    }).catch(error => {
+      console.error("reCAPTCHA render error:", error);
+      showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
+      domElements.emailSubmitBtn.disabled = false;
+      domElements.emailButtonText.textContent = "Send Magic Link";
+    });
   } catch (error) {
     console.error("Error setting up reCAPTCHA:", error);
-    showStatusMessage("Error setting up security verification. Please refresh the page.", true);
+    showStatusMessage("Please try again in a moment.", true);
+    domElements.emailSubmitBtn.disabled = false;
+    domElements.emailButtonText.textContent = "Send Magic Link";
+  }
+}
+
+// Send magic link
+function sendMagicLink(event) {
+  event.preventDefault();
+  const email = domElements.emailInput.value.trim();
+  if (!email) {
+    showStatusMessage("Please enter your email address.", true);
+    return;
+  }
+  if (!window.recaptchaVerifier) {
+    setupRecaptcha();
+  } else {
+    sendMagicLinkWithRecaptcha(email);
   }
 }
 
@@ -852,27 +891,19 @@ function sendMagicLinkWithRecaptcha(email) {
     showStatusMessage("Please enter a valid email address.", true);
     return;
   }
-  
-  // Make sure Firebase and reCAPTCHA are initialized
   if (!window.auth) {
     console.error("Firebase auth is not initialized");
     showStatusMessage("Authentication service unavailable. Please refresh the page.", true);
     return;
   }
-  
   console.log("Starting magic link process for:", email);
   showButtonLoading(domElements.emailSubmitBtn, domElements.emailButtonText, domElements.emailButtonSpinner, true);
   clearStatusMessage();
-  
-  // Show immediate feedback
   showStatusMessage(`Sending magic link to ${email}...`, false);
-  
   auth.sendSignInLinkToEmail(email, ACTION_CODE_SETTINGS)
     .then(() => {
       console.log("Magic link sent successfully");
       window.localStorage.setItem('emailForSignIn', email);
-      
-      // Enhanced success message
       showStatusMessage(`
         <div class="success-message">
           <p><strong>Magic link sent!</strong></p>
@@ -881,28 +912,16 @@ function sendMagicLinkWithRecaptcha(email) {
           <p>The link will expire in 15 minutes.</p>
         </div>
       `, false);
-      
-      // Clear input field
       domElements.emailInput.value = '';
-      
-      // Show toast notification
       showToast("Email sent successfully! Check your inbox.", false);
     })
     .catch((error) => {
       console.error("Error sending magic link:", error);
-      
       let message = "Failed to send magic link. Please try again.";
-      
-      if (error.code === 'auth/invalid-email') {
-        message = "Invalid email address. Please check and try again.";
-      } else if (error.code === 'auth/too-many-requests') {
-        message = "Too many attempts. Please try again later.";
-      } else if (error.code === 'auth/missing-continue-uri' || error.code === 'auth/unauthorized-continue-uri') {
-        message = "Authentication configuration error. Please contact support.";
-      } else if (error.code === 'auth/operation-not-allowed') {
-        message = "Email sign-in is not enabled. Please contact support.";
-      }
-      
+      if (error.code === 'auth/invalid-email') message = "Invalid email address. Please check and try again.";
+      else if (error.code === 'auth/too-many-requests') message = "Too many attempts. Please try again later.";
+      else if (error.code === 'auth/missing-continue-uri' || error.code === 'auth/unauthorized-continue-uri') message = "Authentication configuration error. Please contact support.";
+      else if (error.code === 'auth/operation-not-allowed') message = "Email sign-in is not enabled. Please contact support.";
       showStatusMessage(message, true);
       console.error(`Auth error (${error.code}):`, error.message);
     })
@@ -911,23 +930,124 @@ function sendMagicLinkWithRecaptcha(email) {
     });
 }
 
+// Handle magic link sign-in
+function handleMagicLinkSignIn() {
+  if (auth.isSignInWithEmailLink(window.location.href)) {
+    let email = window.localStorage.getItem('emailForSignIn');
+    if (!email) {
+      showEmailVerificationForm();
+      return;
+    }
+    showStatusMessage("Verifying your magic link...", false);
+    auth.signInWithEmailLink(email, window.location.href)
+      .then((result) => {
+        console.log("Signed in with email link successfully.");
+        window.localStorage.removeItem('emailForSignIn');
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        domElements.authModal?.classList.add('hidden');
+        domElements.mainContent?.classList.remove('blur-background');
+        showToast("Welcome to IZZY! You're now signed in.", false);
+        updateUIForLoggedInUser(result.user);
+      })
+      .catch((error) => {
+        console.error("Error signing in with email link:", error);
+        let message = "Error signing in. Please try again.";
+        if (error.code === 'auth/expired-action-code') message = "The sign-in link has expired. Please request a new one.";
+        else if (error.code === 'auth/invalid-action-code') message = "Invalid sign-in link. Please request a new one.";
+        else if (error.code === 'auth/invalid-email') message = "Invalid email. Please check and try again.";
+        else if (error.code === 'auth/user-disabled') message = "This account has been disabled. Please contact support.";
+        showStatusMessage(message, true);
+        window.localStorage.removeItem('emailForSignIn');
+      });
+  }
+}
+
+// Show email verification form
+function showEmailVerificationForm() {
+  if (domElements.verificationFormContainer) {
+    domElements.verificationFormContainer.classList.remove('hidden');
+    const verificationEmailInput = document.getElementById('verification-email');
+    if (domElements.verifyLinkBtn) {
+      domElements.verifyLinkBtn.addEventListener('click', () => {
+        const enteredEmail = verificationEmailInput.value.trim();
+        if (validateEmail(enteredEmail)) {
+          window.localStorage.setItem('emailForSignIn', enteredEmail);
+          handleMagicLinkSignIn();
+        } else {
+          showStatusMessage("Please enter a valid email address.", true);
+        }
+      });
+    }
+  } else {
+    showStatusMessage("Please enter your email to verify the link.", true);
+  }
+}
+
+// Update UI for logged-in user
+function updateUIForLoggedInUser(user) {
+  window.currentUser = user; // Store user for subscription checks
+  if (domElements.userProfileSection) domElements.userProfileSection.classList.remove('hidden');
+  if (domElements.loginBtn) domElements.loginBtn.classList.add('hidden');
+  if (domElements.logoutBtn) domElements.logoutBtn.classList.remove('hidden');
+  if (domElements.userDisplayName && user.email) {
+    domElements.userDisplayName.textContent = user.displayName || user.email.split('@')[0];
+  }
+}
+
+// Copy referral link
+function copyReferralLink() {
+  if (!domElements.personalLinkInput) return;
+  try {
+    domElements.personalLinkInput.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(domElements.personalLinkInput.value)
+        .then(() => showToast("Link copied to clipboard!", false))
+        .catch(() => {
+          document.execCommand('copy');
+          showToast("Link copied (fallback method)!", false);
+        });
+    } else {
+      document.execCommand('copy');
+      showToast("Link copied (fallback method)!", false);
+    }
+  } catch (err) {
+    console.error('Failed to copy link:', err);
+    showToast("Could not copy link.", true);
+  }
+  window.getSelection()?.removeAllRanges();
+}
+
+// Show toast notification
+function showToast(message, isError = false, duration = 3000) {
+  clearTimeout(window.toastTimeout);
+  if (!domElements.toast) return;
+  domElements.toast.textContent = message;
+  domElements.toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 z-[120] ${isError ? 'bg-red-600 text-white' : 'bg-gray-800 text-white'}`;
+  requestAnimationFrame(() => {
+    domElements.toast.classList.remove('translate-y-full', 'opacity-0');
+    domElements.toast.classList.add('translate-y-0', 'opacity-100');
+  });
+  window.toastTimeout = setTimeout(() => {
+    domElements.toast.classList.remove('translate-y-0', 'opacity-100');
+    domElements.toast.classList.add('translate-y-full', 'opacity-0');
+  }, duration);
+}
+
+// Validate email
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(String(email).toLowerCase());
+}
+
 // Show status message
 function showStatusMessage(message, isError = false) {
-  if (!domElements.statusMessage) {
-    console.error("Status message element not found");
-    return;
-  }
-  
+  if (!domElements.statusMessage) return;
   domElements.statusMessage.innerHTML = message;
   domElements.statusMessage.classList.remove('hidden');
-  
-  if (isError) {
-    domElements.statusMessage.classList.add('error-message');
-    domElements.statusMessage.classList.remove('success-message');
-  } else {
-    domElements.statusMessage.classList.add('success-message');
-    domElements.statusMessage.classList.remove('error-message');
-  }
+  domElements.statusMessage.classList.toggle('error-message', isError);
+  domElements.statusMessage.classList.toggle('success-message', !isError);
 }
 
 // Clear status message
@@ -938,445 +1058,79 @@ function clearStatusMessage() {
   }
 }
 
-// Show/hide button loading state
+// Show/hide button loading
 function showButtonLoading(button, textElement, spinnerElement, isLoading) {
-  if (!button || !textElement || !spinnerElement) {
-    console.error("Button elements not found");
-    return;
-  }
-  
-  if (isLoading) {
-    button.disabled = true;
-    textElement.classList.add('opacity-50');
-    spinnerElement.classList.remove('hidden');
-  } else {
-    button.disabled = false;
-    textElement.classList.remove('opacity-50');
-    spinnerElement.classList.add('hidden');
-  }
+  if (!button || !textElement || !spinnerElement) return;
+  button.disabled = isLoading;
+  textElement.classList.toggle('opacity-50', isLoading);
+  spinnerElement.classList.toggle('hidden', !isLoading);
 }
 
-// Show toast notification
-function showToast(message, isError = false, duration = 3000) {
-  const toast = document.createElement('div');
-  toast.className = `toast ${isError ? 'error-toast' : 'success-toast'}`;
-  toast.innerText = message;
-  
-  document.body.appendChild(toast);
-  
-  // Show the toast
-  setTimeout(() => {
-    toast.classList.add('show-toast');
-  }, 100);
-  
-  // Hide and remove the toast after duration
-  setTimeout(() => {
-    toast.classList.remove('show-toast');
-    setTimeout(() => {
-      document.body.removeChild(toast);
-    }, 300);
-  }, duration);
-}
-
-// Validate email format
-function validateEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
-}
-
-// Rest of your functions (handleMagicLinkSignIn, logout, addMessageToHistory, etc.)
-// ...
-// Log critical configuration errors
-function logConfigError(error) {
-    // You can implement this to log to your server or a monitoring service
-    console.error("CRITICAL AUTH CONFIG ERROR:", error);
-    // Example: send to server endpoint
-    // fetch('/api/log-error', { method: 'POST', body: JSON.stringify({ error }) });
-}
-
-// Function to handle magic link sign-in with improved feedback
-function handleMagicLinkSignIn() {
-    if (auth.isSignInWithEmailLink(window.location.href)) {
-        let email = window.localStorage.getItem('emailForSignIn');
-        
-        if (!email) {
-            // Create a form to collect email if not in localStorage
-            showEmailVerificationForm();
-            return;
-        }
-        
-        // Show processing state
-        showStatusMessage("Verifying your magic link...", false);
-        showButtonLoading(domElements.verifyLinkBtn, domElements.verifyLinkText, domElements.verifyLinkSpinner, true);
-        
-        auth.signInWithEmailLink(email, window.location.href)
-            .then((result) => {
-                console.log("Signed in with email link successfully.");
-                window.localStorage.removeItem('emailForSignIn');
-                
-                // Clean up URL parameters for security and aesthetics
-                if (window.history && window.history.replaceState) {
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
-                
-                // Hide auth modal
-                domElements.authModal?.classList.add('hidden');
-                domElements.mainContent?.classList.remove('blur-background');
-                
-                // Show success message
-                showToast("Welcome to Claude! You're now signed in.", false);
-                
-                // Optional: Redirect user or update UI state
-                updateUIForLoggedInUser(result.user);
-            })
-            .catch((error) => {
-                console.error("Error signing in with email link:", error);
-                let message = "Error signing in. Please try again.";
-                
-                if (error.code === 'auth/expired-action-code') {
-                    message = "The sign-in link has expired. Please request a new one.";
-                } else if (error.code === 'auth/invalid-action-code') {
-                    message = "Invalid sign-in link. Please request a new one.";
-                } else if (error.code === 'auth/invalid-email') {
-                    message = "Invalid email. Please check and try again.";
-                } else if (error.code === 'auth/user-disabled') {
-                    message = "This account has been disabled. Please contact support.";
-                }
-                
-                showStatusMessage(message, true);
-                window.localStorage.removeItem('emailForSignIn');
-            })
-            .finally(() => {
-                showButtonLoading(domElements.verifyLinkBtn, domElements.verifyLinkText, domElements.verifyLinkSpinner, false);
-            });
-    }
-}
-
-// Function to display email verification form when localStorage email is missing
-function showEmailVerificationForm() {
-    // This assumes you have a container element for this verification form
-    const formHTML = `
-        <div class="email-verification-form">
-            <h3>Complete Sign-In</h3>
-            <p>Please enter the email address you used to request the magic link:</p>
-            <input type="email" id="verification-email" placeholder="Your email address" class="form-input">
-            <button id="verify-link-btn" class="btn btn-primary mt-3">
-                <span id="verify-link-text">Complete Sign-In</span>
-                <span id="verify-link-spinner" class="hidden spinner-border"></span>
-            </button>
-        </div>
-    `;
-    
-    if (domElements.verificationFormContainer) {
-        domElements.verificationFormContainer.innerHTML = formHTML;
-        domElements.verificationFormContainer.classList.remove('hidden');
-        
-        // Update domElements to include new form elements
-        domElements.verifyLinkBtn = document.getElementById('verify-link-btn');
-        domElements.verifyLinkText = document.getElementById('verify-link-text');
-        domElements.verifyLinkSpinner = document.getElementById('verify-link-spinner');
-        
-        const verificationEmailInput = document.getElementById('verification-email');
-        
-        // Add event listener for the verify button
-        domElements.verifyLinkBtn?.addEventListener('click', () => {
-            const enteredEmail = verificationEmailInput.value.trim();
-            if (validateEmail(enteredEmail)) {
-                // Store email and try sign-in again
-                window.localStorage.setItem('emailForSignIn', enteredEmail);
-                handleMagicLinkSignIn();
-            } else {
-                showStatusMessage("Please enter a valid email address.", true);
-            }
-        });
-    } else {
-        showStatusMessage("Please enter your email to verify the link.", true);
-    }
-}
-
-// Optional function to update UI after successful login
-function updateUIForLoggedInUser(user) {
-    // Update any UI elements that should change when user is logged in
-    if (domElements.userProfileSection) {
-        domElements.userProfileSection.classList.remove('hidden');
-    }
-    
-    if (domElements.loginBtn) {
-        domElements.loginBtn.classList.add('hidden');
-    }
-    
-    if (domElements.logoutBtn) {
-        domElements.logoutBtn.classList.remove('hidden');
-    }
-    
-    // You might want to display the user's email or name
-    if (domElements.userDisplayName && user.email) {
-        domElements.userDisplayName.textContent = user.displayName || user.email.split('@')[0];
-    }
-}
-
-function copyReferralLink() {
-    if (!domElements.personalLinkInput) return;
-    try {
-        domElements.personalLinkInput.select();
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(domElements.personalLinkInput.value)
-                .then(() => showToast("Link copied to clipboard!", false))
-                .catch(err => {
-                    document.execCommand('copy');
-                    showToast("Link copied (fallback method)!", false);
-                });
-        } else {
-            document.execCommand('copy');
-            showToast("Link copied (fallback method)!", false);
-        }
-    } catch (err) {
-        console.error('Failed to copy link:', err);
-        showToast("Could not copy link.", true);
-    }
-    window.getSelection()?.removeAllRanges();
-}
-
-// Utility Functions
-let toastTimeout;
-function showToast(message, isError = false, duration = 3000) {
-    clearTimeout(toastTimeout);
-    if (!domElements.toast) return;
-    domElements.toast.textContent = message;
-    domElements.toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 z-[120] ${isError ? 'bg-red-600 text-white' : 'bg-gray-800 text-white'}`;
-    requestAnimationFrame(() => {
-        domElements.toast.classList.remove('translate-y-full', 'opacity-0');
-        domElements.toast.classList.add('translate-y-0', 'opacity-100');
-    });
-    toastTimeout = setTimeout(() => {
-        domElements.toast.classList.remove('translate-y-0', 'opacity-100');
-        domElements.toast.classList.add('translate-y-full', 'opacity-0');
-    }, duration);
-}
-
-function usePrompt(promptText) {
-    if (domElements.userInput) {
-        domElements.userInput.value = promptText;
-        domElements.userInput.focus();
-    }
-}
-
-function disableSendButton() {
-    if (!domElements.sendButton) return;
-    domElements.sendButton.disabled = true;
-    domElements.sendButton.classList.add('opacity-50', 'cursor-not-allowed');
-}
-
-function enableSendButton() {
-    if (!domElements.sendButton) return;
-    domElements.sendButton.disabled = false;
-    domElements.sendButton.classList.remove('opacity-50', 'cursor-not-allowed');
-}
-
-function setupRecaptcha() {
-    if (!window.recaptchaLoaded) {
-        console.error("reCAPTCHA script not loaded yet");
-        showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
-        domElements.emailSubmitBtn.disabled = false;
-        domElements.emailButtonText.textContent = "Send Magic Link";
-        return;
-    }
-    if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
-        window.recaptchaVerifier = null;
-    }
-    try {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {
-                console.log("reCAPTCHA solved:", response);
-            },
-            'expired-callback': () => {
-                console.log("reCAPTCHA expired");
-                window.recaptchaVerifier = null;
-                setupRecaptcha();
-            }
-        });
-        window.recaptchaVerifier.render().then(widgetId => {
-            console.log("reCAPTCHA rendered, widget ID:", widgetId);
-            domElements.emailSubmitBtn.disabled = false;
-            domElements.emailButtonText.textContent = "Send Magic Link";
-        }).catch(error => {
-            console.error("reCAPTCHA render error:", error, "Code:", error.code, "Message:", error.message);
-            showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
-            domElements.emailSubmitBtn.disabled = false;
-            domElements.emailButtonText.textContent = "Send Magic Link";
-        });
-    } catch (error) {
-        console.error("Error setting up reCAPTCHA:", error);
-        showStatusMessage("Please try again in a moment.", true);
-        domElements.emailSubmitBtn.disabled = false;
-        domElements.emailButtonText.textContent = "Send Magic Link";
-    }
-}
-       
-function sendMagicLink(event) {
-    event.preventDefault();
-    const email = domElements.emailInput.value.trim();
-    if (!email) {
-        showStatusMessage("Please enter your email address.", true);
-        return;
-    }
-    if (!window.recaptchaVerifier) {
-        setupRecaptcha();
-    } else {
-        sendMagicLinkWithRecaptcha(email);
-    }
-}
-        window.recaptchaVerifier.render().then(widgetId => {
-    console.log("reCAPTCHA rendered, widget ID:", widgetId);
-    domElements.emailSubmitBtn.disabled = false;
-    domElements.emailButtonText.textContent = "Send Magic Link";
-}).catch(error => {
-    console.error("reCAPTCHA render error:", error, "Code:", error.code, "Message:", error.message);
-    showStatusMessage("Failed to load reCAPTCHA. Please refresh.", true);
-    domElements.emailSubmitBtn.disabled = false;
-    domElements.emailButtonText.textContent = "Send Magic Link";
-});
-
-function sendMagicLink(event) {
-    event.preventDefault();
-    const email = domElements.emailInput.value.trim();
-    if (!email) {
-        showStatusMessage("Please enter your email address.", true);
-        return;
-    }
-    if (!window.recaptchaVerifier) {
-        setupRecaptcha();
-    } else {
-        sendMagicLinkWithRecaptcha(email);
-    }
-}
-
-// Event Listeners
-function addEventListeners() {
-    domElements.emailForm?.addEventListener('submit', sendMagicLink);
-    domElements.logoutButton?.addEventListener('click', logout);
-    domElements.mobileLogoutButton?.addEventListener('click', () => {
-        logout();
-        closeMobileMenu();
-    });
-    domElements.sendButton?.addEventListener('click', sendMessage);
-    domElements.restartBtn?.addEventListener('click', restartConversation);
-    domElements.userInput?.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-    domElements.micButtonIcon?.parentElement.addEventListener('click', startDictation);
-    domElements.mobileMenuButton?.addEventListener('click', toggleMobileMenu);
-    domElements.closeMobileMenuButton?.addEventListener('click', closeMobileMenu);
-    domElements.mobileMenuLinks?.forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (link.getAttribute('href')?.startsWith('#') || link.tagName === 'BUTTON') {
-                closeMobileMenu();
-            }
-        });
-    });
-    domElements.subscribeModal?.addEventListener('click', (e) => {
-        if (e.target === domElements.subscribeModal) closeSubscribeModal();
-    });
-    domElements.shareModal?.addEventListener('click', (e) => {
-        if (e.target === domElements.shareModal) closeShareModal();
-    });
-    domElements.personalLinkInput?.addEventListener('click', copyReferralLink);
-    Object.values(domElements.shareTierButtons).forEach(button => {
-        if (button) button.addEventListener('click', openShareModal);
-    });
-    Object.entries(domElements).forEach(([key, el]) => {
-        if (!el) console.warn(`Missing DOM element for ${key}`);
-    });
-    document.getElementById('promptCoffee')?.addEventListener('click', () => usePrompt('Hi, I noticed you at the coffee shop'));
-    document.getElementById('promptIntro')?.addEventListener('click', () => usePrompt('Excuse me, I just wanted to introduce myself'));
-    document.getElementById('promptCompliment')?.addEventListener('click', () => usePrompt('I like your style, where did you get that?'));
-    const mainSubButtons = document.querySelectorAll('#subscribe .plan-card a[target="_blank"]');
-    mainSubButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            if (!currentUser) {
-                e.preventDefault();
-                showToast("Please log in before subscribing.", true);
-            } else {
-                console.log("Proceeding to subscription:", button.href);
-            }
-        });
-    });
-}
-
-// Mobile Menu Logic
+// Mobile menu logic
 function toggleMobileMenu() {
-    const isOpen = domElements.mobileMenu.classList.contains('open');
-    if (isOpen) closeMobileMenu();
-    else openMobileMenu();
+  const isOpen = domElements.mobileMenu.classList.contains('open');
+  if (isOpen) closeMobileMenu();
+  else openMobileMenu();
 }
 
 function openMobileMenu() {
-    if (domElements.mobileMenu) domElements.mobileMenu.classList.add('open');
-    domElements.mobileMenuButton?.setAttribute('aria-expanded', 'true');
+  if (domElements.mobileMenu) domElements.mobileMenu.classList.add('open');
+  domElements.mobileMenuButton?.setAttribute('aria-expanded', 'true');
 }
 
 function closeMobileMenu() {
-    if (domElements.mobileMenu) domElements.mobileMenu.classList.remove('open');
-    domElements.mobileMenuButton?.setAttribute('aria-expanded', 'false');
+  if (domElements.mobileMenu) domElements.mobileMenu.classList.remove('open');
+  domElements.mobileMenuButton?.setAttribute('aria-expanded', 'false');
 }
 
-// Initialization
-document.addEventListener('DOMContentLoaded', () => {
-    cacheDomElements();
-    domElements.emailSubmitBtn.disabled = true;
-    domElements.emailButtonText.textContent = "Loading...";
-    try {
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-            console.log("Firebase Initialized");
-        } else {
-            firebase.app();
-            console.log("Firebase Already Initialized");
-        }
-    } catch (e) {
-        console.error("Firebase initialization failed:", e);
-        showStatusMessage("Failed to initialize application. Please check your network and try again.", true);
-        domElements.emailSubmitBtn.disabled = false;
-        domElements.emailButtonText.textContent = "Send Magic Link";
-    }
-    handleMagicLinkSignIn();
-    addEventListeners();
-    handleReferralVisit();
+function openShareModal() {
+  if (domElements.shareModal) domElements.shareModal.classList.remove('hidden');
+  domElements.mainContent?.classList.add('blur-background');
+}
 
-    // Add a timeout to handle reCAPTCHA load failure
-    const recaptchaLoadTimeout = setTimeout(() => {
-        if (!window.recaptchaLoaded) {
-            console.error("reCAPTCHA script failed to load within 10 seconds");
-            showStatusMessage("Failed to load reCAPTCHA. Please refresh the page.", true);
-            domElements.emailSubmitBtn.disabled = false;
-            domElements.emailButtonText.textContent = "Send Magic Link";
-        }
-    }, 10000); // 10 seconds timeout
+function closeShareModal() {
+  if (domElements.shareModal) domElements.shareModal.classList.add('hidden');
+  domElements.mainContent?.classList.remove('blur-background');
+}
 
-    // Clear the timeout if reCAPTCHA loads successfully
-    const originalOnRecaptchaLoad = window.onRecaptchaLoad;
-    window.onRecaptchaLoad = function() {
-        clearTimeout(recaptchaLoadTimeout);
-        originalOnRecaptchaLoad();
-    };
-});
+function openSubscribeModal() {
+  if (domElements.subscribeModal) domElements.subscribeModal.classList.remove('hidden');
+  domElements.mainContent?.classList.add('blur-background');
+}
 
-// Microphone Permission
+function closeSubscribeModal() {
+  if (domElements.subscribeModal) domElements.subscribeModal.classList.add('hidden');
+  domElements.mainContent?.classList.remove('blur-background');
+}
+
+// Placeholder functions (implement as needed)
+function sendMessage() {
+  console.log("Send message not implemented");
+}
+
+function restartConversation() {
+  console.log("Restart conversation not implemented");
+}
+
+function logout() {
+  console.log("Logout not implemented");
+}
+
+function startDictation() {
+  console.log("Start dictation not implemented");
+}
+
+// Microphone permission
 function requestMicPermission() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            stream.getTracks().forEach(t => t.stop());
-            console.log("Microphone permission granted");
-        })
-        .catch(err => {
-            console.warn("Mic permission denied:", err);
-        });
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      stream.getTracks().forEach(t => t.stop());
+      console.log("Microphone permission granted");
+    })
+    .catch(err => {
+      console.warn("Mic permission denied:", err);
+    });
 }
 document.addEventListener('DOMContentLoaded', requestMicPermission);
 </script>

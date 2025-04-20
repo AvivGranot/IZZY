@@ -639,7 +639,12 @@ class="underline text-izzy-purple-600">Subscribe</a> for unlimited.
       <p class="text-sm opacity-80">AI Avatar for Real Conversations</p>
     </div>
     <div class="flex space-x-4">
-      <a href="#terms" class="hover:text-white opacity-80 hover:opacity-100">Terms</a> <a href="#privacy" class="hover:text-white opacity-80 hover:opacity-100">Privacy</a> <a href="mailto:support@example.com" class="hover:text-white opacity-80 hover:opacity-100">Support</a> </div>
+      <button onclick="shareVia('facebook')" class="bg-blue-600 text-white px-4 py-2 rounded">Facebook</button>
+      <button onclick="shareVia('twitter')" class="bg-sky-500 text-white px-4 py-2 rounded">Twitter</button>
+      <button onclick="shareVia('whatsapp')" class="bg-green-500 text-white px-4 py-2 rounded">WhatsApp</button>
+      <button onclick="shareVia('linkedin')" class="bg-blue-800 text-white px-4 py-2 rounded">LinkedIn</button>
+      <button onclick="shareVia('email')" class="bg-gray-600 text-white px-4 py-2 rounded">Email</button>
+    </div>
   </div>
 </footer>
 
@@ -996,6 +1001,139 @@ function updateUIForLoggedInUser(user) {
   }
 }
 
+// Share via social media
+function shareVia(platform) {
+  const shareUrl = 'https://izzy-auth.web.app';
+  const shareText = 'Check out IZZY, your AI assistant! #IZZY #AI';
+  let url = '';
+  switch (platform.toLowerCase()) {
+    case 'facebook':
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+      break;
+    case 'twitter':
+      url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+      break;
+    case 'whatsapp':
+      url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+      break;
+    case 'linkedin':
+      url = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent('IZZY AI Assistant')}&summary=${encodeURIComponent(shareText)}`;
+      break;
+    case 'email':
+      url = `mailto:?subject=${encodeURIComponent('Discover IZZY AI')}&body=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+      break;
+    case 'reddit':
+      url = `https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+      break;
+    default:
+      console.error('Unsupported share platform:', platform);
+      showToast('Sharing platform not supported.', true);
+      return;
+  }
+  try {
+    window.open(url, '_blank');
+    showToast(`Shared on ${platform}!`, false);
+  } catch (error) {
+    console.error('Error sharing on', platform, ':', error);
+    showToast('Failed to share. Please try again.', true);
+  }
+}
+
+// Send message to IZZY
+function sendMessage() {
+  const messageText = domElements.userInput.value.trim();
+  if (!messageText) {
+    showToast('Please enter a message.', true);
+    return;
+  }
+  if (!window.currentUser) {
+    showToast('Please log in to send messages.', true);
+    return;
+  }
+  showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, true);
+  
+  // Add message to UI
+  const messageElement = document.createElement('div');
+  messageElement.className = 'flex justify-end mb-4';
+  messageElement.innerHTML = `
+    <div class="bg-izzy-blue text-white p-3 rounded-lg max-w-xs shadow-md">
+      ${messageText}
+    </div>
+  `;
+  domElements.chatContainer.appendChild(messageElement);
+  domElements.chatContainer.scrollTop = domElements.chatContainer.scrollHeight;
+  
+  // Save to Firebase
+  const userId = window.currentUser.uid;
+  const messageRef = window.db.ref(`messages/${userId}`).push();
+  messageRef.set({
+    text: messageText,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  }).then(() => {
+    console.log('Message saved to Firebase');
+    domElements.userInput.value = '';
+    // Simulate IZZY response (placeholder)
+    addIzzyResponse('Thanks for your message! I’m working on a reply...');
+  }).catch(error => {
+    console.error('Error saving message:', error);
+    showToast('Failed to send message.', true);
+  }).finally(() => {
+    showButtonLoading(domElements.sendButton, domElements.sendButtonText, domElements.sendButtonSpinner, false);
+  });
+}
+
+// Add IZZY response to chat
+function addIzzyResponse(text) {
+  const responseElement = document.createElement('div');
+  responseElement.className = 'flex justify-start mb-4';
+  responseElement.innerHTML = `
+    <div class="bg-gray-200 text-gray-800 p-3 rounded-lg max-w-xs shadow-md">
+      ${text}
+    </div>
+  `;
+  domElements.chatContainer.appendChild(responseElement);
+  domElements.chatContainer.scrollTop = domElements.chatContainer.scrollHeight;
+}
+
+// Start dictation
+function startDictation() {
+  if (!('webkitSpeechRecognition' in window)) {
+    showToast('Speech recognition not supported in this browser.', true);
+    return;
+  }
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  
+  domElements.micButtonIcon.classList.remove('fa-microphone');
+  domElements.micButtonIcon.classList.add('fa-microphone-slash', 'text-red-500');
+  
+  recognition.start();
+  showToast('Recording... Say something!', false);
+  
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    domElements.userInput.value = transcript;
+    showToast('Transcription added to input.', false);
+    // Optionally auto-send the message
+    sendMessage();
+  };
+  
+  recognition.onend = () => {
+    domElements.micButtonIcon.classList.remove('fa-microphone-slash', 'text-red-500');
+    domElements.micButtonIcon.classList.add('fa-microphone');
+    console.log('Dictation ended');
+  };
+  
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error:', event.error);
+    showToast('Error during recording. Please try again.', true);
+    domElements.micButtonIcon.classList.remove('fa-microphone-slash', 'text-red-500');
+    domElements.micButtonIcon.classList.add('fa-microphone');
+  };
+}
+
 // Copy referral link
 function copyReferralLink() {
   if (!domElements.personalLinkInput) return;
@@ -1103,21 +1241,37 @@ function closeSubscribeModal() {
   domElements.mainContent?.classList.remove('blur-background');
 }
 
-// Placeholder functions (implement as needed)
-function sendMessage() {
-  console.log("Send message not implemented");
-}
-
+// Restart conversation
 function restartConversation() {
-  console.log("Restart conversation not implemented");
+  if (!window.currentUser) {
+    showToast('Please log in to restart the conversation.', true);
+    return;
+  }
+  domElements.chatContainer.innerHTML = '';
+  const userId = window.currentUser.uid;
+  window.db.ref(`messages/${userId}`).remove()
+    .then(() => {
+      showToast('Conversation restarted.', false);
+    })
+    .catch(error => {
+      console.error('Error restarting conversation:', error);
+      showToast('Failed to restart conversation.', true);
+    });
 }
 
+// Logout
 function logout() {
-  console.log("Logout not implemented");
-}
-
-function startDictation() {
-  console.log("Start dictation not implemented");
+  auth.signOut().then(() => {
+    window.currentUser = null;
+    if (domElements.userProfileSection) domElements.userProfileSection.classList.add('hidden');
+    if (domElements.loginBtn) domElements.loginBtn.classList.remove('hidden');
+    if (domElements.logoutBtn) domElements.logoutBtn.classList.add('hidden');
+    domElements.chatContainer.innerHTML = '';
+    showToast('Logged out successfully.', false);
+  }).catch(error => {
+    console.error('Logout error:', error);
+    showToast('Failed to log out.', true);
+  });
 }
 
 // Microphone permission

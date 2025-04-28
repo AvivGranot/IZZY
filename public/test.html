@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IZZY Test</title>
+  <link href="./dist/output.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+    textarea {
+      flex: 1;
+      min-height: 100px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      background: linear-gradient(to right, #8B5CF6, #EC4899);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .messages {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .message {
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .user-message {
+      align-self: flex-end;
+      background-color: #f0f0f0;
+    }
+    .izzy-message {
+      align-self: flex-start;
+      background-color: #f5edff;
+    }
+    h1 {
+      background: linear-gradient(to right, #8B5CF6, #EC4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .status {
+      font-size: 0.8rem;
+      color: #666;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>IZZY Chat Test</h1>
+  <div class="container">
+    <div class="messages" id="messages">
+      <div class="message izzy-message">Hi there! I'm IZZY. How can I help you today?</div>
+    </div>
+    <div class="input-area">
+      <textarea id="userInput" placeholder="Type your message here..."></textarea>
+      <button id="sendBtn">Send</button>
+    </div>
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sendBtn = document.getElementById('sendBtn');
+      const userInput = document.getElementById('userInput');
+      const messages = document.getElementById('messages');
+      const status = document.getElementById('status');
+
+      sendBtn.addEventListener('click', sendMessage);
+      userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      async function sendMessage() {
+        const userMessage = userInput.value.trim();
+        if (!userMessage) return;
+
+        // Add user message to chat
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.textContent = userMessage;
+        messages.appendChild(userDiv);
+
+        // Clear input
+        userInput.value = '';
+        
+        // Scroll to bottom
+        messages.scrollTop = messages.scrollHeight;
+
+        // Show status
+        status.textContent = 'Sending message to IZZY...';
+
+        try {
+          // Use the backend URL - make sure this matches your Flask server
+          const response = await fetch('http://localhost:5000/ask', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: userMessage })
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+
+          const data = await response.json();
+          
+          // Add IZZY's response
+          const izzyDiv = document.createElement('div');
+          izzyDiv.className = 'message izzy-message';
+          izzyDiv.textContent = data.response || "Sorry, I couldn't understand that.";
+          messages.appendChild(izzyDiv);
+          
+          status.textContent = '';
+        } catch (error) {
+          console.error('Error:', error);
+          status.textContent = `Error: ${error.message}. Make sure the backend is running at http://localhost:5000`;
+          
+          // Add error message
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'message izzy-message';
+          errorDiv.textContent = "Sorry, I couldn't connect to my brain right now. Please try again later.";
+          messages.appendChild(errorDiv);
+        }
+        
+        // Scroll to bottom again
+        messages.scrollTop = messages.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html> 

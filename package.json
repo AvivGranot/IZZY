@@ -1,11 +1,10 @@
 {
   "name": "izzy",
   "version": "1.0.0",
-  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "build": "npx tailwindcss -i ./input.css -o ./dist/output.css --minify"
+    "build": "npx tailwindcss -i ./input.css -o ./dist/output.css --minify",
+    "dev": "npx live-server public --port=3000"
   },
   "repository": {
     "type": "git",

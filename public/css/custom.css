@@ -1,0 +1,155 @@
+/* Custom styles for IZZY */
+
+/* Make header narrower */
+.desktop-nav,
+nav,
+header,
+footer,
+main {
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Header spacing */
+.desktop-nav {
+  padding: 0.75rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.desktop-nav a,
+.desktop-nav button {
+  transition: all 0.2s ease !important;
+}
+
+.desktop-nav a:hover,
+.desktop-nav button:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Fix the social buttons in footer */
+footer button,
+footer [data-share],
+footer a.bg-blue-600,
+footer a.bg-sky-500,
+footer a.bg-green-500,
+footer a.bg-blue-800,
+footer a.bg-gray-600 {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+footer button:hover,
+footer [data-share]:hover,
+footer a.bg-blue-600:hover,
+footer a.bg-sky-500:hover,
+footer a.bg-green-500:hover,
+footer a.bg-blue-800:hover,
+footer a.bg-gray-600:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove subscription UI from top nav */
+nav a[href="#subscribe"] {
+  display: none !important;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  
+  .mobile-nav-button {
+    display: block !important;
+  }
+  
+  .mobile-menu {
+    width: 100% !important;
+    max-width: 300px !important;
+  }
+  
+  /* Footer responsive buttons */
+  footer .flex.space-x-4 {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  footer button,
+  footer [data-share] {
+    margin: 0.25rem !important;
+    padding: 0.5rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Chat panel responsiveness */
+  .chat-panel {
+    height: auto !important;
+    max-height: 80vh !important;
+  }
+  
+  /* Subscription modal responsiveness */
+  .subscription-options {
+    flex-direction: column !important;
+  }
+  
+  .plan {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Make buttons more touch-friendly */
+  button, .btn, [role="button"], [type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Adjust font sizes for mobile */
+  h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Fix spacing */
+  .p-4 {
+    padding: 0.75rem !important;
+  }
+  
+  .px-6 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Fix IZZY undefined error */
+.message-bubble-ai:empty::after {
+  content: "I'm here to help with your conversation practice!";
+  color: inherit;
+}
+
+/* Prevent empty message bubbles */
+.chat-message.izzy .content:empty::after {
+  content: "I'm here to help with your conversation practice!";
+}
+
+/* Fix any undefined errors */
+[innerText="undefined"], 
+[textContent="undefined"] {
+  display: none;
+}
+
+/* Ensure the subscription modal appears on top */
+#subscribeModal {
+  z-index: 9999 !important;
+} 

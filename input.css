@@ -1,3 +1,17 @@
+/* input.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  button:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    /* @apply animate-fadeIn; REMOVED - Animation applied via config */
+    /* Keyframes will be defined in tailwind.config.js */
+  }
+}

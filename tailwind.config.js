@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./public/*.html"],
+  content: ["./public/*.html", "./public/*.js"],
   theme: {
     extend: {
       colors: {
@@ -15,7 +15,18 @@ module.exports = {
           600: '#DB2777',
         },
       },
+      // Add animation definitions
+      keyframes: {
+        fadeIn: {
+          'from': { opacity: '0', transform: 'translateY(0.5rem)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.5s ease-out forwards', // Use 'forwards' to keep the final state
+      },
     },
   },
   plugins: [],
 };
+ 
